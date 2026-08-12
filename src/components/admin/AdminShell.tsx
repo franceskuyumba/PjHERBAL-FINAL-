@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   LogOut,
   Package,
+  Receipt,
   ScrollText,
   ShoppingBag,
   Star,
@@ -18,23 +19,27 @@ import {
   UserCog,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { useI18n } from "@/context/LanguageContext";
 
 const allNavItems = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true, adminOnly: false },
-  { href: "/admin/products", label: "Products", icon: ShoppingBag, adminOnly: false },
-  { href: "/admin/inventory", label: "Inventory", icon: Boxes, adminOnly: false },
-  { href: "/admin/orders", label: "Orders", icon: Package, adminOnly: false },
-  { href: "/admin/customers", label: "Customers", icon: Users, adminOnly: false },
-  { href: "/admin/coupons", label: "Coupons", icon: Tag, adminOnly: false },
-  { href: "/admin/blog", label: "Blog", icon: BookOpen, adminOnly: false },
-  { href: "/admin/reviews", label: "Reviews", icon: Star, adminOnly: false },
-  { href: "/admin/activity", label: "Activity Log", icon: Activity, adminOnly: true },
-  { href: "/admin/team", label: "Team & Roles", icon: UserCog, adminOnly: true },
+  { href: "/admin", labelKey: "admin.shell.dashboard", icon: LayoutDashboard, exact: true, adminOnly: false },
+  { href: "/admin/products", labelKey: "admin.shell.products", icon: ShoppingBag, adminOnly: false },
+  { href: "/admin/inventory", labelKey: "admin.shell.inventory", icon: Boxes, adminOnly: false },
+  { href: "/admin/orders", labelKey: "admin.shell.orders", icon: Package, adminOnly: false },
+  { href: "/admin/documents", labelKey: "admin.shell.receipts", icon: Receipt, adminOnly: false },
+  { href: "/admin/customers", labelKey: "admin.shell.customers", icon: Users, adminOnly: false },
+  { href: "/admin/coupons", labelKey: "admin.shell.coupons", icon: Tag, adminOnly: false },
+  { href: "/admin/blog", labelKey: "admin.shell.blog", icon: BookOpen, adminOnly: false },
+  { href: "/admin/reviews", labelKey: "admin.shell.reviews", icon: Star, adminOnly: false },
+  { href: "/admin/activity", labelKey: "admin.shell.activityLog", icon: Activity, adminOnly: true },
+  { href: "/admin/team", labelKey: "admin.shell.team", icon: UserCog, adminOnly: true },
 ];
 
 export function AdminShell({ children, role }: { children: ReactNode; role: string }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { t } = useI18n();
   const isAdmin = role === "ADMIN";
   const navItems = allNavItems.filter((item) => !item.adminOnly || isAdmin);
 
@@ -53,7 +58,9 @@ export function AdminShell({ children, role }: { children: ReactNode; role: stri
         <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-ink/5 bg-brand-950 text-white md:flex">
           <div className="border-b border-white/10 px-5 py-5">
             <p className="font-display text-lg font-bold text-gold-300">PJHERBAL</p>
-            <p className="text-xs text-white/50">Admin Panel · {isAdmin ? "Owner" : "Staff"}</p>
+            <p className="text-xs text-white/50">
+              {t("admin.shell.adminPanel")} · {isAdmin ? t("admin.shell.owner") : t("admin.shell.staff")}
+            </p>
           </div>
           <nav className="flex-1 space-y-1 p-3">
             {navItems.map((item) => (
@@ -68,7 +75,7 @@ export function AdminShell({ children, role }: { children: ReactNode; role: stri
                 )}
               >
                 <item.icon className="h-4 w-4" />
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             ))}
           </nav>
@@ -78,28 +85,31 @@ export function AdminShell({ children, role }: { children: ReactNode; role: stri
               className="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-white/70 transition-colors hover:bg-white/5 hover:text-white"
             >
               <LogOut className="h-4 w-4" />
-              Log out
+              {t("admin.shell.logout")}
             </button>
           </div>
         </aside>
 
         <div className="min-w-0 flex-1">
           <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-ink/5 bg-white px-4 md:hidden">
-            <p className="font-display text-base font-bold text-brand-950">PJHERBAL Admin</p>
+            <p className="font-display text-base font-bold text-brand-950">
+              PJHERBAL {t("admin.shell.admin")}
+            </p>
             <button
               onClick={logout}
               className="flex h-9 w-9 items-center justify-center rounded-full text-ink/50 hover:bg-slate-100"
-              aria-label="Log out"
+              aria-label={t("admin.shell.logout")}
             >
               <LogOut className="h-4 w-4" />
             </button>
           </header>
-          <header className="sticky top-0 z-30 hidden h-14 items-center border-b border-ink/5 bg-white px-8 md:flex">
+          <header className="sticky top-0 z-30 hidden h-14 items-center justify-between border-b border-ink/5 bg-white px-8 md:flex">
             <p className="text-sm text-ink/50">
               <Link href="/" className="font-semibold text-brand-700 hover:text-brand-800">
-                ← View store
+                ← {t("admin.shell.viewStore")}
               </Link>
             </p>
+            <LanguageSwitcher />
           </header>
           <main className="p-4 md:p-8">{children}</main>
         </div>

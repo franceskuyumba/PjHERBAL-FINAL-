@@ -6,6 +6,7 @@ import { Bot, MessageCircle, Send, X } from "lucide-react";
 import { getBotReply, botStarter } from "@/lib/chatbot";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 interface ChatMessage {
   id: string;
@@ -19,6 +20,7 @@ let idCounter = 0;
 const nextId = () => `c${++idCounter}`;
 
 export function ChatBot() {
+  const { t, lang } = useI18n();
   const reduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -26,14 +28,21 @@ export function ChatBot() {
   const [typing, setTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const starterChips = [
+    t("live.chatbot.chipProductsPrices"),
+    t("live.chatbot.chipDeliveryFees"),
+    t("live.chatbot.chipPaymentOptions"),
+    t("live.chatbot.chipTrackOrder"),
+  ];
+
   useEffect(() => {
     if (open && messages.length === 0) {
       setMessages([
         {
           id: nextId(),
           from: "bot",
-          text: `Hello! 👋 I'm the ${botStarter.title}. ${botStarter.subtitle}.`,
-          quickReplies: botStarter.chips,
+          text: t("live.chatbot.greeting"),
+          quickReplies: starterChips,
         },
       ]);
     }
@@ -53,7 +62,7 @@ export function ChatBot() {
 
     // Small delay to feel like a real assistant.
     setTimeout(() => {
-      const reply = getBotReply(text);
+      const reply = getBotReply(text, lang);
       setMessages((m) => [
         ...m,
         {
@@ -69,7 +78,7 @@ export function ChatBot() {
   };
 
   const handoffUrl = buildWhatsAppUrl({
-    message: messages.length > 0 ? messages.filter((m) => m.from === "user").at(-1)?.text || botStarter.chips[0] : botStarter.chips[0],
+    message: messages.length > 0 ? messages.filter((m) => m.from === "user").at(-1)?.text || starterChips[0] : starterChips[0],
   });
 
   return (
@@ -92,7 +101,7 @@ export function ChatBot() {
                 </span>
                 <div>
                   <p className="text-sm font-bold">{botStarter.title}</p>
-                  <p className="text-xs text-white/60">{botStarter.subtitle}</p>
+                  <p className="text-xs text-white/60">{t("live.chatbot.subtitle")}</p>
                 </div>
               </div>
               <button
@@ -149,7 +158,7 @@ export function ChatBot() {
                   rel="noopener noreferrer"
                   className="btn-whatsapp inline-flex items-center gap-2"
                 >
-                  <MessageCircle className="h-4 w-4" /> Chat with a specialist on WhatsApp
+                  <MessageCircle className="h-4 w-4" /> {t("live.chatbot.handoff")}
                 </a>
               )}
             </div>
@@ -164,7 +173,7 @@ export function ChatBot() {
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask about products, delivery, payment…"
+                placeholder={t("live.chatbot.placeholder")}
                 className="input flex-1 rounded-full"
               />
               <button

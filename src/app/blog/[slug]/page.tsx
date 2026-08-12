@@ -17,6 +17,7 @@ import { ShareButtons } from "@/components/blog/ShareButtons";
 import { ProductCard } from "@/components/product/ProductCard";
 import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
 import type { ProductCardProduct } from "@/components/product/ProductCard";
+import { getLocale, t } from "@/lib/i18n";
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await prisma.blogPost.findFirst({
@@ -50,6 +51,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+  const lang = getLocale();
   const post = await prisma.blogPost.findFirst({
     where: { slug: params.slug, ...publishedWhere() },
   });
@@ -139,9 +141,9 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       <article className="container-site pb-16 pt-8 lg:pt-12">
         <div className="mx-auto max-w-3xl">
           <nav className="flex flex-wrap items-center gap-2 text-xs text-ink/45" aria-label="Breadcrumb">
-            <Link href="/" className="font-semibold text-brand-700 hover:underline">Home</Link>
+            <Link href="/" className="font-semibold text-brand-700 hover:underline">{t(lang, "blog.homeCrumb")}</Link>
             <span>/</span>
-            <Link href="/blog" className="font-semibold text-brand-700 hover:underline">Journal</Link>
+            <Link href="/blog" className="font-semibold text-brand-700 hover:underline">{t(lang, "blog.journalCrumb")}</Link>
             <span>/</span>
             <span className="badge bg-brand-50 text-brand-700">{post.category}</span>
           </nav>
@@ -171,7 +173,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 <CalendarDays className="h-4 w-4 text-brand-600" /> {formatDate(post.publishedAt)}
               </span>
               <span className="flex items-center gap-1.5">
-                <Clock className="h-4 w-4 text-brand-600" /> {post.readingTime} min read
+                <Clock className="h-4 w-4 text-brand-600" /> {t(lang, "blog.readTime").replace("{n}", String(post.readingTime))}
               </span>
             </div>
             <ShareButtons title={post.title} url={url} />
@@ -197,12 +199,10 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
             <div className="mt-10 rounded-3xl border-l-4 border-gold-500 bg-brand-50/60 px-6 py-5">
               <p className="flex items-center gap-2 font-display text-lg font-bold text-brand-950">
-                <Leaf className="h-5 w-5 text-brand-600" /> A note from our clinic
+                <Leaf className="h-5 w-5 text-brand-600" /> {t(lang, "blog.noteTitle")}
               </p>
               <p className="mt-2 text-sm leading-7 text-ink/65">
-                This article is for general wellness education and is not medical advice. Always consult a
-                qualified healthcare professional before starting any supplement, especially if you are
-                pregnant, nursing or taking medication.
+                {t(lang, "blog.noteText")}
               </p>
             </div>
 
@@ -212,11 +212,11 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-5 w-5 text-gold-600" />
                     <h2 id="recommended-products-heading" className="font-display text-2xl font-bold text-brand-950">
-                      Recommended products
+                      {t(lang, "blog.recommendedTitle")}
                     </h2>
                   </div>
                   <p className="mt-2 text-sm leading-6 text-ink/55">
-                    Explore supplements aligned with this topic. Add them to your cart and check out in minutes.
+                    {t(lang, "blog.recommendedText")}
                   </p>
                 </AnimatedReveal>
                 <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-2 xl:grid-cols-2">
@@ -226,15 +226,15 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 </div>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Link href="/shop" className="btn-primary btn-md">
-                    Explore all products <ArrowRight className="h-4 w-4" />
+                    {t(lang, "blog.exploreAll")} <ArrowRight className="h-4 w-4" />
                   </Link>
                   <a
-                    href={buildWhatsAppUrl({ message: `Hello PJHERBAL Clinic, I read "${post.title}" and I would like a recommendation.` })}
+                    href={buildWhatsAppUrl({ message: t(lang, "blog.askSpecialistMsg").replace("{title}", post.title) })}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-whatsapp btn-md"
                   >
-                    <MessageCircle className="h-4 w-4" /> Ask a specialist
+                    <MessageCircle className="h-4 w-4" /> {t(lang, "blog.askSpecialist")}
                   </a>
                 </div>
               </section>
@@ -244,7 +244,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               {newer ? (
                 <Link href={`/blog/${newer.slug}`} className="group card flex flex-col gap-1 p-5 transition-all hover:shadow-lift">
                   <span className="flex items-center gap-1 text-xs font-semibold text-brand-600">
-                    <ArrowLeft className="h-3.5 w-3.5" /> Newer article
+                    <ArrowLeft className="h-3.5 w-3.5" /> {t(lang, "blog.newerArticle")}
                   </span>
                   <span className="line-clamp-2 font-display text-base font-bold text-brand-950 group-hover:text-brand-700">
                     {newer.title}
@@ -256,7 +256,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               {older ? (
                 <Link href={`/blog/${older.slug}`} className="group card flex flex-col items-end gap-1 p-5 text-right transition-all hover:shadow-lift">
                   <span className="flex items-center gap-1 text-xs font-semibold text-brand-600">
-                    Older article <ArrowRight className="h-3.5 w-3.5" />
+                    {t(lang, "blog.olderArticle")} <ArrowRight className="h-3.5 w-3.5" />
                   </span>
                   <span className="line-clamp-2 font-display text-base font-bold text-brand-950 group-hover:text-brand-700">
                     {older.title}
@@ -269,16 +269,16 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
             <div className="mt-10 flex flex-col items-start justify-between gap-4 rounded-3xl bg-brand-900 p-7 text-white sm:flex-row sm:items-center">
               <div>
-                <p className="font-display text-lg font-bold">Questions about your health?</p>
-                <p className="mt-1 text-sm text-white/70">Talk to a PJHERBAL specialist — it is free and private.</p>
+                <p className="font-display text-lg font-bold">{t(lang, "blog.healthQuestion")}</p>
+                <p className="mt-1 text-sm text-white/70">{t(lang, "blog.talkSpecialistText")}</p>
               </div>
               <a
-                href={buildWhatsAppUrl({ message: `Hello PJHERBAL Clinic, I read your article "${post.title}" and have a question.` })}
+                href={buildWhatsAppUrl({ message: t(lang, "blog.askWhatsAppMsg").replace("{title}", post.title) })}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-gold"
               >
-                <MessageCircle className="h-4 w-4" /> Ask on WhatsApp
+                <MessageCircle className="h-4 w-4" /> {t(lang, "blog.askWhatsApp")}
               </a>
             </div>
           </div>
@@ -291,11 +291,11 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             <AnimatedReveal>
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="eyebrow">Keep exploring</p>
-                  <h2 className="mt-2 font-display text-2xl font-bold text-brand-950 sm:text-3xl">More from the journal</h2>
+                  <p className="eyebrow">{t(lang, "blog.keepExploring")}</p>
+                  <h2 className="mt-2 font-display text-2xl font-bold text-brand-950 sm:text-3xl">{t(lang, "blog.moreFromJournal")}</h2>
                 </div>
                 <Link href="/blog" className="btn-outline btn-sm hidden shrink-0 sm:inline-flex">
-                  All articles <ArrowRight className="h-4 w-4" />
+                  {t(lang, "blog.allArticles")} <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             </AnimatedReveal>

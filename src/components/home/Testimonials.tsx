@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Rating } from "@/components/ui/Rating";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 const testimonials = [
   {
@@ -43,6 +44,7 @@ const testimonials = [
 export function Testimonials() {
   const reduceMotion = useReducedMotion();
   const [index, setIndex] = useState(0);
+  const { t: tr } = useI18n();
 
   useEffect(() => {
     const timer = setInterval(() => setIndex((v) => (v + 1) % testimonials.length), 6000);
@@ -55,9 +57,9 @@ export function Testimonials() {
     <section className="bg-gradient-to-b from-brand-950 to-brand-900 py-16 text-white sm:py-20">
       <div className="container-site">
         <SectionHeading
-          eyebrow="Testimonials"
-          title="Loved by customers across Tanzania"
-          subtitle="Real stories from real customers who trust PJHERBAL Clinic."
+          eyebrow={tr("home.testimonials.eyebrow")}
+          title={tr("home.testimonials.title")}
+          subtitle={tr("home.testimonials.subtitle")}
           className="text-white [&_h2]:text-white [&_.eyebrow]:text-gold-300 [&_p]:text-white/60"
         />
 
@@ -92,7 +94,7 @@ export function Testimonials() {
               <button
                 key={i}
                 onClick={() => setIndex(i)}
-                aria-label={`Show testimonial ${i + 1}`}
+                aria-label={tr("home.testimonials.showTestimonial").replace("{n}", String(i + 1))}
                 className={cn(
                   "h-2 rounded-full transition-all",
                   i === index ? "w-8 bg-gold-400" : "w-2 bg-white/25 hover:bg-white/50"

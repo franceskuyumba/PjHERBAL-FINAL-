@@ -2,6 +2,7 @@
 
 import { AlertTriangle, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 interface ErrorStateProps {
   title?: string;
@@ -10,12 +11,8 @@ interface ErrorStateProps {
   className?: string;
 }
 
-export function ErrorState({
-  title = "Something went wrong",
-  description = "We couldn't load this content. Please try again.",
-  onRetry,
-  className,
-}: ErrorStateProps) {
+export function ErrorState({ title, description, onRetry, className }: ErrorStateProps) {
+  const { t } = useI18n();
   return (
     <div
       className={cn(
@@ -26,15 +23,15 @@ export function ErrorState({
       <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-100 text-red-600">
         <AlertTriangle className="h-8 w-8" />
       </div>
-      <h3 className="font-display text-xl font-bold text-red-900">{title}</h3>
-      <p className="mt-2 max-w-sm text-sm text-red-800/70">{description}</p>
+      <h3 className="font-display text-xl font-bold text-red-900">{title || t("ui.error.defaultTitle")}</h3>
+      <p className="mt-2 max-w-sm text-sm text-red-800/70">{description || t("ui.error.defaultDesc")}</p>
       {onRetry && (
         <button
           onClick={onRetry}
           className="btn-outline btn-sm mt-6"
         >
           <RotateCcw className="h-4 w-4" />
-          Try again
+          {t("ui.error.retry")}
         </button>
       )}
     </div>

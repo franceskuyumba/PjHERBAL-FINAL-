@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { useI18n } from "@/context/LanguageContext";
 import { useToast } from "@/components/ui/Toast";
 import { cn } from "@/lib/utils";
 
@@ -17,12 +18,13 @@ export function ReviewForm({ productId, defaultRating = 5 }: ReviewFormProps) {
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
+  const { t } = useI18n();
   const { toast } = useToast();
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!comment.trim()) {
-      toast("Please write a short review", "error");
+      toast(t("product.reviewRequired"), "error");
       return;
     }
     setLoading(true);
@@ -33,19 +35,19 @@ export function ReviewForm({ productId, defaultRating = 5 }: ReviewFormProps) {
     });
     setLoading(false);
     if (res.ok) {
-      toast("Thank you! Your review will appear once approved.", "success");
+      toast(t("product.reviewThanks"), "success");
       setTitle("");
       setComment("");
       setRating(5);
     } else {
       const data = await res.json().catch(() => null);
-      toast(data?.error || "Could not submit your review.", "error");
+      toast(data?.error || t("product.reviewError"), "error");
     }
   };
 
   return (
     <form onSubmit={submit} className="rounded-2xl bg-white p-5 shadow-card sm:p-6">
-      <h3 className="font-display text-lg font-bold text-brand-950">Write a review</h3>
+      <h3 className="font-display text-lg font-bold text-brand-950">{t("product.writeReview")}</h3>
       <div className="mt-4 flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
@@ -54,7 +56,7 @@ export function ReviewForm({ productId, defaultRating = 5 }: ReviewFormProps) {
             onClick={() => setRating(star)}
             onMouseEnter={() => setHover(star)}
             onMouseLeave={() => setHover(0)}
-            aria-label={`Rate ${star} stars`}
+            aria-label={t("product.rateStars").replace("{n}", String(star))}
             className="text-2xl transition-transform hover:scale-110"
           >
             <Star
@@ -71,7 +73,7 @@ export function ReviewForm({ productId, defaultRating = 5 }: ReviewFormProps) {
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="Review title (optional)"
+        placeholder={t("product.reviewTitlePlaceholder")}
         maxLength={120}
         className="input mt-4"
       />
@@ -79,12 +81,12 @@ export function ReviewForm({ productId, defaultRating = 5 }: ReviewFormProps) {
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         rows={4}
-        placeholder="Share your experience with this product..."
+        placeholder={t("product.reviewCommentPlaceholder")}
         className="input mt-4"
         maxLength={600}
       />
       <Button type="submit" loading={loading} className="mt-4">
-        Submit review
+        {t("product.submitReview")}
       </Button>
     </form>
   );

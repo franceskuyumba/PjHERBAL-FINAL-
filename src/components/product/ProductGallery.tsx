@@ -4,8 +4,10 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 export function ProductGallery({ images, name }: { images: string[]; name: string }) {
+  const { t } = useI18n();
   const list = images.length > 0 ? images : ["/images/hero.svg"];
   const [active, setActive] = useState(0);
 
@@ -19,7 +21,7 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
       >
         <Image
           src={list[active]}
-          alt={`${name} — image ${active + 1}`}
+          alt={`${name} — ${t("product.imageAlt").replace("{n}", String(active + 1))}`}
           fill
           priority
           sizes="(max-width: 1024px) 100vw, 50vw"
@@ -37,7 +39,7 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
                 "relative h-20 w-20 overflow-hidden rounded-2xl border-2 transition-all",
                 i === active ? "border-brand-600" : "border-transparent opacity-70 hover:opacity-100"
               )}
-              aria-label={`View image ${i + 1}`}
+              aria-label={t("product.viewImage").replace("{n}", String(i + 1))}
             >
               <Image src={img} alt="" fill sizes="80px" className="object-cover" />
             </button>

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ORDER_STATUSES, PAYMENT_STATUSES } from "@/lib/constants";
+import { useI18n } from "@/context/LanguageContext";
 
 export function OrderStatusControls({
   orderId,
@@ -14,6 +15,8 @@ export function OrderStatusControls({
   paymentStatus: string;
 }) {
   const router = useRouter();
+  const { t } = useI18n();
+  const updatedMsg = t("admin.orderStatus.updated");
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
 
@@ -27,8 +30,8 @@ export function OrderStatusControls({
         body: JSON.stringify(data),
       });
       const d = await res.json();
-      if (!res.ok) throw new Error(d.error || "Update failed");
-      setMsg("Order updated.");
+      if (!res.ok) throw new Error(d.error || t("admin.orderStatus.updateFailed"));
+      setMsg(updatedMsg);
       router.refresh();
     } catch (e) {
       setMsg((e as Error).message);
@@ -40,7 +43,7 @@ export function OrderStatusControls({
   return (
     <div className="space-y-4">
       <div>
-        <label className="text-sm font-medium text-brand-950">Order status</label>
+        <label className="text-sm font-medium text-brand-950">{t("admin.orderStatus.orderStatus")}</label>
         <div className="mt-2 flex flex-wrap gap-2">
           {ORDER_STATUSES.map((s) => (
             <button
@@ -60,7 +63,7 @@ export function OrderStatusControls({
       </div>
 
       <div>
-        <label className="text-sm font-medium text-brand-950">Payment status</label>
+        <label className="text-sm font-medium text-brand-950">{t("admin.orderStatus.paymentStatus")}</label>
         <div className="mt-2 flex flex-wrap gap-2">
           {PAYMENT_STATUSES.map((p) => (
             <button
@@ -79,9 +82,9 @@ export function OrderStatusControls({
         </div>
       </div>
 
-      {saving && <p className="text-xs text-ink/50">Saving...</p>}
+      {saving && <p className="text-xs text-ink/50">{t("admin.orderStatus.saving")}</p>}
       {msg && (
-        <p className={`text-xs font-medium ${msg === "Order updated." ? "text-green-600" : "text-red-600"}`}>{msg}</p>
+        <p className={`text-xs font-medium ${msg === updatedMsg ? "text-green-600" : "text-red-600"}`}>{msg}</p>
       )}
     </div>
   );

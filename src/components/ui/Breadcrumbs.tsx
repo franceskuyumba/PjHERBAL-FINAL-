@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { ChevronRight, Home } from "lucide-react";
 import { Fragment } from "react";
+import { useI18n } from "@/context/LanguageContext";
 
 export interface Crumb {
   label: string;
@@ -8,13 +11,14 @@ export interface Crumb {
 }
 
 export function Breadcrumbs({ crumbs }: { crumbs: Crumb[] }) {
+  const { t } = useI18n();
   return (
     <nav aria-label="Breadcrumb" className="container-site">
       <ol className="flex flex-wrap items-center gap-1.5 text-sm text-ink/50">
         <li>
           <Link href="/" className="flex items-center gap-1 transition-colors hover:text-brand-700">
             <Home className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only">Home</span>
+            <span className="sr-only sm:not-sr-only">{t("ui.home")}</span>
           </Link>
         </li>
         {crumbs.map((crumb, i) => (

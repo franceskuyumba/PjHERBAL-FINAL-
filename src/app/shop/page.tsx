@@ -9,6 +9,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { toProductCard } from "@/lib/serializers";
 import { getCurrentUser } from "@/lib/auth";
+import { getLocale, t } from "@/lib/i18n";
 import { SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -29,6 +30,7 @@ function getParam(value: string | string[] | undefined): string {
 }
 
 export default async function ShopPage({ searchParams }: ShopPageProps) {
+  const lang = getLocale();
   const search = getParam(searchParams.search).trim();
   const categorySlug = getParam(searchParams.category);
   const sort = getParam(searchParams.sort) || "featured";
@@ -96,14 +98,14 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
         <p className="eyebrow">PJHERBAL Clinic</p>
         <h1 className="mt-2 font-display text-3xl font-bold text-brand-950 sm:text-4xl">
           {categorySlug
-            ? categories.find((c) => c.slug === categorySlug)?.name || "Shop"
+            ? categories.find((c) => c.slug === categorySlug)?.name || t(lang, "shop.title")
             : search
-              ? `Results for "${search}"`
-              : "Shop Supplements"}
+              ? t(lang, "shop.resultsFor").replace("{q}", search)
+              : t(lang, "shop.titleSupplements")}
         </h1>
         <p className="mt-2 text-sm text-ink/55">
-          {total} {total === 1 ? "product" : "products"} available
-          {categorySlug ? " in this category" : ""}
+          {total} {total === 1 ? t(lang, "shop.product") : t(lang, "shop.products")} {t(lang, "shop.available")}
+          {categorySlug ? " " + t(lang, "shop.inThisCategory") : ""}
         </p>
       </div>
 
@@ -114,11 +116,11 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
           {total === 0 ? (
             <EmptyState
               icon={<PackageSearch className="h-8 w-8" />}
-              title="No products found"
-              description="Try adjusting your filters or search for a different product."
+              title={t(lang, "shop.noProducts")}
+              description={t(lang, "shop.noProductsDesc")}
               action={
                 <Link href="/shop" className="btn-primary btn-md">
-                  Browse all products
+                  {t(lang, "shop.browseAll")}
                 </Link>
               }
             />
@@ -137,7 +139,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
               {page > 1 && (
                 <PaginationLink
                   href={buildPageHref(searchParams, page - 1)}
-                  aria-label="Previous page"
+                  aria-label={t(lang, "shop.prevPage")}
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </PaginationLink>
@@ -158,7 +160,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
               {page < totalPages && (
                 <PaginationLink
                   href={buildPageHref(searchParams, page + 1)}
-                  aria-label="Next page"
+                  aria-label={t(lang, "shop.nextPage")}
                 >
                   <ChevronRight className="h-4 w-4" />
                 </PaginationLink>

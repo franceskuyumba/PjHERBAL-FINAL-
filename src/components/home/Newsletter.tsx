@@ -4,17 +4,19 @@ import { motion, useReducedMotion } from "framer-motion";
 import { CheckCircle2, Mail } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/Toast";
+import { useI18n } from "@/context/LanguageContext";
 
 export function Newsletter() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const reduceMotion = useReducedMotion();
   const { toast } = useToast();
+  const { t } = useI18n();
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-      toast("Please enter a valid email address", "error");
+      toast(t("home.newsletter.invalidEmail"), "error");
       return;
     }
     setLoading(true);
@@ -25,10 +27,10 @@ export function Newsletter() {
     });
     setLoading(false);
     if (res.ok) {
-      toast("Welcome to the PJHERBAL newsletter!", "success");
+      toast(t("home.newsletter.welcome"), "success");
       setEmail("");
     } else {
-      toast("Something went wrong. Please try again.", "error");
+      toast(t("home.newsletter.error"), "error");
     }
   };
 
@@ -45,28 +47,27 @@ export function Newsletter() {
           <Mail className="h-7 w-7" />
         </div>
         <h2 className="font-display text-3xl font-bold text-brand-950 sm:text-4xl">
-          Wellness tips, straight to your inbox
+          {t("home.newsletter.title")}
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-base text-ink/60">
-          Join our newsletter for exclusive offers, health articles and new product
-          launches. No spam — ever.
+          {t("home.newsletter.subtitle")}
         </p>
         <form onSubmit={submit} className="mx-auto mt-7 flex max-w-md flex-col gap-3 sm:flex-row">
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email address"
-            aria-label="Email address"
+            placeholder={t("home.newsletter.placeholder")}
+            aria-label={t("home.newsletter.emailLabel")}
             className="input flex-1"
           />
           <button type="submit" disabled={loading} className="btn-gold btn-md shrink-0">
-            {loading ? "Subscribing..." : "Subscribe"}
+            {loading ? t("home.newsletter.subscribing") : t("home.newsletter.subscribe")}
           </button>
         </form>
         <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-ink/45">
           <CheckCircle2 className="h-3.5 w-3.5 text-brand-600" />
-          Trusted by hundreds of happy subscribers
+          {t("home.newsletter.trusted")}
         </p>
       </motion.div>
     </section>

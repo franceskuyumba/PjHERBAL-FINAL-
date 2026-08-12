@@ -7,6 +7,7 @@ import { ProductCard, type ProductCardProduct } from "@/components/product/Produ
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/components/ui/Toast";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { useI18n } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
 
 type WishlistProduct = ProductCardProduct & { wishlistId: string };
@@ -15,6 +16,7 @@ export function WishlistGrid({ products }: { products: WishlistProduct[] }) {
   const router = useRouter();
   const { addItem } = useCart();
   const { toast } = useToast();
+  const { t } = useI18n();
 
   const remove = async (id: string) => {
     await fetch(`/api/wishlist/${id}`, { method: "POST" });
@@ -33,7 +35,7 @@ export function WishlistGrid({ products }: { products: WishlistProduct[] }) {
       stock: p.stock,
     });
     await fetch(`/api/wishlist/${p.wishlistId}`, { method: "POST" });
-    toast(`${p.name} moved to cart`, "success");
+    toast(t("dash.wishlist.movedToCart").replace("{name}", p.name), "success");
     router.refresh();
   };
 
@@ -42,9 +44,9 @@ export function WishlistGrid({ products }: { products: WishlistProduct[] }) {
       <div className="mt-8">
         <EmptyState
           icon={<Heart className="h-7 w-7" />}
-          title="Your wishlist is empty"
-          description="Tap the heart on any product to save it here for later."
-          action={<a href="/shop" className="btn-primary btn-sm">Browse products</a>}
+          title={t("dash.wishlist.emptyTitle")}
+          description={t("dash.wishlist.emptyDesc")}
+          action={<a href="/shop" className="btn-primary btn-sm">{t("dash.wishlist.browse")}</a>}
         />
       </div>
     );
@@ -66,7 +68,7 @@ export function WishlistGrid({ products }: { products: WishlistProduct[] }) {
             >
               <button
                 onClick={() => remove(p.wishlistId)}
-                aria-label="Remove from wishlist"
+                aria-label={t("dash.wishlist.removeAria")}
                 className="absolute -right-1.5 -top-1.5 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-card transition-transform hover:scale-110"
               >
                 <Trash2 className="h-3.5 w-3.5" />
@@ -82,7 +84,7 @@ export function WishlistGrid({ products }: { products: WishlistProduct[] }) {
                   )}
                 >
                   <ShoppingBag className="h-3.5 w-3.5" />
-                  {p.stock <= 0 ? "Out of stock" : "Move to cart"}
+                  {p.stock <= 0 ? t("dash.wishlist.outOfStock") : t("dash.wishlist.moveToCart")}
                   <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>

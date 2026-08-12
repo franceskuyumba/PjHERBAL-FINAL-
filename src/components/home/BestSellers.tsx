@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ProductCard, type ProductCardProduct } from "@/components/product/ProductCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { useI18n } from "@/context/LanguageContext";
 
 export function BestSellers({
   products,
@@ -12,18 +13,19 @@ export function BestSellers({
   products: ProductCardProduct[];
   isLoggedIn?: boolean;
 }) {
+  const { t } = useI18n();
   return (
     <section className="container-site py-16 sm:py-20">
       <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:items-end">
         <SectionHeading
-          eyebrow="Customer favourites"
-          title="Best Sellers"
-          subtitle="The products our customers trust and reorder again and again."
+          eyebrow={t("home.bestSellers.eyebrow")}
+          title={t("home.bestSellers.title")}
+          subtitle={t("home.bestSellers.subtitle")}
           align="left"
           className="mb-0"
         />
         <Link href="/shop" className="btn-outline btn-md hidden shrink-0 sm:inline-flex">
-          View all products
+          {t("home.viewAllProducts")}
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
@@ -36,7 +38,7 @@ export function BestSellers({
 
       <div className="mt-8 text-center sm:hidden">
         <Link href="/shop" className="btn-outline btn-md">
-          View all products
+          {t("home.viewAllProducts")}
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>

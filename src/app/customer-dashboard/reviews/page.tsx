@@ -2,10 +2,12 @@ import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { MyReviewsList } from "@/components/dashboard/MyReviewsList";
+import { getLocale, t } from "@/lib/i18n";
 
 export const metadata = { title: "My Reviews", robots: { index: false, follow: false } };
 
 export default async function ReviewsPage() {
+  const lang = getLocale();
   const session = await getSession();
   if (!session) notFound();
 
@@ -17,8 +19,8 @@ export default async function ReviewsPage() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-brand-950">My reviews</h1>
-      <p className="mt-1 text-sm text-ink/55">Reviews you have written for PJHERBAL products.</p>
+      <h1 className="font-display text-2xl font-bold text-brand-950">{t(lang, "dash.reviews.title")}</h1>
+      <p className="mt-1 text-sm text-ink/55">{t(lang, "dash.reviews.subtitle")}</p>
       <MyReviewsList
         reviews={reviews.map((r) => ({
           id: r.id,

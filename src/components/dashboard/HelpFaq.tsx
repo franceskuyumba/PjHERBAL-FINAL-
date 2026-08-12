@@ -4,42 +4,26 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, LifeBuoy } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const faqs = [
-  {
-    q: "How do I pay for my order?",
-    a: "We accept M-Pesa, Tigo Pesa, Airtel Money, HaloPesa and bank transfer (CRDB / NMB). During checkout you will receive clear payment instructions, including the paybill number and your order reference. After paying, confirm on WhatsApp to speed up dispatch.",
-  },
-  {
-    q: "How long does delivery take?",
-    a: "Within Dar es Salaam we deliver same-day or next-day. Other regions take 2–4 working days depending on your location. Delivery is free on orders over TZS 200,000.",
-  },
-  {
-    q: "How do I check my order progress?",
-    a: "Open My Dashboard → My Orders and open your order — every stage from payment through to delivery is shown there. You can also message us on WhatsApp with your order number for a live update.",
-  },
-  {
-    q: "Can I change or cancel my order?",
-    a: "Yes — as long as it has not been dispatched. Message us on WhatsApp with your order number and we will help right away.",
-  },
-  {
-    q: "Are your products genuine and tested?",
-    a: "Yes. Every product is sourced through quality-checked suppliers and stored according to the clinic's standards. We share honest product information and never make exaggerated medical claims.",
-  },
-  {
-    q: "What if a product does not suit me?",
-    a: "Message us on WhatsApp. Our specialists will help you decide whether to continue, switch products or stop use. If a product arrives damaged or incorrect, we will replace it.",
-  },
-];
+import { useI18n } from "@/context/LanguageContext";
 
 export function HelpFaq() {
+  const { t } = useI18n();
   const [open, setOpen] = useState<number | null>(0);
+
+  const faqs = [
+    { q: t("dash.faq.q1"), a: t("dash.faq.a1") },
+    { q: t("dash.faq.q2"), a: t("dash.faq.a2") },
+    { q: t("dash.faq.q3"), a: t("dash.faq.a3") },
+    { q: t("dash.faq.q4"), a: t("dash.faq.a4") },
+    { q: t("dash.faq.q5"), a: t("dash.faq.a5") },
+    { q: t("dash.faq.q6"), a: t("dash.faq.a6") },
+  ];
 
   return (
     <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card sm:p-8">
       <div className="flex items-center gap-2">
         <LifeBuoy className="h-5 w-5 text-brand-700" />
-        <h2 className="font-display text-xl font-bold text-brand-950">Frequently asked questions</h2>
+        <h2 className="font-display text-xl font-bold text-brand-950">{t("dash.faq.title")}</h2>
       </div>
       <div className="mt-6 space-y-3">
         {faqs.map((f, i) => {

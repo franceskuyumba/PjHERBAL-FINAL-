@@ -20,6 +20,7 @@ import { getRecommendations } from "@/lib/recommendations";
 import { SITE } from "@/lib/constants";
 import { generateJsonLd } from "@/lib/seo";
 import { publishedWhere } from "@/lib/blog";
+import { getLocale, t } from "@/lib/i18n";
 import type { ProductCardProduct } from "@/components/product/ProductCard";
 
 export const metadata: Metadata = {
@@ -29,6 +30,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
+  const lang = getLocale();
   const [categories, bestSellers, recentPosts, user, dealCandidates, newArrivals] = await Promise.all([
     prisma.category.findMany({
       where: { isActive: true },
@@ -110,22 +112,22 @@ export default async function HomePage() {
       <FeaturedCategories categories={categoryCards} />
       {recommended.length > 0 && (
         <ProductGridSection
-          eyebrow="Personalised for you"
-          title="Recommended for you"
-          subtitle="Picked from the categories you shop and browse most."
+          eyebrow={t(lang, "home.recommended.eyebrow")}
+          title={t(lang, "home.recommended.title")}
+          subtitle={t(lang, "home.recommended.subtitle")}
           href="/customer-dashboard/recommendations"
-          linkLabel="See all recommendations"
+          linkLabel={t(lang, "home.recommended.linkLabel")}
           products={recommended}
           isLoggedIn={isLoggedIn}
         />
       )}
       <BestSellers products={bestSellers.map((p) => toProductCard(p))} isLoggedIn={isLoggedIn} />
       <ProductGridSection
-        eyebrow="Just arrived"
-        title="New Arrivals"
-        subtitle="The latest additions to the PJHERBAL collection, straight from our dispensary."
+        eyebrow={t(lang, "home.newArrivals.eyebrow")}
+        title={t(lang, "home.newArrivals.title")}
+        subtitle={t(lang, "home.newArrivals.subtitle")}
         href="/shop?sort=newest"
-        linkLabel="View all products"
+        linkLabel={t(lang, "home.viewAllProducts")}
         products={newArrivalCards}
         isLoggedIn={isLoggedIn}
       />

@@ -92,3 +92,26 @@ export const blogSchema = z.object({
   readingTime: z.coerce.number().int().min(1).max(60).optional(),
   scheduledFor: z.string().datetime().optional().nullable(),
 });
+
+const financeDocumentItemSchema = z.object({
+  description: z.string().min(2, "Please enter an item description").max(200),
+  quantity: z.coerce.number().int().min(1, "Quantity must be at least 1"),
+  unitPrice: z.coerce.number().nonnegative("Unit price cannot be negative"),
+});
+
+export const financeDocumentSchema = z.object({
+  type: z.enum(["RECEIPT", "INVOICE"]),
+  category: z.enum(["EXTERNAL", "INTERNAL"]),
+  title: z.string().max(160).optional().nullable(),
+  partyName: z.string().min(2, "Please enter the party name").max(120),
+  partyPhone: z.string().max(40).optional().nullable(),
+  partyEmail: z.string().max(120).optional().nullable(),
+  orderNumber: z.string().max(40).optional().nullable(),
+  notes: z.string().max(1000).optional().nullable(),
+  discount: z.coerce.number().nonnegative("Discount cannot be negative").default(0),
+  tax: z.coerce.number().nonnegative("Tax cannot be negative").default(0),
+  status: z.enum(["DRAFT", "ISSUED", "PAID", "CANCELLED"]).default("ISSUED"),
+  issueDate: z.coerce.date({ invalid_type_error: "Please enter a valid issue date" }),
+  dueDate: z.coerce.date({ invalid_type_error: "Please enter a valid due date" }).optional().nullable(),
+  items: z.array(financeDocumentItemSchema).min(1, "Add at least one item"),
+});

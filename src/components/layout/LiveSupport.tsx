@@ -6,8 +6,10 @@ import { Clock, Headset, Mail, MessageCircle, PackageSearch, Phone, X } from "lu
 import { useState } from "react";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { SITE } from "@/lib/constants";
+import { useI18n } from "@/context/LanguageContext";
 
 export function LiveSupport() {
+  const { t } = useI18n();
   const reduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
 
@@ -32,8 +34,8 @@ export function LiveSupport() {
                     <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-brand-900 bg-emerald-400" />
                   </span>
                   <div>
-                    <p className="text-sm font-bold">Live support</p>
-                    <p className="text-xs text-white/60">We typically reply in minutes</p>
+                    <p className="text-sm font-bold">{t("live.title")}</p>
+                    <p className="text-xs text-white/60">{t("live.replyTime")}</p>
                   </div>
                 </div>
                 <button
@@ -55,21 +57,21 @@ export function LiveSupport() {
               >
                 <MessageCircle className="h-5 w-5" />
                 <span>
-                  <span className="block text-sm font-bold">Chat on WhatsApp</span>
-                  <span className="block text-xs text-white/85">Talk to a real specialist</span>
+                  <span className="block text-sm font-bold">{t("live.chatWhatsApp")}</span>
+                  <span className="block text-xs text-white/85">{t("live.talkSpecialist")}</span>
                 </span>
               </a>
 
               <div className="mt-1.5 grid grid-cols-2 gap-1.5">
-                <SupportLink href={`tel:${SITE.phone.replace(/\s/g, "")}`} icon={<Phone className="h-4 w-4" />} label="Call us" />
-                <SupportLink href={`mailto:${SITE.email}`} icon={<Mail className="h-4 w-4" />} label="Email us" />
-                <SupportLink href="/customer-dashboard/orders" icon={<PackageSearch className="h-4 w-4" />} label="My orders" />
-                <SupportLink href="/contact" icon={<Clock className="h-4 w-4" />} label="Help & hours" />
+                <SupportLink href={`tel:${SITE.phone.replace(/\s/g, "")}`} icon={<Phone className="h-4 w-4" />} label={t("live.callUs")} />
+                <SupportLink href={`mailto:${SITE.email}`} icon={<Mail className="h-4 w-4" />} label={t("live.emailUs")} />
+                <SupportLink href="/customer-dashboard/orders" icon={<PackageSearch className="h-4 w-4" />} label={t("live.myOrders")} />
+                <SupportLink href="/contact" icon={<Clock className="h-4 w-4" />} label={t("live.helpHours")} />
               </div>
             </div>
 
             <p className="border-t border-ink/5 bg-cream px-5 py-2.5 text-[11px] text-ink/50">
-              {SITE.address} · Open daily 9:00am – 8:00pm
+              {SITE.address} · {t("live.openDaily")}
             </p>
           </motion.div>
         )}
@@ -89,7 +91,7 @@ export function LiveSupport() {
         <MessageCircle className="relative h-7 w-7" />
         {!open && (
           <span className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-full bg-ink px-3 py-1.5 text-xs font-semibold text-white shadow-card sm:block">
-            Chat with a specialist
+            {t("live.tooltip")}
           </span>
         )}
       </motion.button>

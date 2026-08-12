@@ -1,13 +1,16 @@
 import { notFound } from "next/navigation";
-import { FileText, MapPin, MessageCircle } from "lucide-react";
+import Link from "next/link";
+import { FileText, MapPin, MessageCircle, Receipt } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { formatTZS, formatDateTime } from "@/lib/utils";
 import { StatusBadge, PaymentStatusBadge } from "@/components/dashboard/StatusBadge";
 import { TrackingTimeline } from "@/components/dashboard/TrackingTimeline";
 import { OrderStatusControls } from "@/components/admin/OrderStatusControls";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { getLocale, t } from "@/lib/i18n";
 
 export default async function AdminOrderDetailPage({ params }: { params: { id: string } }) {
+  const lang = getLocale();
   const order = await prisma.order.findUnique({
     where: { id: params.id },
     include: { items: true, payments: true, paymentLogs: { orderBy: { createdAt: "desc" } } },
@@ -19,7 +22,9 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-display text-2xl font-bold text-brand-950">{order.orderNumber}</h1>
-          <p className="mt-1 text-sm text-ink/55">Placed {formatDateTime(order.createdAt)}</p>
+          <p className="mt-1 text-sm text-ink/55">
+            {t(lang, "admin.orderDetail.placed").replace("{date}", formatDateTime(order.createdAt))}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <StatusBadge status={order.status} />
@@ -29,27 +34,30 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
 
       <div className="mt-4 flex flex-wrap gap-2">
         <a href={`/order/${order.orderNumber}/invoice`} target="_blank" className="btn-outline btn-sm">
-          <FileText className="h-4 w-4" /> Invoice / Receipt (PDF)
+          <FileText className="h-4 w-4" /> {t(lang, "admin.orderDetail.invoice")}
         </a>
+        <Link href={`/admin/documents/new?order=${order.orderNumber}`} className="btn-outline btn-sm">
+          <Receipt className="h-4 w-4" /> {t(lang, "admin.orderDetail.createReceipt")}
+        </Link>
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]">
         <div className="space-y-6">
           <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-            <h2 className="mb-5 font-display text-lg font-bold text-brand-950">Order progress</h2>
+            <h2 className="mb-5 font-display text-lg font-bold text-brand-950">{t(lang, "admin.orderDetail.progress")}</h2>
             <TrackingTimeline status={order.status} />
           </div>
 
           <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-            <h2 className="mb-4 font-display text-lg font-bold text-brand-950">Items</h2>
+            <h2 className="mb-4 font-display text-lg font-bold text-brand-950">{t(lang, "admin.orderDetail.items")}</h2>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-ink/10 text-xs uppercase tracking-wide text-ink/40">
-                    <th className="pb-3 pr-4 font-semibold">Product</th>
-                    <th className="pb-3 pr-4 font-semibold">Price</th>
-                    <th className="pb-3 pr-4 font-semibold">Qty</th>
-                    <th className="pb-3 font-semibold">Subtotal</th>
+                    <th className="pb-3 pr-4 font-semibold">{t(lang, "admin.orderDetail.colProduct")}</th>
+                    <th className="pb-3 pr-4 font-semibold">{t(lang, "admin.orderDetail.colPrice")}</th>
+                    <th className="pb-3 pr-4 font-semibold">{t(lang, "admin.orderDetail.colQty")}</th>
+                    <th className="pb-3 font-semibold">{t(lang, "admin.orderDetail.colSubtotal")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-ink/5">
@@ -72,9 +80,9 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
           </div>
 
           <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-            <h2 className="mb-4 font-display text-lg font-bold text-brand-950">Payment history</h2>
+            <h2 className="mb-4 font-display text-lg font-bold text-brand-950">{t(lang, "admin.orderDetail.paymentHistory")}</h2>
             {order.paymentLogs.length === 0 ? (
-              <p className="text-sm text-ink/50">No payment events recorded yet.</p>
+              <p className="text-sm text-ink/50">{t(lang, "admin.orderDetail.noPaymentEvents")}</p>
             ) : (
               <ol className="space-y-4">
                 {order.paymentLogs.map((log, i) => (
@@ -100,7 +108,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                       <p className="text-xs text-ink/55">{formatDateTime(log.createdAt)}</p>
                       {log.message && <p className="mt-0.5 text-xs text-ink/55">{log.message}</p>}
                       {log.reference && (
-                        <p className="mt-0.5 font-mono text-xs text-ink/45">Ref: {log.reference}</p>
+                        <p className="mt-0.5 font-mono text-xs text-ink/45">{t(lang, "admin.orderDetail.ref").replace("{reference}", log.reference)}</p>
                       )}
                     </div>
                   </li>
@@ -112,24 +120,32 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
 
         <div className="space-y-6">
           <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-            <h2 className="mb-4 font-display text-lg font-bold text-brand-950">Update status</h2>
+            <h2 className="mb-4 font-display text-lg font-bold text-brand-950">{t(lang, "admin.orderDetail.updateStatus")}</h2>
             <OrderStatusControls orderId={order.id} status={order.status} paymentStatus={order.paymentStatus} />
           </div>
 
           <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-            <h2 className="mb-3 font-display text-lg font-bold text-brand-950">Summary</h2>
+            <h2 className="mb-3 font-display text-lg font-bold text-brand-950">{t(lang, "admin.orderDetail.summary")}</h2>
             <dl className="space-y-2 text-sm">
-              <Row label="Subtotal" value={formatTZS(order.subtotal)} />
-              {order.discount > 0 && <Row label={`Discount${order.couponCode ? ` (${order.couponCode})` : ""}`} value={`-${formatTZS(order.discount)}`} />}
-              <Row label="Shipping" value={order.shipping > 0 ? formatTZS(order.shipping) : "Free"} />
-              <Row label="Total" value={formatTZS(order.total)} bold />
+              <Row label={t(lang, "admin.orderDetail.subtotal")} value={formatTZS(order.subtotal)} />
+              {order.discount > 0 && (
+                <Row
+                  label={t(lang, "admin.orderDetail.discount").replace("{code}", order.couponCode ? ` (${order.couponCode})` : "")}
+                  value={`-${formatTZS(order.discount)}`}
+                />
+              )}
+              <Row
+                label={t(lang, "admin.orderDetail.shipping")}
+                value={order.shipping > 0 ? formatTZS(order.shipping) : t(lang, "admin.orderDetail.free")}
+              />
+              <Row label={t(lang, "admin.orderDetail.total")} value={formatTZS(order.total)} bold />
               <div className="flex justify-between pt-1">
-                <dt className="text-ink/50">Payment</dt>
+                <dt className="text-ink/50">{t(lang, "admin.orderDetail.payment")}</dt>
                 <dd className="font-semibold text-brand-950">{order.paymentMethod}</dd>
               </div>
               {order.paymentReference && (
                 <div className="flex justify-between">
-                  <dt className="text-ink/50">Reference</dt>
+                  <dt className="text-ink/50">{t(lang, "admin.orderDetail.reference")}</dt>
                   <dd className="font-mono text-xs text-brand-950">{order.paymentReference}</dd>
                 </div>
               )}
@@ -137,7 +153,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
           </div>
 
           <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-            <h2 className="mb-3 font-display text-lg font-bold text-brand-950">Customer</h2>
+            <h2 className="mb-3 font-display text-lg font-bold text-brand-950">{t(lang, "admin.orderDetail.customer")}</h2>
             <div className="flex gap-3 text-sm text-ink/65">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-700" />
               <div>
@@ -147,18 +163,24 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                 <p className="mt-1">
                   {order.address}, {order.district}, {order.region}
                 </p>
-                {order.notes && <p className="mt-1 text-ink/50">Note: {order.notes}</p>}
+                {order.notes && (
+                  <p className="mt-1 text-ink/50">
+                    {t(lang, "admin.orderDetail.note").replace("{note}", order.notes)}
+                  </p>
+                )}
               </div>
             </div>
             <a
               href={buildWhatsAppUrl({
-                message: `Hello ${order.customerName}! This is PJHERBAL Clinic about your order ${order.orderNumber}.`,
+                message: t(lang, "admin.orderDetail.whatsappMessage")
+                  .replace("{name}", order.customerName)
+                  .replace("{number}", order.orderNumber),
               })}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-whatsapp mt-4 flex w-full items-center justify-center"
             >
-              <MessageCircle className="mr-2 h-4 w-4" /> Contact customer
+              <MessageCircle className="mr-2 h-4 w-4" /> {t(lang, "admin.orderDetail.contactCustomer")}
             </a>
           </div>
         </div>

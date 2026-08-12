@@ -16,6 +16,9 @@ export type ActivityAction =
   | "BLOG_UPDATE"
   | "STAFF_CREATE"
   | "STAFF_UPDATE"
+  | "DOCUMENT_CREATE"
+  | "DOCUMENT_UPDATE"
+  | "DOCUMENT_DELETE"
   | "SYSTEM";
 
 export interface ActivityInput {

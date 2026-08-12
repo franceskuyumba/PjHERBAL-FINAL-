@@ -2,10 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CalendarDays, Clock } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { getLocale, t } from "@/lib/i18n";
 import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
 import type { BlogCardData } from "./BlogCard";
 
 export function FeaturedPost({ post }: { post: BlogCardData }) {
+  const lang = getLocale();
   return (
     <AnimatedReveal y={32}>
       <article className="group overflow-hidden rounded-[2rem] bg-brand-950 shadow-lift">
@@ -23,7 +25,7 @@ export function FeaturedPost({ post }: { post: BlogCardData }) {
           </div>
 
           <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-12">
-            <span className="badge w-fit bg-gold-500 text-brand-950">Featured article</span>
+            <span className="badge w-fit bg-gold-500 text-brand-950">{t(lang, "blog.featuredArticle")}</span>
             <p className="mt-5 text-xs font-bold uppercase tracking-[0.2em] text-gold-300">{post.category}</p>
             <Link href={`/blog/${post.slug}`}>
               <h2 className="mt-3 font-display text-3xl font-bold leading-[1.15] text-white transition-colors group-hover:text-gold-200 sm:text-4xl">
@@ -51,12 +53,12 @@ export function FeaturedPost({ post }: { post: BlogCardData }) {
                 <CalendarDays className="h-4 w-4" /> {formatDate(post.publishedAt)}
               </span>
               <span className="flex items-center gap-1.5">
-                <Clock className="h-4 w-4" /> {post.readingTime} min read
+                <Clock className="h-4 w-4" /> {t(lang, "blog.minRead").replace("{n}", String(post.readingTime))}
               </span>
             </div>
 
             <Link href={`/blog/${post.slug}`} className="btn-gold btn-md mt-8 w-fit">
-              Read article <ArrowRight className="h-4 w-4" />
+              {t(lang, "blog.readArticle")} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>

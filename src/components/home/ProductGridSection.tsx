@@ -2,13 +2,14 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ProductCard, type ProductCardProduct } from "@/components/product/ProductCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { getLocale, t } from "@/lib/i18n";
 
 export function ProductGridSection({
   eyebrow,
   title,
   subtitle,
   href,
-  linkLabel = "View all products",
+  linkLabel,
   products,
   isLoggedIn = false,
 }: {
@@ -20,12 +21,14 @@ export function ProductGridSection({
   products: ProductCardProduct[];
   isLoggedIn?: boolean;
 }) {
+  const lang = getLocale();
+  const resolvedLinkLabel = linkLabel ?? t(lang, "home.viewAllProducts");
   return (
     <section className="container-site py-16 sm:py-20">
       <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:items-end">
         <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} align="left" className="mb-0" />
         <Link href={href} className="btn-outline btn-md hidden shrink-0 sm:inline-flex">
-          {linkLabel}
+          {resolvedLinkLabel}
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
@@ -38,7 +41,7 @@ export function ProductGridSection({
 
       <div className="mt-8 text-center sm:hidden">
         <Link href={href} className="btn-outline btn-md">
-          {linkLabel}
+          {resolvedLinkLabel}
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { formatTZS, formatDate } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 interface Customer {
   id: string;
@@ -16,6 +17,7 @@ interface Customer {
 }
 
 export function AdminCustomersTable() {
+  const { t } = useI18n();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -34,8 +36,8 @@ export function AdminCustomersTable() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-brand-950">Customers</h1>
-      <p className="mt-1 text-sm text-ink/55">{customers.length} registered customers</p>
+      <h1 className="font-display text-2xl font-bold text-brand-950">{t("admin.customers.title")}</h1>
+      <p className="mt-1 text-sm text-ink/55">{t("admin.customers.count").replace("{count}", String(customers.length))}</p>
 
       <form
         className="mt-5 flex max-w-md gap-2"
@@ -49,30 +51,30 @@ export function AdminCustomersTable() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search name, email or phone..."
+            placeholder={t("admin.customers.searchPlaceholder")}
             className="input w-full rounded-xl border border-ink/15 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
           />
         </div>
         <button type="submit" className="btn-outline btn-sm">
-          Search
+          {t("admin.customers.search")}
         </button>
       </form>
 
       <div className="mt-5 overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-card">
         {loading ? (
-          <p className="p-10 text-center text-sm text-ink/50">Loading customers...</p>
+          <p className="p-10 text-center text-sm text-ink/50">{t("admin.customers.loading")}</p>
         ) : customers.length === 0 ? (
-          <p className="p-10 text-center text-sm text-ink/50">No customers found.</p>
+          <p className="p-10 text-center text-sm text-ink/50">{t("admin.customers.empty")}</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-ink/10 bg-slate-50 text-xs uppercase tracking-wide text-ink/40">
-                  <th className="px-5 py-3 font-semibold">Customer</th>
-                  <th className="px-5 py-3 font-semibold">Contact</th>
-                  <th className="px-5 py-3 font-semibold">Joined</th>
-                  <th className="px-5 py-3 font-semibold">Orders</th>
-                  <th className="px-5 py-3 font-semibold">Total spent</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.customers.colCustomer")}</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.customers.colContact")}</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.customers.colJoined")}</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.customers.colOrders")}</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.customers.colTotalSpent")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-ink/5">

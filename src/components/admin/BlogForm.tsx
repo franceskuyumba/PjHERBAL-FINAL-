@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { slugify } from "@/lib/utils";
 import { BLOG_CATEGORIES } from "@/lib/blog";
+import { useI18n } from "@/context/LanguageContext";
 
 interface BlogValues {
   title: string;
@@ -43,6 +44,7 @@ const empty: BlogValues = {
 
 export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: string } }) {
   const router = useRouter();
+  const { t } = useI18n();
   const [form, setForm] = useState<BlogValues>({ ...empty, ...(editing || {}) });
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
@@ -64,7 +66,7 @@ export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: s
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Unable to save post");
+      if (!res.ok) throw new Error(data.error || t("admin2.blogForm.saveError"));
       router.push("/admin/blog");
       router.refresh();
     } catch (err) {
@@ -79,16 +81,18 @@ export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: s
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-display text-2xl font-bold text-brand-950">
-            {editing?.id ? `Edit: ${form.title || "post"}` : "New blog post"}
+            {editing?.id
+              ? t("admin2.blogForm.editTitle").replace("{title}", form.title || t("admin2.blogForm.postFallback"))
+              : t("admin2.blogForm.newPost")}
           </h1>
-          <p className="mt-1 text-sm text-ink/55">Publish wellness articles and product guides.</p>
+          <p className="mt-1 text-sm text-ink/55">{t("admin2.blogForm.subtitle")}</p>
         </div>
         <div className="flex gap-2">
           <Button type="button" variant="outline" onClick={() => router.push("/admin/blog")}>
-            Cancel
+            {t("admin2.blogForm.cancel")}
           </Button>
           <Button type="submit" loading={loading}>
-            {editing?.id ? "Save changes" : "Create post"}
+            {editing?.id ? t("admin2.blogForm.saveChanges") : t("admin2.blogForm.createPost")}
           </Button>
         </div>
       </div>
@@ -97,7 +101,7 @@ export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: s
 
       <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
         <div className="space-y-4 rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-          <Field label="Title *">
+          <Field label={t("admin2.blogForm.titleLabel")}>
             <Input
               required
               value={form.title}
@@ -107,10 +111,10 @@ export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: s
               }}
             />
           </Field>
-          <Field label="Slug *">
+          <Field label={t("admin2.blogForm.slugLabel")}>
             <Input required value={form.slug} onChange={(e) => set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))} />
           </Field>
-          <Field label="Excerpt *">
+          <Field label={t("admin2.blogForm.excerptLabel")}>
             <textarea
               required
               value={form.excerpt}
@@ -121,7 +125,7 @@ export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: s
             />
             <p className="text-right text-xs text-ink/40">{form.excerpt.length}/300</p>
           </Field>
-          <Field label="Content (markdown) *">
+          <Field label={t("admin2.blogForm.contentLabel")}>
             <textarea
               required
               value={form.content}
@@ -130,10 +134,13 @@ export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: s
               className="input w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 font-mono text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
             />
             <p className="text-xs text-ink/45">
-              Use <code className="rounded bg-brand-50 px-1">## Heading</code> for sections (auto table of contents),{" "}
+              {t("admin2.blogForm.mdUse")}{" "}
+              <code className="rounded bg-brand-50 px-1">## Heading</code>{" "}
+              {t("admin2.blogForm.mdForSections")},{" "}
               <code className="rounded bg-brand-50 px-1">### Sub-heading</code>,{" "}
               <code className="rounded bg-brand-50 px-1">- list</code>,{" "}
-              <code className="rounded bg-brand-50 px-1">&gt; highlight</code> and{" "}
+              <code className="rounded bg-brand-50 px-1">&gt; highlight</code>{" "}
+              {t("admin2.blogForm.mdAnd")}{" "}
               <code className="rounded bg-brand-50 px-1">**bold**</code>.
             </p>
           </Field>
@@ -141,30 +148,30 @@ export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: s
 
         <div className="space-y-4">
           <div className="space-y-4 rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-            <Field label="Category *">
+            <Field label={t("admin2.blogForm.categoryLabel")}>
               <select
                 required
                 value={form.category}
                 onChange={(e) => set("category", e.target.value)}
                 className="input w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm"
               >
-                <option value="" disabled>Select a category…</option>
+                <option value="" disabled>{t("admin2.blogForm.selectCategory")}</option>
                 {BLOG_CATEGORIES.map((c) => (
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>
             </Field>
-            <Field label="Author *">
+            <Field label={t("admin2.blogForm.authorLabel")}>
               <Input required value={form.author} onChange={(e) => set("author", e.target.value)} />
             </Field>
-            <Field label="Author role">
-              <Input value={form.authorRole} onChange={(e) => set("authorRole", e.target.value)} placeholder="e.g. Wellness Specialist" />
+            <Field label={t("admin2.blogForm.authorRoleLabel")}>
+              <Input value={form.authorRole} onChange={(e) => set("authorRole", e.target.value)} placeholder={t("admin2.blogForm.authorRolePlaceholder")} />
             </Field>
-            <Field label="Cover image path">
-              <Input value={form.coverImage} onChange={(e) => set("coverImage", e.target.value)} placeholder="/images/blog/slug.svg" />
+            <Field label={t("admin2.blogForm.coverImageLabel")}>
+              <Input value={form.coverImage} onChange={(e) => set("coverImage", e.target.value)} placeholder={t("admin2.blogForm.coverImagePlaceholder")} />
             </Field>
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Reading time (min)">
+              <Field label={t("admin2.blogForm.readingTimeLabel")}>
                 <Input
                   type="number"
                   min={1}
@@ -173,7 +180,7 @@ export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: s
                   onChange={(e) => set("readingTime", Number(e.target.value) || 1)}
                 />
               </Field>
-              <Field label="Schedule for">
+              <Field label={t("admin2.blogForm.scheduleForLabel")}>
                 <Input
                   type="datetime-local"
                   value={form.scheduledFor}
@@ -185,8 +192,8 @@ export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: s
             <div className="space-y-3 pt-1">
               <label className="flex cursor-pointer items-center justify-between rounded-xl border border-ink/10 bg-cream px-4 py-3">
                 <span>
-                  <span className="block text-sm font-medium text-brand-950">Publish now</span>
-                  <span className="block text-xs text-ink/45">Leave schedule empty to publish immediately</span>
+                  <span className="block text-sm font-medium text-brand-950">{t("admin2.blogForm.publishNow")}</span>
+                  <span className="block text-xs text-ink/45">{t("admin2.blogForm.publishNowHint")}</span>
                 </span>
                 <input
                   type="checkbox"
@@ -200,8 +207,8 @@ export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: s
               </label>
               <label className="flex cursor-pointer items-center justify-between rounded-xl border border-gold-300 bg-gold-50 px-4 py-3">
                 <span>
-                  <span className="block text-sm font-medium text-brand-950">Feature on blog home</span>
-                  <span className="block text-xs text-ink/45">Shown as the large hero article</span>
+                  <span className="block text-sm font-medium text-brand-950">{t("admin2.blogForm.featureHome")}</span>
+                  <span className="block text-xs text-ink/45">{t("admin2.blogForm.featureHomeHint")}</span>
                 </span>
                 <input
                   type="checkbox"
@@ -214,18 +221,18 @@ export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: s
           </div>
 
           <div className="space-y-4 rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-            <p className="text-sm font-bold text-brand-950">Search engine settings</p>
-            <Field label="SEO title">
-              <Input value={form.seoTitle} onChange={(e) => set("seoTitle", e.target.value)} maxLength={160} placeholder="Optional — defaults to post title" />
+            <p className="text-sm font-bold text-brand-950">{t("admin2.blogForm.seoSettings")}</p>
+            <Field label={t("admin2.blogForm.seoTitleLabel")}>
+              <Input value={form.seoTitle} onChange={(e) => set("seoTitle", e.target.value)} maxLength={160} placeholder={t("admin2.blogForm.seoTitlePlaceholder")} />
             </Field>
-            <Field label="SEO description">
+            <Field label={t("admin2.blogForm.seoDescriptionLabel")}>
               <textarea
                 value={form.seoDescription}
                 onChange={(e) => set("seoDescription", e.target.value)}
                 rows={3}
                 maxLength={300}
                 className="input w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
-                placeholder="Optional — defaults to the excerpt"
+                placeholder={t("admin2.blogForm.seoDescriptionPlaceholder")}
               />
             </Field>
           </div>

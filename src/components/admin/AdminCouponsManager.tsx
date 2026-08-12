@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { useI18n } from "@/context/LanguageContext";
 
 interface Coupon {
   id: string;
@@ -31,6 +32,7 @@ const emptyForm = {
 };
 
 export function AdminCouponsManager() {
+  const { t } = useI18n();
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [form, setForm] = useState(emptyForm);
   const [loading, setLoading] = useState(true);
@@ -67,7 +69,7 @@ export function AdminCouponsManager() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Unable to create coupon");
+      if (!res.ok) throw new Error(data.error || t("admin2.coupons.createError"));
       setForm(emptyForm);
       load();
     } catch (err) {
@@ -87,72 +89,72 @@ export function AdminCouponsManager() {
   };
 
   const onDelete = async (c: Coupon) => {
-    if (!confirm(`Delete coupon ${c.code}?`)) return;
+    if (!confirm(t("admin2.coupons.deleteConfirm").replace("{code}", c.code))) return;
     await fetch(`/api/admin/coupons/${c.id}`, { method: "DELETE" });
     load();
   };
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-brand-950">Coupons</h1>
-      <p className="mt-1 text-sm text-ink/55">Create discount codes customers can apply at checkout.</p>
+      <h1 className="font-display text-2xl font-bold text-brand-950">{t("admin2.coupons.title")}</h1>
+      <p className="mt-1 text-sm text-ink/55">{t("admin2.coupons.subtitle")}</p>
 
       <div className="mt-5 grid gap-6 lg:grid-cols-[340px_1fr]">
         <form onSubmit={onCreate} className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-          <h2 className="mb-4 font-display text-lg font-bold text-brand-950">New coupon</h2>
+          <h2 className="mb-4 font-display text-lg font-bold text-brand-950">{t("admin2.coupons.newCoupon")}</h2>
           {errorMsg && <div className="mb-3 rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-700">{errorMsg}</div>}
           <div className="space-y-4">
-            <Field label="Code *">
-              <Input required value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} placeholder="e.g. WELCOME10" />
+            <Field label={t("admin2.coupons.codeLabel")}>
+              <Input required value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} placeholder={t("admin2.coupons.codePlaceholder")} />
             </Field>
-            <Field label="Type">
+            <Field label={t("admin2.coupons.typeLabel")}>
               <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className="input w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20">
-                <option value="PERCENTAGE">Percentage (%)</option>
-                <option value="FIXED">Fixed (TZS)</option>
+                <option value="PERCENTAGE">{t("admin2.coupons.typePercentage")}</option>
+                <option value="FIXED">{t("admin2.coupons.typeFixed")}</option>
               </select>
             </Field>
-            <Field label="Value *">
+            <Field label={t("admin2.coupons.valueLabel")}>
               <Input required type="number" min={0} value={form.value} onChange={(e) => setForm({ ...form, value: e.target.value })} />
             </Field>
-            <Field label="Minimum order (TZS)">
+            <Field label={t("admin2.coupons.minOrderLabel")}>
               <Input type="number" min={0} value={form.minOrder} onChange={(e) => setForm({ ...form, minOrder: e.target.value })} />
             </Field>
-            <Field label="Max discount (TZS)">
-              <Input type="number" min={0} value={form.maxDiscount} onChange={(e) => setForm({ ...form, maxDiscount: e.target.value })} placeholder="Optional" />
+            <Field label={t("admin2.coupons.maxDiscountLabel")}>
+              <Input type="number" min={0} value={form.maxDiscount} onChange={(e) => setForm({ ...form, maxDiscount: e.target.value })} placeholder={t("admin2.coupons.optionalPlaceholder")} />
             </Field>
-            <Field label="Max uses">
-              <Input type="number" min={1} value={form.maxUses} onChange={(e) => setForm({ ...form, maxUses: e.target.value })} placeholder="Optional" />
+            <Field label={t("admin2.coupons.maxUsesLabel")}>
+              <Input type="number" min={1} value={form.maxUses} onChange={(e) => setForm({ ...form, maxUses: e.target.value })} placeholder={t("admin2.coupons.optionalPlaceholder")} />
             </Field>
-            <Field label="Starts (schedule)">
+            <Field label={t("admin2.coupons.startsLabel")}>
               <Input type="date" value={form.startsAt} onChange={(e) => setForm({ ...form, startsAt: e.target.value })} />
             </Field>
-            <Field label="Expires">
+            <Field label={t("admin2.coupons.expiresLabel")}>
               <Input type="date" value={form.expiresAt} onChange={(e) => setForm({ ...form, expiresAt: e.target.value })} />
             </Field>
             <Button type="submit" fullWidth loading={saving}>
-              Create coupon
+              {t("admin2.coupons.createButton")}
             </Button>
           </div>
         </form>
 
         <div className="overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-card">
           {loading ? (
-            <p className="p-10 text-center text-sm text-ink/50">Loading coupons...</p>
+            <p className="p-10 text-center text-sm text-ink/50">{t("admin2.coupons.loading")}</p>
           ) : coupons.length === 0 ? (
-            <p className="p-10 text-center text-sm text-ink/50">No coupons yet. Create your first one.</p>
+            <p className="p-10 text-center text-sm text-ink/50">{t("admin2.coupons.empty")}</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-ink/10 bg-slate-50 text-xs uppercase tracking-wide text-ink/40">
-                    <th className="px-5 py-3 font-semibold">Code</th>
-                    <th className="px-5 py-3 font-semibold">Value</th>
-                    <th className="px-5 py-3 font-semibold">Min order</th>
-                    <th className="px-5 py-3 font-semibold">Used</th>
-                    <th className="px-5 py-3 font-semibold">Starts</th>
-                    <th className="px-5 py-3 font-semibold">Expires</th>
-                    <th className="px-5 py-3 font-semibold">Active</th>
-                    <th className="px-5 py-3 text-right font-semibold">Actions</th>
+                    <th className="px-5 py-3 font-semibold">{t("admin2.coupons.thCode")}</th>
+                    <th className="px-5 py-3 font-semibold">{t("admin2.coupons.thValue")}</th>
+                    <th className="px-5 py-3 font-semibold">{t("admin2.coupons.thMinOrder")}</th>
+                    <th className="px-5 py-3 font-semibold">{t("admin2.coupons.thUsed")}</th>
+                    <th className="px-5 py-3 font-semibold">{t("admin2.coupons.thStarts")}</th>
+                    <th className="px-5 py-3 font-semibold">{t("admin2.coupons.thExpires")}</th>
+                    <th className="px-5 py-3 font-semibold">{t("admin2.coupons.thActive")}</th>
+                    <th className="px-5 py-3 text-right font-semibold">{t("admin2.coupons.thActions")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-ink/5">

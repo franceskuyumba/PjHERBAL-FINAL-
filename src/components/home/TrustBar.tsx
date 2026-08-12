@@ -4,34 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Banknote, Headset, MousePointerClick, PackageCheck, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
-
-const items = [
-  {
-    icon: <ShieldCheck className="h-6 w-6" />,
-    title: "Authentic Products",
-    description: "Genuine, quality-checked herbal supplements",
-  },
-  {
-    icon: <Banknote className="h-6 w-6" />,
-    title: "Secure Payments",
-    description: "M-Pesa, Tigo Pesa, Airtel Money & banks",
-  },
-  {
-    icon: <PackageCheck className="h-6 w-6" />,
-    title: "Fast Delivery",
-    description: "Same-day in Dar, nationwide dispatch",
-  },
-  {
-    icon: <Headset className="h-6 w-6" />,
-    title: "Customer Support",
-    description: "Real specialists on WhatsApp",
-  },
-  {
-    icon: <MousePointerClick className="h-6 w-6" />,
-    title: "Easy Ordering",
-    description: "Search, add to cart, checkout in minutes",
-  },
-];
+import { useI18n } from "@/context/LanguageContext";
 
 function TrustIcon({ children }: { children: ReactNode }) {
   const reduceMotion = useReducedMotion();
@@ -47,6 +20,36 @@ function TrustIcon({ children }: { children: ReactNode }) {
 }
 
 export function TrustBar() {
+  const { t } = useI18n();
+
+  const items = [
+    {
+      icon: <ShieldCheck className="h-6 w-6" />,
+      title: t("home.trustBar.i1.title"),
+      description: t("home.trustBar.i1.description"),
+    },
+    {
+      icon: <Banknote className="h-6 w-6" />,
+      title: t("home.trustBar.i2.title"),
+      description: t("home.trustBar.i2.description"),
+    },
+    {
+      icon: <PackageCheck className="h-6 w-6" />,
+      title: t("home.trustBar.i3.title"),
+      description: t("home.trustBar.i3.description"),
+    },
+    {
+      icon: <Headset className="h-6 w-6" />,
+      title: t("home.trustBar.i4.title"),
+      description: t("home.trustBar.i4.description"),
+    },
+    {
+      icon: <MousePointerClick className="h-6 w-6" />,
+      title: t("home.trustBar.i5.title"),
+      description: t("home.trustBar.i5.description"),
+    },
+  ];
+
   return (
     <section className="border-y border-ink/5 bg-white">
       <div className="container-site grid grid-cols-1 gap-6 py-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">

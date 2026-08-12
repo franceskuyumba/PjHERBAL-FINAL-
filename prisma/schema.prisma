@@ -279,3 +279,44 @@ model ProductView {
 
   @@index([userId, createdAt])
 }
+
+model FinanceDocument {
+  id          String   @id @default(cuid())
+  docNumber   String   @unique
+  type        String   // RECEIPT | INVOICE
+  category    String   // EXTERNAL (customer-facing) | INTERNAL (business expenses e.g. water/electricity bills)
+  title       String?
+  partyName   String
+  partyPhone  String?
+  partyEmail  String?
+  orderNumber String?  // linked web order, when generated from a customer order
+  notes       String?
+  subtotal    Float    @default(0)
+  discount    Float    @default(0)
+  tax         Float    @default(0)
+  total       Float
+  currency    String   @default("TZS")
+  status      String   @default("ISSUED") // DRAFT | ISSUED | PAID | CANCELLED
+  issueDate   DateTime
+  dueDate     DateTime?
+  paidAt      DateTime?
+  createdBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  items       FinanceDocumentItem[]
+
+  @@index([category, createdAt])
+}
+
+model FinanceDocumentItem {
+  id          String @id @default(cuid())
+  documentId  String
+  document    FinanceDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  description String
+  quantity    Int    @default(1)
+  unitPrice   Float
+  amount      Float
+
+  @@index([documentId])
+}

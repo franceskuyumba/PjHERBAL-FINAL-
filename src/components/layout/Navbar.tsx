@@ -22,9 +22,11 @@ import {
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useSearch } from "@/context/SearchContext";
+import { useI18n } from "@/context/LanguageContext";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 import { MobileMenu } from "@/components/layout/MobileMenu";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { SITE } from "@/lib/constants";
 
 interface NavUser {
@@ -35,18 +37,18 @@ interface NavUser {
 }
 
 const CATEGORY_LINKS = [
-  { label: "Men's Wellness", href: "/category/mens-health" },
-  { label: "Women's Wellness", href: "/category/womens-wellness" },
-  { label: "Energy & Immunity", href: "/category/energy-immunity" },
-  { label: "Weight Management", href: "/category/weight-management" },
-  { label: "Brain & Focus", href: "/category/brain-focus" },
-  { label: "Digestion & Detox", href: "/category/detox-digestion" },
+  { labelKey: "nav.mensWellness", href: "/category/mens-health" },
+  { labelKey: "nav.womensWellness", href: "/category/womens-wellness" },
+  { labelKey: "nav.energyImmunity", href: "/category/energy-immunity" },
+  { labelKey: "nav.weightManagement", href: "/category/weight-management" },
+  { labelKey: "nav.brainFocus", href: "/category/brain-focus" },
+  { labelKey: "nav.digestionDetox", href: "/category/detox-digestion" },
 ];
 
 const PAGE_LINKS = [
-  { label: "Blog", href: "/blog" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { labelKey: "nav.blog", href: "/blog" },
+  { labelKey: "nav.about", href: "/about" },
+  { labelKey: "nav.contact", href: "/contact" },
 ];
 
 export function Navbar({ user }: { user: NavUser | null }) {
@@ -57,6 +59,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { t } = useI18n();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -85,23 +88,24 @@ export function Navbar({ user }: { user: NavUser | null }) {
             </a>
             <p className="flex items-center gap-1.5 text-white/80">
               <Truck className="h-3.5 w-3.5 text-gold-300" />
-              <span className="truncate">Free delivery in Dar es Salaam over TZS 200,000</span>
+              <span className="truncate">{t("nav.freeDelivery")}</span>
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-4 sm:gap-5">
+            <LanguageSwitcher variant="dark" />
             <Link href={user ? "/customer-dashboard/orders" : "/login"} className="flex items-center gap-1.5 text-white/80 transition-colors hover:text-gold-300">
               <PackageSearch className="h-3.5 w-3.5" />
-              My Orders
+              {t("nav.myOrders")}
             </Link>
             <Link href="/contact" className="hidden text-white/80 transition-colors hover:text-gold-300 sm:block">
-              Help & Support
+              {t("nav.helpSupport")}
             </Link>
             <Link
               href={user ? (user.role === "ADMIN" ? "/admin" : "/customer-dashboard") : "/login"}
               className="flex items-center gap-1.5 text-white/80 transition-colors hover:text-gold-300"
             >
               <User className="h-3.5 w-3.5" />
-              {user ? "My Account" : "Sign In"}
+              {user ? t("nav.myAccount") : t("nav.signIn")}
             </Link>
           </div>
         </div>
@@ -121,10 +125,10 @@ export function Navbar({ user }: { user: NavUser | null }) {
           <button
             onClick={openSearch}
             className="group hidden flex-1 items-center gap-2.5 rounded-full border border-brand-200 bg-white px-4 py-2.5 text-sm text-ink/45 shadow-sm transition-all hover:border-brand-400 hover:shadow-card sm:flex sm:max-w-2xl"
-            aria-label="Open search"
+            aria-label={t("nav.ariaOpenSearch")}
           >
             <Search className="h-4 w-4 text-brand-600" />
-            <span className="truncate">Search products, categories and wellness topics...</span>
+            <span className="truncate">{t("nav.searchPlaceholder")}</span>
             <kbd className="ml-auto hidden rounded-md border border-ink/10 bg-cream px-1.5 py-0.5 text-[10px] font-semibold text-ink/40 lg:block">
               /
             </kbd>
@@ -133,7 +137,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
           <button
             onClick={openSearch}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink/70 transition-colors hover:bg-brand-50 hover:text-brand-700 sm:hidden"
-            aria-label="Open search"
+            aria-label={t("nav.ariaOpenSearch")}
           >
             <Search className="h-5 w-5" />
           </button>
@@ -142,7 +146,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
             <Link
               href="/customer-dashboard/wishlist"
               className="flex h-10 w-10 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-brand-50 hover:text-red-500"
-              aria-label="Wishlist"
+              aria-label={t("nav.ariaWishlist")}
             >
               <Heart className="h-5 w-5" />
             </Link>
@@ -161,7 +165,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
               <button
                 onClick={() => setAccountOpen((v) => !v)}
                 className="flex h-10 w-10 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-brand-50 hover:text-brand-700"
-                aria-label="Account"
+                aria-label={t("nav.ariaAccount")}
               >
                 <User className="h-5 w-5" />
               </button>
@@ -181,13 +185,13 @@ export function Navbar({ user }: { user: NavUser | null }) {
                           <p className="truncate text-xs text-ink/50">{user.email}</p>
                         </div>
                         <AccountLink href={user.role === "ADMIN" ? "/admin" : "/customer-dashboard"} icon={<LayoutDashboard className="h-4 w-4" />}>
-                          {user.role === "ADMIN" ? "Admin dashboard" : "My dashboard"}
+                          {user.role === "ADMIN" ? t("nav.adminDashboard") : t("nav.myDashboard")}
                         </AccountLink>
                         <AccountLink href="/customer-dashboard/orders" icon={<Package className="h-4 w-4" />}>
-                          My orders
+                          {t("nav.myOrders")}
                         </AccountLink>
                         <AccountLink href="/customer-dashboard/wishlist" icon={<Heart className="h-4 w-4" />}>
-                          My wishlist
+                          {t("nav.myWishlist")}
                         </AccountLink>
                         <button
                           onClick={async () => {
@@ -198,17 +202,17 @@ export function Navbar({ user }: { user: NavUser | null }) {
                           className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm text-red-600 transition-colors hover:bg-red-50"
                         >
                           <LogOut className="h-4 w-4" />
-                          Log out
+                          {t("nav.logOut")}
                         </button>
                       </div>
                     ) : (
                       <div className="p-3">
-                        <p className="px-2 pb-2 text-sm text-ink/60">Welcome to PJHERBAL Clinic</p>
+                        <p className="px-2 pb-2 text-sm text-ink/60">{t("nav.welcome")}</p>
                         <Link href="/login" className="btn-primary btn-sm mb-2 w-full">
-                          Sign in
+                          {t("nav.signIn")}
                         </Link>
                         <Link href="/register" className="btn-outline btn-sm w-full">
-                          Create account
+                          {t("nav.createAccount")}
                         </Link>
                       </div>
                     )}
@@ -220,7 +224,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
             <Link
               href="/cart"
               className="relative flex h-10 w-10 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-brand-50 hover:text-brand-700"
-              aria-label={`Cart with ${count} items`}
+              aria-label={t("nav.ariaCartCount").replace("{count}", String(count))}
             >
               <ShoppingBag className="h-5 w-5" />
               {count > 0 && (
@@ -233,7 +237,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
             <button
               onClick={() => setMobileOpen(true)}
               className="flex h-10 w-10 items-center justify-center rounded-full text-ink/70 transition-colors hover:bg-brand-50 lg:hidden"
-              aria-label="Open menu"
+              aria-label={t("nav.ariaOpenMenu")}
             >
               <Menu className="h-6 w-6" />
             </button>
@@ -242,25 +246,25 @@ export function Navbar({ user }: { user: NavUser | null }) {
 
         <nav className="hidden border-t border-ink/5 bg-white/60 lg:block" aria-label="Category navigation">
           <div className="container-site flex items-center gap-1">
-            <CategoryLink href="/shop" label="All Products" active={pathname === "/shop"} />
+            <CategoryLink href="/shop" label={t("nav.allProducts")} active={pathname === "/shop"} />
             {CATEGORY_LINKS.map((link) => (
               <CategoryLink
                 key={link.href}
                 href={link.href}
-                label={link.label}
+                label={t(link.labelKey)}
                 active={pathname.startsWith(link.href)}
               />
             ))}
             <span className="mx-2 h-5 w-px bg-ink/10" aria-hidden="true" />
             {PAGE_LINKS.map((link) => (
-              <CategoryLink key={link.href} href={link.href} label={link.label} active={pathname === link.href} />
+              <CategoryLink key={link.href} href={link.href} label={t(link.labelKey)} active={pathname === link.href} />
             ))}
             <Link
               href="/shop?sort=newest"
               className="ml-auto flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-gold-700 transition-colors hover:bg-gold-50"
             >
               <PackageSearch className="h-3.5 w-3.5" />
-              New Arrivals
+              {t("nav.newArrivals")}
             </Link>
           </div>
         </nav>

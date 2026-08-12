@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { formatTZS } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 interface Product {
   id: string;
@@ -19,6 +20,7 @@ interface Product {
 }
 
 export function AdminProductsTable() {
+  const { t } = useI18n();
   const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -29,7 +31,7 @@ export function AdminProductsTable() {
     try {
       const res = await fetch(`/api/admin/products${q ? `?search=${encodeURIComponent(q)}` : ""}`);
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to load products");
+      if (!res.ok) throw new Error(data.error || t("admin.products.loadFailed"));
       setProducts(data.products);
     } catch (e) {
       setErrorMsg((e as Error).message);
@@ -48,7 +50,7 @@ export function AdminProductsTable() {
   };
 
   const onDelete = async (id: string, name: string) => {
-    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+    if (!confirm(t("admin.products.deleteConfirm").replace("{name}", name))) return;
     await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
     load(search);
   };
@@ -57,11 +59,11 @@ export function AdminProductsTable() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-bold text-brand-950">Products</h1>
-          <p className="mt-1 text-sm text-ink/55">{products.length} products</p>
+          <h1 className="font-display text-2xl font-bold text-brand-950">{t("admin.products.title")}</h1>
+          <p className="mt-1 text-sm text-ink/55">{t("admin.products.count").replace("{count}", String(products.length))}</p>
         </div>
         <Link href="/admin/products/new" className="btn-primary btn-sm">
-          <Plus className="h-4 w-4" /> New product
+          <Plus className="h-4 w-4" /> {t("admin.products.newProduct")}
         </Link>
       </div>
 
@@ -71,12 +73,12 @@ export function AdminProductsTable() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by name or SKU..."
+            placeholder={t("admin.products.searchPlaceholder")}
             className="input w-full rounded-xl border border-ink/15 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
           />
         </div>
         <button type="submit" className="btn-outline btn-sm">
-          Search
+          {t("admin.products.search")}
         </button>
       </form>
 
@@ -86,21 +88,21 @@ export function AdminProductsTable() {
 
       <div className="mt-5 overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-card">
         {loading ? (
-          <p className="p-10 text-center text-sm text-ink/50">Loading products...</p>
+          <p className="p-10 text-center text-sm text-ink/50">{t("admin.products.loading")}</p>
         ) : products.length === 0 ? (
-          <p className="p-10 text-center text-sm text-ink/50">No products found.</p>
+          <p className="p-10 text-center text-sm text-ink/50">{t("admin.products.empty")}</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-ink/10 bg-slate-50 text-xs uppercase tracking-wide text-ink/40">
-                  <th className="px-5 py-3 font-semibold">Product</th>
-                  <th className="px-5 py-3 font-semibold">SKU</th>
-                  <th className="px-5 py-3 font-semibold">Category</th>
-                  <th className="px-5 py-3 font-semibold">Price</th>
-                  <th className="px-5 py-3 font-semibold">Stock</th>
-                  <th className="px-5 py-3 font-semibold">Status</th>
-                  <th className="px-5 py-3 text-right font-semibold">Actions</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.products.colProduct")}</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.products.colSku")}</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.products.colCategory")}</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.products.colPrice")}</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.products.colStock")}</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.products.colStatus")}</th>
+                  <th className="px-5 py-3 text-right font-semibold">{t("admin.products.colActions")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-ink/5">
@@ -121,7 +123,7 @@ export function AdminProductsTable() {
                       </span>
                       {p.stock > 0 && p.stock <= p.lowStockThreshold && (
                         <span className="ml-2 inline-flex rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
-                          Low stock
+                          {t("admin.products.lowStock")}
                         </span>
                       )}
                     </td>
@@ -133,14 +135,14 @@ export function AdminProductsTable() {
                         <Link
                           href={`/admin/products/${p.id}/edit`}
                           className="flex h-8 w-8 items-center justify-center rounded-lg text-ink/50 hover:bg-brand-50 hover:text-brand-700"
-                          aria-label="Edit"
+                          aria-label={t("admin.products.edit")}
                         >
                           <Pencil className="h-4 w-4" />
                         </Link>
                         <button
                           onClick={() => onDelete(p.id, p.name)}
                           className="flex h-8 w-8 items-center justify-center rounded-lg text-ink/50 hover:bg-red-50 hover:text-red-600"
-                          aria-label="Delete"
+                          aria-label={t("admin.products.delete")}
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>

@@ -9,6 +9,7 @@ import { ChatBot } from "@/components/layout/ChatBot";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { SITE } from "@/lib/constants";
 import { getCurrentUser } from "@/lib/auth";
+import { getLocale } from "@/lib/i18n";
 import "./globals.css";
 
 const inter = Inter({
@@ -99,9 +100,10 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const user = await getCurrentUser();
+  const lang = getLocale();
 
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang={lang} className={`${inter.variable} ${playfair.variable}`}>
       <body className="flex min-h-screen flex-col pb-16 lg:pb-0">
         <script
           type="application/ld+json"

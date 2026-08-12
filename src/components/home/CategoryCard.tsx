@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Brain, Flower2, Leaf, Scale, Shield, Zap } from "lucide-react";
 import type { ReactNode } from "react";
+import { useI18n } from "@/context/LanguageContext";
 
 const iconMap: Record<string, ReactNode> = {
   shield: <Shield className="h-6 w-6" />,
@@ -25,6 +26,7 @@ export interface CategoryCardData {
 }
 
 export function CategoryCard({ category, index = 0 }: { category: CategoryCardData; index?: number }) {
+  const { t } = useI18n();
   return (
     <motion.div
       initial={{ opacity: 0, y: 28 }}
@@ -63,7 +65,7 @@ export function CategoryCard({ category, index = 0 }: { category: CategoryCardDa
           <p className="mt-1.5 text-sm leading-6 text-ink/55">{category.description}</p>
           {typeof category.productCount === "number" && (
             <p className="mt-3 text-xs font-semibold text-brand-600">
-              {category.productCount} products
+              {t("home.categoryCard.productCount").replace("{count}", String(category.productCount))}
             </p>
           )}
         </div>

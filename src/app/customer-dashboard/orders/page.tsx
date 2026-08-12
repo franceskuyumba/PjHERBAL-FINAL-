@@ -9,8 +9,10 @@ import { StatusBadge, PaymentStatusBadge } from "@/components/dashboard/StatusBa
 import { OrderProgress } from "@/components/dashboard/OrderProgress";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
+import { getLocale, t } from "@/lib/i18n";
 
 export default async function OrdersPage() {
+  const lang = getLocale();
   const session = await getSession();
   if (!session) notFound();
 
@@ -22,16 +24,16 @@ export default async function OrdersPage() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-brand-950">My orders</h1>
-      <p className="mt-1 text-sm text-ink/55">Track and review everything you have ordered.</p>
+      <h1 className="font-display text-2xl font-bold text-brand-950">{t(lang, "dash.orders.title")}</h1>
+      <p className="mt-1 text-sm text-ink/55">{t(lang, "dash.orders.subtitle")}</p>
 
       {orders.length === 0 ? (
         <div className="mt-8">
           <EmptyState
             icon={<PackageSearch className="h-7 w-7" />}
-            title="No orders yet"
-            description="When you place an order, it will appear here with live tracking."
-            action={<Link href="/shop" className="btn-primary btn-sm">Browse products</Link>}
+            title={t(lang, "dash.orders.emptyTitle")}
+            description={t(lang, "dash.orders.emptyDesc")}
+            action={<Link href="/shop" className="btn-primary btn-sm">{t(lang, "dash.orders.browse")}</Link>}
           />
         </div>
       ) : (
@@ -60,7 +62,7 @@ export default async function OrdersPage() {
                     <div>
                       <p className="font-mono text-sm font-bold text-brand-950">{order.orderNumber}</p>
                       <p className="mt-0.5 text-xs text-ink/50">
-                        {formatDate(order.createdAt)} · {order.items.length} item{order.items.length === 1 ? "" : "s"}
+                        {formatDate(order.createdAt)} · {t(lang, order.items.length === 1 ? "dash.orders.itemOne" : "dash.orders.itemMany").replace("{count}", String(order.items.length))}
                       </p>
                     </div>
                   </div>

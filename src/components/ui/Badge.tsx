@@ -1,5 +1,8 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 type BadgeColor = "green" | "gold" | "amber" | "blue" | "red" | "gray" | "violet" | "indigo";
 
@@ -27,9 +30,10 @@ export function Badge({ children, color = "gray", className }: BadgeProps) {
 }
 
 export function StockBadge({ stock }: { stock: number }) {
-  if (stock <= 0) return <Badge color="red">Out of stock</Badge>;
-  if (stock <= 5) return <Badge color="amber">Only {stock} left</Badge>;
-  return <Badge color="green">In stock</Badge>;
+  const { t } = useI18n();
+  if (stock <= 0) return <Badge color="red">{t("ui.stock.out")}</Badge>;
+  if (stock <= 5) return <Badge color="amber">{t("ui.stock.low").replace("{n}", String(stock))}</Badge>;
+  return <Badge color="green">{t("ui.stock.in")}</Badge>;
 }
 
 export function StatusBadge({ status }: { status: string }) {

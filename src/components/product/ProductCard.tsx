@@ -9,6 +9,7 @@ import { Rating } from "@/components/ui/Rating";
 import { PriceTag } from "@/components/ui/PriceTag";
 import { StockBadge } from "@/components/ui/Badge";
 import { useCart } from "@/context/CartContext";
+import { useI18n } from "@/context/LanguageContext";
 import { useToast } from "@/components/ui/Toast";
 import { formatTZS } from "@/lib/utils";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
@@ -39,6 +40,7 @@ export function ProductCard({
   isLoggedIn?: boolean;
 }) {
   const { addItem } = useCart();
+  const { t } = useI18n();
   const { toast } = useToast();
   const [wishlisted, setWishlisted] = useState(false);
   const [added, setAdded] = useState(false);
@@ -58,18 +60,18 @@ export function ProductCard({
     setAdded(true);
     if (addedTimer.current) clearTimeout(addedTimer.current);
     addedTimer.current = setTimeout(() => setAdded(false), 1200);
-    toast(`${product.name} added to cart`, "success");
+    toast(t("product.added").replace("{name}", product.name), "success");
   };
 
   const handleWishlist = async () => {
     if (!isLoggedIn) {
-      toast("Please sign in to save items to your wishlist", "info");
+      toast(t("product.wishlistSignIn"), "info");
       return;
     }
     const res = await fetch(`/api/wishlist/${product.id}`, { method: "POST" });
     if (res.ok) {
       setWishlisted((v) => !v);
-      toast(wishlisted ? "Removed from wishlist" : "Saved to wishlist", "success");
+      toast(wishlisted ? t("product.wishlistRemoved") : t("product.wishlistSaved"), "success");
     }
   };
 
@@ -95,13 +97,13 @@ export function ProductCard({
 
         {product.isBestSeller && (
           <span className="badge absolute left-3 top-3 bg-gold-500 text-brand-950 shadow-card">
-            Best Seller
+            {t("product.bestSeller")}
           </span>
         )}
 
         <motion.button
           onClick={handleWishlist}
-          aria-label="Toggle wishlist"
+          aria-label={t("product.toggleWishlist")}
           animate={wishlisted ? { scale: [1, 1.35, 1] } : { scale: 1 }}
           transition={{ duration: 0.35 }}
           className={cn(
@@ -152,12 +154,12 @@ export function ProductCard({
             {added ? (
               <>
                 <Check className="h-4 w-4" />
-                <span className="hidden sm:inline">Added</span>
+                <span className="hidden sm:inline">{t("product.addedLabel")}</span>
               </>
             ) : (
               <>
                 <ShoppingCart className="h-4 w-4" />
-                <span className="hidden sm:inline">Add to cart</span>
+                <span className="hidden sm:inline">{t("product.addToCartLabel")}</span>
                 <span className="sm:hidden">{formatTZS(product.price)}</span>
               </>
             )}
@@ -170,7 +172,7 @@ export function ProductCard({
             })}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Ask about ${product.name} on WhatsApp`}
+            aria-label={t("product.askAbout").replace("{name}", product.name)}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#25D366]/30 text-[#1eb958] transition-colors hover:bg-[#25D366] hover:text-white"
           >
             <MessageCircle className="h-4 w-4" />

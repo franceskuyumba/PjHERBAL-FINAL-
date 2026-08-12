@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { LogOut, MessageCircle, Search, X } from "lucide-react";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { useSearch } from "@/context/SearchContext";
+import { useI18n } from "@/context/LanguageContext";
 
 interface NavUser {
   id: string;
@@ -17,22 +18,23 @@ interface NavUser {
 }
 
 const mobileLinks = [
-  { label: "Home", href: "/" },
-  { label: "Shop All", href: "/shop" },
-  { label: "Men's Health", href: "/category/mens-health" },
-  { label: "Weight Management", href: "/category/weight-management" },
-  { label: "Energy & Immunity", href: "/category/energy-immunity" },
-  { label: "Women's Wellness", href: "/category/womens-wellness" },
-  { label: "Brain & Focus", href: "/category/brain-focus" },
-  { label: "Detox & Digestion", href: "/category/detox-digestion" },
-  { label: "About", href: "/about" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "/contact" },
+  { labelKey: "nav.home", href: "/" },
+  { labelKey: "nav.shopAll", href: "/shop" },
+  { labelKey: "nav.mensHealth", href: "/category/mens-health" },
+  { labelKey: "nav.weightManagement", href: "/category/weight-management" },
+  { labelKey: "nav.energyImmunity", href: "/category/energy-immunity" },
+  { labelKey: "nav.womensWellness", href: "/category/womens-wellness" },
+  { labelKey: "nav.brainFocus", href: "/category/brain-focus" },
+  { labelKey: "nav.detoxDigestion", href: "/category/detox-digestion" },
+  { labelKey: "nav.about", href: "/about" },
+  { labelKey: "nav.blog", href: "/blog" },
+  { labelKey: "nav.contact", href: "/contact" },
 ];
 
 export function MobileMenu({ open, onClose, user }: { open: boolean; onClose: () => void; user: NavUser | null }) {
   const router = useRouter();
   const { openSearch } = useSearch();
+  const { t } = useI18n();
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -63,7 +65,7 @@ export function MobileMenu({ open, onClose, user }: { open: boolean; onClose: ()
               <button
                 onClick={onClose}
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-ink/5 text-ink/70"
-                aria-label="Close menu"
+                aria-label={t("nav.ariaCloseMenu")}
               >
                 <X className="h-5 w-5" />
               </button>
@@ -78,7 +80,7 @@ export function MobileMenu({ open, onClose, user }: { open: boolean; onClose: ()
                 className="mb-5 flex w-full items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-3 text-sm text-ink/45 transition-colors hover:border-brand-400"
               >
                 <Search className="h-4 w-4 shrink-0 text-brand-600" />
-                <span className="truncate text-left">Search products, categories and wellness topics...</span>
+                <span className="truncate text-left">{t("nav.searchPlaceholder")}</span>
               </button>
 
               <nav className="space-y-1" aria-label="Mobile navigation">
@@ -94,7 +96,7 @@ export function MobileMenu({ open, onClose, user }: { open: boolean; onClose: ()
                       onClick={onClose}
                       className="block rounded-xl px-3 py-2.5 text-[15px] font-medium text-ink/80 transition-colors hover:bg-brand-50 hover:text-brand-700"
                     >
-                      {link.label}
+                      {t(link.labelKey)}
                     </Link>
                   </motion.div>
                 ))}
@@ -104,14 +106,14 @@ export function MobileMenu({ open, onClose, user }: { open: boolean; onClose: ()
                 {user ? (
                   <>
                     <p className="px-3 text-sm text-ink/50">
-                      Signed in as <span className="font-semibold text-brand-800">{user.name}</span>
+                      {t("nav.signedInAs")} <span className="font-semibold text-brand-800">{user.name}</span>
                     </p>
                     <Link
                       href={user.role === "ADMIN" ? "/admin" : "/customer-dashboard"}
                       onClick={onClose}
                       className="btn-primary btn-sm w-full"
                     >
-                      {user.role === "ADMIN" ? "Admin dashboard" : "My dashboard"}
+                      {user.role === "ADMIN" ? t("nav.adminDashboard") : t("nav.myDashboard")}
                     </Link>
                     <button
                       onClick={async () => {
@@ -123,16 +125,16 @@ export function MobileMenu({ open, onClose, user }: { open: boolean; onClose: ()
                       className="btn-outline btn-sm flex w-full items-center justify-center gap-2"
                     >
                       <LogOut className="h-4 w-4" />
-                      Log out
+                      {t("nav.logOut")}
                     </button>
                   </>
                 ) : (
                   <>
                     <Link href="/login" onClick={onClose} className="btn-primary btn-md w-full">
-                      Sign in
+                      {t("nav.signIn")}
                     </Link>
                     <Link href="/register" onClick={onClose} className="btn-outline btn-md w-full">
-                      Create account
+                      {t("nav.createAccount")}
                     </Link>
                   </>
                 )}
@@ -143,7 +145,7 @@ export function MobileMenu({ open, onClose, user }: { open: boolean; onClose: ()
                   className="btn-whatsapp btn-md mt-2 w-full"
                 >
                   <MessageCircle className="h-4 w-4" />
-                  WhatsApp us
+                  {t("nav.whatsappUs")}
                 </a>
               </div>
             </div>

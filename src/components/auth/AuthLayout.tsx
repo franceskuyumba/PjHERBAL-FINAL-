@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { CheckCircle2, Leaf, ShieldCheck, Truck } from "lucide-react";
+import { getLocale, t } from "@/lib/i18n";
 
 export function AuthLayout({
   title,
@@ -12,6 +13,7 @@ export function AuthLayout({
   subtitle: string;
   children: ReactNode;
 }) {
+  const lang = getLocale();
   return (
     <div className="bg-cream">
       <div className="container-site grid min-h-[calc(100vh-5rem)] items-center gap-12 py-12 lg:grid-cols-2 lg:gap-16">
@@ -20,17 +22,16 @@ export function AuthLayout({
             <Image src="/images/logo.svg" alt="PJHERBAL Clinic" fill className="object-contain object-left" />
           </Link>
           <h1 className="font-display text-4xl font-bold leading-tight text-brand-950">
-            Natural wellness, delivered to your door.
+            {t(lang, "auth.benefits.heading")}
           </h1>
           <p className="mt-4 max-w-md text-ink/60">
-            Trusted herbal supplements from PJHERBAL Clinic – Segerea Branch. Shop with confidence, track your
-            orders, and chat with our specialists on WhatsApp.
+            {t(lang, "auth.benefits.subtitle")}
           </p>
           <ul className="mt-8 space-y-4">
-            <Benefit icon={<ShieldCheck className="h-5 w-5" />} text="Authentic, quality-tested natural products" />
-            <Benefit icon={<Truck className="h-5 w-5" />} text="Fast delivery across Tanzania" />
-            <Benefit icon={<Leaf className="h-5 w-5" />} text="Free delivery on orders over TZS 200,000" />
-            <Benefit icon={<CheckCircle2 className="h-5 w-5" />} text="Real-time order tracking & support" />
+            <Benefit icon={<ShieldCheck className="h-5 w-5" />} text={t(lang, "auth.benefits.authentic")} />
+            <Benefit icon={<Truck className="h-5 w-5" />} text={t(lang, "auth.benefits.fastDelivery")} />
+            <Benefit icon={<Leaf className="h-5 w-5" />} text={t(lang, "auth.benefits.freeDelivery")} />
+            <Benefit icon={<CheckCircle2 className="h-5 w-5" />} text={t(lang, "auth.benefits.tracking")} />
           </ul>
         </div>
 

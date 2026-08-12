@@ -1,37 +1,40 @@
 import { CheckCircle2, FlaskConical, Leaf, PackageCheck } from "lucide-react";
 import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-
-const reasons = [
-  {
-    icon: <Leaf className="h-6 w-6" />,
-    title: "Pure natural ingredients",
-    description: "Carefully sourced herbs and botanicals, free from harmful additives.",
-  },
-  {
-    icon: <FlaskConical className="h-6 w-6" />,
-    title: "Quality tested",
-    description: "Every batch is checked for purity, safety and consistent strength.",
-  },
-  {
-    icon: <CheckCircle2 className="h-6 w-6" />,
-    title: "Specialist guidance",
-    description: "Talk to a real naturopath on WhatsApp before you buy.",
-  },
-  {
-    icon: <PackageCheck className="h-6 w-6" />,
-    title: "Genuine products",
-    description: "No fakes, no shortcuts — the authentic formula you were promised.",
-  },
-];
+import { getLocale, t } from "@/lib/i18n";
 
 export function WhyUs() {
+  const lang = getLocale();
+
+  const reasons = [
+    {
+      icon: <Leaf className="h-6 w-6" />,
+      title: t(lang, "home.whyUs.r1.title"),
+      description: t(lang, "home.whyUs.r1.description"),
+    },
+    {
+      icon: <FlaskConical className="h-6 w-6" />,
+      title: t(lang, "home.whyUs.r2.title"),
+      description: t(lang, "home.whyUs.r2.description"),
+    },
+    {
+      icon: <CheckCircle2 className="h-6 w-6" />,
+      title: t(lang, "home.whyUs.r3.title"),
+      description: t(lang, "home.whyUs.r3.description"),
+    },
+    {
+      icon: <PackageCheck className="h-6 w-6" />,
+      title: t(lang, "home.whyUs.r4.title"),
+      description: t(lang, "home.whyUs.r4.description"),
+    },
+  ];
+
   return (
     <section className="container-site py-16 sm:py-20">
       <SectionHeading
-        eyebrow="Why PJHERBAL Clinic"
-        title="Wellness you can trust"
-        subtitle="For over a decade, families across Tanzania have trusted us for honest guidance and genuine supplements."
+        eyebrow={t(lang, "home.whyUs.eyebrow")}
+        title={t(lang, "home.whyUs.title")}
+        subtitle={t(lang, "home.whyUs.subtitle")}
       />
       <div className="grid gap-6 sm:grid-cols-2">
         {reasons.map((reason, i) => (

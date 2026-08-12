@@ -18,36 +18,37 @@ import {
 } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { cn, getInitials } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 interface NavItem {
   href: string;
-  label: string;
+  labelKey: string;
   icon: React.ComponentType<{ className?: string }>;
   exact?: boolean;
   badge?: number;
 }
 
 const accountNav: NavItem[] = [
-  { href: "/customer-dashboard", label: "Overview", icon: LayoutDashboard, exact: true },
-  { href: "/customer-dashboard/orders", label: "My Orders", icon: Package },
-  { href: "/customer-dashboard/wishlist", label: "Wishlist", icon: Heart },
-  { href: "/customer-dashboard/addresses", label: "Saved Addresses", icon: MapPin },
-  { href: "/customer-dashboard/reviews", label: "My Reviews", icon: Star },
-  { href: "/customer-dashboard/recommendations", label: "Recommended For You", icon: Sparkles },
+  { href: "/customer-dashboard", labelKey: "dash.shell.overview", icon: LayoutDashboard, exact: true },
+  { href: "/customer-dashboard/orders", labelKey: "dash.shell.myOrders", icon: Package },
+  { href: "/customer-dashboard/wishlist", labelKey: "dash.shell.wishlist", icon: Heart },
+  { href: "/customer-dashboard/addresses", labelKey: "dash.shell.savedAddresses", icon: MapPin },
+  { href: "/customer-dashboard/reviews", labelKey: "dash.shell.myReviews", icon: Star },
+  { href: "/customer-dashboard/recommendations", labelKey: "dash.shell.recommendedForYou", icon: Sparkles },
 ];
 
 const supportNav: NavItem[] = [
-  { href: "/customer-dashboard/notifications", label: "Notifications", icon: Bell, badge: 0 },
-  { href: "/customer-dashboard/help", label: "Help & Support", icon: LifeBuoy },
-  { href: "/customer-dashboard/settings", label: "Account Settings", icon: Settings },
+  { href: "/customer-dashboard/notifications", labelKey: "dash.shell.notifications", icon: Bell, badge: 0 },
+  { href: "/customer-dashboard/help", labelKey: "dash.shell.helpSupport", icon: LifeBuoy },
+  { href: "/customer-dashboard/settings", labelKey: "dash.shell.accountSettings", icon: Settings },
 ];
 
 const mobileNav: NavItem[] = [
-  { href: "/customer-dashboard", label: "Home", icon: LayoutDashboard, exact: true },
-  { href: "/customer-dashboard/orders", label: "Orders", icon: Package },
-  { href: "/shop", label: "Shop", icon: Store },
-  { href: "/customer-dashboard/wishlist", label: "Wishlist", icon: Heart },
-  { href: "/customer-dashboard/settings", label: "Account", icon: Settings },
+  { href: "/customer-dashboard", labelKey: "dash.shell.home", icon: LayoutDashboard, exact: true },
+  { href: "/customer-dashboard/orders", labelKey: "dash.shell.orders", icon: Package },
+  { href: "/shop", labelKey: "dash.shell.shop", icon: Store },
+  { href: "/customer-dashboard/wishlist", labelKey: "dash.shell.wishlist", icon: Heart },
+  { href: "/customer-dashboard/settings", labelKey: "dash.shell.account", icon: Settings },
 ];
 
 export function DashboardShell({
@@ -64,6 +65,7 @@ export function DashboardShell({
   const pathname = usePathname();
   const router = useRouter();
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
 
   const isActive = (item: NavItem) => (item.exact ? pathname === item.href : pathname.startsWith(item.href));
 
@@ -92,7 +94,7 @@ export function DashboardShell({
           />
         )}
         <item.icon className="relative h-4 w-4 shrink-0" />
-        <span className="relative flex-1 truncate">{item.label}</span>
+        <span className="relative flex-1 truncate">{t(item.labelKey)}</span>
         {(item.badge ?? 0) > 0 && (
           <span className="relative inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[11px] font-bold text-white">
             {item.badge}
@@ -118,10 +120,10 @@ export function DashboardShell({
               </div>
             </div>
 
-            <nav className="pt-3" aria-label="Account navigation">
-              <p className="px-3.5 pb-1.5 pt-1 text-[11px] font-bold uppercase tracking-widest text-ink/40">Account</p>
+            <nav className="pt-3" aria-label={t("dash.shell.accountNavAria")}>
+              <p className="px-3.5 pb-1.5 pt-1 text-[11px] font-bold uppercase tracking-widest text-ink/40">{t("dash.shell.accountSection")}</p>
               <div className="space-y-0.5">{accountNav.map(renderLink)}</div>
-              <p className="px-3.5 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-widest text-ink/40">Support</p>
+              <p className="px-3.5 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-widest text-ink/40">{t("dash.shell.supportSection")}</p>
               <div className="space-y-0.5">
                 {supportNav.map((item) => renderLink({ ...item, badge: item.href.endsWith("notifications") ? unread : 0 }))}
               </div>
@@ -132,7 +134,7 @@ export function DashboardShell({
               className="mt-4 flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
             >
               <LogOut className="h-4 w-4" />
-              Log out
+              {t("dash.shell.logOut")}
             </button>
           </div>
         </aside>
@@ -147,12 +149,18 @@ export function DashboardShell({
             {getInitials(name)}
           </span>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-brand-950">Hello, {name.split(" ")[0]}</p>
+            <p className="truncate text-sm font-semibold text-brand-950">
+              {t("dash.shell.mobileHello").replace("{name}", name.split(" ")[0])}
+            </p>
             <p className="truncate text-xs text-ink/50">{email}</p>
           </div>
           <Link
             href="/customer-dashboard/notifications"
-            aria-label={`Notifications${unread > 0 ? `, ${unread} unread` : ""}`}
+            aria-label={
+              unread > 0
+                ? t("dash.shell.notificationsUnreadAria").replace("{count}", String(unread))
+                : t("dash.shell.notificationsAria")
+            }
             className="relative flex h-10 w-10 items-center justify-center rounded-full border border-ink/10 bg-white text-brand-700"
           >
             <Bell className="h-5 w-5" />
@@ -167,7 +175,7 @@ export function DashboardShell({
 
       {/* Mobile bottom navigation */}
       <nav
-        aria-label="Mobile navigation"
+        aria-label={t("dash.shell.mobileNavAria")}
         className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
       >
         <div className="mx-auto flex max-w-lg items-stretch justify-between px-2 py-1.5">
@@ -183,7 +191,7 @@ export function DashboardShell({
                 )}
               >
                 <item.icon className={cn("h-5 w-5", active && "scale-110")} />
-                <span className="max-w-full truncate">{item.label}</span>
+                <span className="max-w-full truncate">{t(item.labelKey)}</span>
               </Link>
             );
           })}

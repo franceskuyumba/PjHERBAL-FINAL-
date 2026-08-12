@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Flame, TimerReset } from "lucide-react";
 import { ProductCard, type ProductCardProduct } from "@/components/product/ProductCard";
 import { CountdownTimer } from "@/components/home/CountdownTimer";
+import { getLocale, t } from "@/lib/i18n";
 
 export function FlashDeals({
   products,
@@ -10,6 +11,7 @@ export function FlashDeals({
   products: ProductCardProduct[];
   isLoggedIn?: boolean;
 }) {
+  const lang = getLocale();
   if (products.length === 0) return null;
 
   return (
@@ -19,13 +21,13 @@ export function FlashDeals({
           <div>
             <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-gold-300">
               <Flame className="h-4 w-4" />
-              Flash Deals
+              {t(lang, "home.flashDeals.eyebrow")}
             </p>
             <h2 className="mt-2 font-display text-3xl font-bold text-white sm:text-4xl">
-              Today's hottest prices
+              {t(lang, "home.flashDeals.title")}
             </h2>
             <p className="mt-2 max-w-md text-sm text-white/60">
-              Time-limited discounts on customer favourites. When the timer hits zero, the deals reset.
+              {t(lang, "home.flashDeals.subtitle")}
             </p>
           </div>
 
@@ -35,7 +37,7 @@ export function FlashDeals({
               <CountdownTimer />
             </div>
             <Link href="/shop" className="btn-gold btn-sm">
-              Shop all deals
+              {t(lang, "home.flashDeals.shopAllDeals")}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

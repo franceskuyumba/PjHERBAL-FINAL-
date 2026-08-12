@@ -144,6 +144,23 @@ export const PRODUCT_STATUSES = [
   { value: "DRAFT", label: "Draft" },
 ] as const;
 
+export const DOCUMENT_TYPES = [
+  { value: "RECEIPT", label: "Receipt" },
+  { value: "INVOICE", label: "Invoice" },
+] as const;
+
+export const DOCUMENT_CATEGORIES = [
+  { value: "EXTERNAL", label: "External", description: "For customers (sales)" },
+  { value: "INTERNAL", label: "Internal", description: "Business expenses e.g. water / electricity bills" },
+] as const;
+
+export const DOCUMENT_STATUSES = [
+  { value: "DRAFT", label: "Draft", color: "slate" },
+  { value: "ISSUED", label: "Issued", color: "blue" },
+  { value: "PAID", label: "Paid", color: "green" },
+  { value: "CANCELLED", label: "Cancelled", color: "red" },
+] as const;
+
 export const CATEGORY_ICONS: Record<string, string> = {
   "mens-health": "shield",
   "weight-management": "scale",

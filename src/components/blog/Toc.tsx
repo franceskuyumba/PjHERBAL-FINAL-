@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, ListTree } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 import type { TocItem } from "@/lib/blog";
 
 export function Toc({ items }: { items: TocItem[] }) {
+  const { t } = useI18n();
   const [active, setActive] = useState<string>(items[0]?.id || "");
   const [open, setOpen] = useState(false);
 
@@ -55,8 +57,8 @@ export function Toc({ items }: { items: TocItem[] }) {
 
   return (
     <>
-      <aside className="sticky top-28 hidden max-h-[calc(100vh-8rem)] overflow-y-auto lg:block" aria-label="Table of contents">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink/40">On this page</p>
+      <aside className="sticky top-28 hidden max-h-[calc(100vh-8rem)] overflow-y-auto lg:block" aria-label={t("blog.tocTitle")}>
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink/40">{t("blog.onThisPage")}</p>
         <div className="mt-4">{list}</div>
       </aside>
 
@@ -68,7 +70,7 @@ export function Toc({ items }: { items: TocItem[] }) {
           className="flex w-full items-center justify-between rounded-2xl border border-ink/10 bg-white px-4 py-3 text-sm font-semibold text-brand-950 shadow-card"
         >
           <span className="flex items-center gap-2">
-            <ListTree className="h-4 w-4 text-brand-600" /> Table of contents
+            <ListTree className="h-4 w-4 text-brand-600" /> {t("blog.tocTitle")}
           </span>
           <ChevronDown className={cn("h-4 w-4 text-ink/40 transition-transform duration-200", open && "rotate-180")} />
         </button>

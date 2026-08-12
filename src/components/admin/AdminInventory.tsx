@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { PackagePlus, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/Toast";
+import { useI18n } from "@/context/LanguageContext";
 
 interface Product {
   id: string;
@@ -17,6 +18,7 @@ interface Product {
 
 export function AdminInventory() {
   const { toast } = useToast();
+  const { t } = useI18n();
   const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
   const [lowStockOnly, setLowStockOnly] = useState(false);
@@ -30,7 +32,7 @@ export function AdminInventory() {
       if (lowStockOnly) params.set("lowStock", "1");
       const res = await fetch(`/api/admin/products?${params}`);
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to load inventory");
+      if (!res.ok) throw new Error(data.error || t("admin.inventory.loadFailed"));
       setProducts(data.products);
     } catch (e) {
       toast((e as Error).message, "error");
@@ -53,8 +55,8 @@ export function AdminInventory() {
         body: JSON.stringify({ mode: "quick", stock: p.stock + amount }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Restock failed");
-      toast(`Restocked ${p.name} (+${amount})`, "success");
+      if (!res.ok) throw new Error(data.error || t("admin.inventory.restockFailed"));
+      toast(t("admin.inventory.restocked").replace("{name}", p.name).replace("{amount}", String(amount)), "success");
       load();
     } catch (e) {
       toast((e as Error).message, "error");
@@ -73,11 +75,14 @@ export function AdminInventory() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-bold text-brand-950">Inventory</h1>
+          <h1 className="font-display text-2xl font-bold text-brand-950">{t("admin.inventory.title")}</h1>
           <p className="mt-1 text-sm text-ink/55">
-            {products.length} product{products.length === 1 ? "" : "s"} ·{" "}
+            {t("admin.inventory.summary")
+              .replace("{count}", String(products.length))
+              .replace("{plural}", products.length === 1 ? "" : "s")}{" "}
+            ·{" "}
             <span className={lowCount > 0 ? "font-semibold text-amber-600" : "text-ink/55"}>
-              {lowCount} low stock
+              {t("admin.inventory.lowStockCount").replace("{count}", String(lowCount))}
             </span>
           </p>
         </div>
@@ -88,7 +93,7 @@ export function AdminInventory() {
             onChange={(e) => setLowStockOnly(e.target.checked)}
             className="h-4 w-4 accent-brand-600"
           />
-          Low stock only
+          {t("admin.inventory.lowStockOnly")}
         </label>
       </div>
 
@@ -103,7 +108,7 @@ export function AdminInventory() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Filter by name or SKU..."
+            placeholder={t("admin.inventory.filterPlaceholder")}
             className="input w-full rounded-xl border border-ink/15 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
           />
         </div>
@@ -111,20 +116,20 @@ export function AdminInventory() {
 
       <div className="mt-5 overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-card">
         {loading ? (
-          <p className="p-10 text-center text-sm text-ink/50">Loading inventory...</p>
+          <p className="p-10 text-center text-sm text-ink/50">{t("admin.inventory.loading")}</p>
         ) : filtered.length === 0 ? (
-          <p className="p-10 text-center text-sm text-ink/50">No products found.</p>
+          <p className="p-10 text-center text-sm text-ink/50">{t("admin.inventory.empty")}</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-ink/10 bg-slate-50 text-xs uppercase tracking-wide text-ink/40">
-                  <th className="px-5 py-3 font-semibold">Product</th>
-                  <th className="px-5 py-3 font-semibold">SKU</th>
-                  <th className="px-5 py-3 font-semibold">In stock</th>
-                  <th className="px-5 py-3 font-semibold">Low-stock threshold</th>
-                  <th className="px-5 py-3 font-semibold">Status</th>
-                  <th className="px-5 py-3 text-right font-semibold">Quick restock</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.inventory.colProduct")}</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.inventory.colSku")}</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.inventory.colInStock")}</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.inventory.colThreshold")}</th>
+                  <th className="px-5 py-3 font-semibold">{t("admin.inventory.colStatus")}</th>
+                  <th className="px-5 py-3 text-right font-semibold">{t("admin.inventory.colQuickRestock")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-ink/5">
@@ -146,7 +151,7 @@ export function AdminInventory() {
                         </span>
                         {isLow && (
                           <span className="ml-2 inline-flex rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
-                            {isOut ? "Out of stock" : "Low stock"}
+                            {isOut ? t("admin.inventory.outOfStock") : t("admin.inventory.lowStock")}
                           </span>
                         )}
                       </td>

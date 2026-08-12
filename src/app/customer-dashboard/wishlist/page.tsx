@@ -2,8 +2,10 @@ import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { WishlistGrid } from "@/components/dashboard/WishlistGrid";
+import { getLocale, t } from "@/lib/i18n";
 
 export default async function WishlistPage() {
+  const lang = getLocale();
   const session = await getSession();
   if (!session) notFound();
 
@@ -15,8 +17,8 @@ export default async function WishlistPage() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-brand-950">My wishlist</h1>
-      <p className="mt-1 text-sm text-ink/55">Products you have saved for later.</p>
+      <h1 className="font-display text-2xl font-bold text-brand-950">{t(lang, "dash.wishlist.pageTitle")}</h1>
+      <p className="mt-1 text-sm text-ink/55">{t(lang, "dash.wishlist.pageSubtitle")}</p>
       <WishlistGrid
         products={wishlist.map((w) => ({
           wishlistId: w.id,

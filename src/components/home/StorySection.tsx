@@ -2,31 +2,34 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, HeartHandshake, Leaf, Microscope, Truck } from "lucide-react";
 import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
-
-const pillars = [
-  {
-    icon: <Leaf className="h-5 w-5" />,
-    title: "Clinic-backed",
-    text: "Recommended through the PJHERBAL Clinic at Segerea — not a faceless online shop.",
-  },
-  {
-    icon: <Microscope className="h-5 w-5" />,
-    title: "Quality-checked batches",
-    text: "Every batch is reviewed for purity and consistent strength before it reaches you.",
-  },
-  {
-    icon: <Truck className="h-5 w-5" />,
-    title: "Delivered nationwide",
-    text: "Same-day across Dar es Salaam and fast, tracked dispatch to every region.",
-  },
-  {
-    icon: <HeartHandshake className="h-5 w-5" />,
-    title: "People, not bots",
-    text: "Talk to a real specialist on WhatsApp before and after you order.",
-  },
-];
+import { getLocale, t } from "@/lib/i18n";
 
 export function StorySection() {
+  const lang = getLocale();
+
+  const pillars = [
+    {
+      icon: <Leaf className="h-5 w-5" />,
+      title: t(lang, "home.storySection.p1.title"),
+      text: t(lang, "home.storySection.p1.text"),
+    },
+    {
+      icon: <Microscope className="h-5 w-5" />,
+      title: t(lang, "home.storySection.p2.title"),
+      text: t(lang, "home.storySection.p2.text"),
+    },
+    {
+      icon: <Truck className="h-5 w-5" />,
+      title: t(lang, "home.storySection.p3.title"),
+      text: t(lang, "home.storySection.p3.text"),
+    },
+    {
+      icon: <HeartHandshake className="h-5 w-5" />,
+      title: t(lang, "home.storySection.p4.title"),
+      text: t(lang, "home.storySection.p4.text"),
+    },
+  ];
+
   return (
     <section className="overflow-hidden bg-white py-16 sm:py-24">
       <div className="container-site grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
@@ -36,14 +39,14 @@ export function StorySection() {
             <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] shadow-lift">
               <Image
                 src="/images/products/moringa-power.svg"
-                alt="Premium PJHERBAL supplements"
+                alt={t(lang, "home.storySection.imageAlt")}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
               />
             </div>
             <div className="absolute -bottom-6 left-6 rounded-2xl bg-brand-950 px-5 py-4 text-white shadow-lift">
-              <p className="font-display text-lg font-bold text-gold-300">Segerea Branch</p>
+              <p className="font-display text-lg font-bold text-gold-300">{t(lang, "home.storySection.branch")}</p>
               <p className="text-sm text-white/70">Dar es Salaam · Tanzania</p>
             </div>
           </div>
@@ -51,14 +54,12 @@ export function StorySection() {
 
         <div className="order-1 lg:order-2">
           <AnimatedReveal>
-            <p className="eyebrow">Who we are</p>
+            <p className="eyebrow">{t(lang, "home.storySection.eyebrow")}</p>
             <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-brand-950 sm:text-4xl">
-              A wellness clinic, not just a supplement shop
+              {t(lang, "home.storySection.title")}
             </h2>
             <p className="mt-4 text-base leading-7 text-ink/60">
-              PJHERBAL Clinic at Segerea blends traditional plant knowledge with modern quality standards.
-              When you shop with us, you get the same care and honesty we offer patients who walk through
-              our clinic doors — plus the convenience of ordering from your phone.
+              {t(lang, "home.storySection.paragraph")}
             </p>
           </AnimatedReveal>
 
@@ -81,10 +82,10 @@ export function StorySection() {
           <AnimatedReveal delay={0.2}>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/about" className="btn-primary btn-md">
-                Our story <ArrowRight className="h-4 w-4" />
+                {t(lang, "home.storySection.ourStory")} <ArrowRight className="h-4 w-4" />
               </Link>
               <Link href="/blog" className="btn-outline btn-md">
-                Read the wellness journal
+                {t(lang, "home.storySection.readJournal")}
               </Link>
             </div>
           </AnimatedReveal>

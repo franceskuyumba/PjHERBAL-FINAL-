@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { PRODUCT_STATUSES } from "@/lib/constants";
 import { slugify } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 export interface CategoryOption {
   id: string;
@@ -61,6 +62,7 @@ export function ProductForm({
   editing?: Partial<ProductFormValues> & { id?: string };
 }) {
   const router = useRouter();
+  const { t } = useI18n();
   const [form, setForm] = useState<ProductFormValues>({
     ...emptyForm,
     ...(editing || {}),
@@ -82,13 +84,13 @@ export function ProductForm({
       });
       const data = await res.json();
       if (!res.ok) {
-        setErrorMsg(data.error || "Unable to save product.");
+        setErrorMsg(data.error || t("admin2.productForm.saveError"));
         return;
       }
       router.push("/admin/products");
       router.refresh();
     } catch {
-      setErrorMsg("Network error. Please try again.");
+      setErrorMsg(t("admin2.productForm.networkError"));
     } finally {
       setLoading(false);
     }
@@ -99,16 +101,18 @@ export function ProductForm({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-display text-2xl font-bold text-brand-950">
-            {editing?.id ? `Edit: ${form.name || "product"}` : "New product"}
+            {editing?.id
+              ? t("admin2.productForm.editTitle").replace("{title}", form.name || t("admin2.productForm.productFallback"))
+              : t("admin2.productForm.newProduct")}
           </h1>
-          <p className="mt-1 text-sm text-ink/55">Products marked ACTIVE appear in the shop.</p>
+          <p className="mt-1 text-sm text-ink/55">{t("admin2.productForm.subtitle")}</p>
         </div>
         <div className="flex gap-2">
           <Button type="button" variant="outline" onClick={() => router.push("/admin/products")}>
-            Cancel
+            {t("admin2.productForm.cancel")}
           </Button>
           <Button type="submit" loading={loading}>
-            {editing?.id ? "Save changes" : "Create product"}
+            {editing?.id ? t("admin2.productForm.saveChanges") : t("admin2.productForm.createProduct")}
           </Button>
         </div>
       </div>
@@ -119,8 +123,8 @@ export function ProductForm({
 
       <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
         <div className="space-y-6">
-          <Section title="Basic details">
-            <Field label="Product name *">
+          <Section title={t("admin2.productForm.basicDetails")}>
+            <Field label={t("admin2.productForm.nameLabel")}>
               <Input
                 required
                 value={form.name}
@@ -130,21 +134,21 @@ export function ProductForm({
                 }}
               />
             </Field>
-            <Field label="Slug *">
+            <Field label={t("admin2.productForm.slugLabel")}>
               <Input
                 required
                 value={form.slug}
                 onChange={(e) => set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
               />
             </Field>
-            <Field label="Category *">
+            <Field label={t("admin2.productForm.categoryLabel")}>
               <select
                 required
                 value={form.categoryId}
                 onChange={(e) => set("categoryId", e.target.value)}
                 className="input w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
               >
-                <option value="">Select category</option>
+                <option value="">{t("admin2.productForm.selectCategory")}</option>
                 {categories.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
@@ -152,17 +156,17 @@ export function ProductForm({
                 ))}
               </select>
             </Field>
-            <Field label="Short description *">
+            <Field label={t("admin2.productForm.shortDescLabel")}>
               <textarea
                 required
                 value={form.shortDescription}
                 onChange={(e) => set("shortDescription", e.target.value)}
                 rows={2}
-                placeholder="One or two lines shown on the product card."
+                placeholder={t("admin2.productForm.shortDescPlaceholder")}
                 className="input w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
               />
             </Field>
-            <Field label="Full description *">
+            <Field label={t("admin2.productForm.fullDescLabel")}>
               <textarea
                 required
                 value={form.description}
@@ -173,54 +177,60 @@ export function ProductForm({
             </Field>
           </Section>
 
-          <Section title="Detail blocks (optional)">
-            <Field label="Ingredients">
+          <Section title={t("admin2.productForm.detailBlocks")}>
+            <Field label={t("admin2.productForm.ingredientsLabel")}>
               <textarea value={form.ingredients} onChange={(e) => set("ingredients", e.target.value)} rows={3} className="input w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20" />
             </Field>
-            <Field label="Usage">
+            <Field label={t("admin2.productForm.usageLabel")}>
               <textarea value={form.usage} onChange={(e) => set("usage", e.target.value)} rows={3} className="input w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20" />
             </Field>
-            <Field label="Benefits">
+            <Field label={t("admin2.productForm.benefitsLabel")}>
               <textarea value={form.benefits} onChange={(e) => set("benefits", e.target.value)} rows={3} className="input w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20" />
             </Field>
-            <Field label="Precautions">
+            <Field label={t("admin2.productForm.precautionsLabel")}>
               <textarea value={form.precautions} onChange={(e) => set("precautions", e.target.value)} rows={3} className="input w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20" />
             </Field>
           </Section>
         </div>
 
         <div className="space-y-6">
-          <Section title="Pricing & inventory">
-            <Field label="Price (TZS) *">
+          <Section title={t("admin2.productForm.pricingInventory")}>
+            <Field label={t("admin2.productForm.priceLabel")}>
               <Input required type="number" min={0} value={form.price} onChange={(e) => set("price", e.target.value)} />
             </Field>
-            <Field label="Compare-at price (TZS)">
-              <Input type="number" min={0} value={form.compareAtPrice} onChange={(e) => set("compareAtPrice", e.target.value)} placeholder="Optional, shown struck through" />
+            <Field label={t("admin2.productForm.compareAtLabel")}>
+              <Input type="number" min={0} value={form.compareAtPrice} onChange={(e) => set("compareAtPrice", e.target.value)} placeholder={t("admin2.productForm.compareAtPlaceholder")} />
             </Field>
-            <Field label="Stock *">
+            <Field label={t("admin2.productForm.stockLabel")}>
               <Input required type="number" min={0} value={form.stock} onChange={(e) => set("stock", e.target.value)} />
             </Field>
-            <Field label="SKU">
-              <Input value={form.sku} onChange={(e) => set("sku", e.target.value)} placeholder="Auto-generated if empty" />
+            <Field label={t("admin2.productForm.skuLabel")}>
+              <Input value={form.sku} onChange={(e) => set("sku", e.target.value)} placeholder={t("admin2.productForm.skuPlaceholder")} />
             </Field>
-            <Field label="Status">
+            <Field label={t("admin2.productForm.statusLabel")}>
               <select value={form.status} onChange={(e) => set("status", e.target.value)} className="input w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20">
                 {PRODUCT_STATUSES.map((s) => (
                   <option key={s.value} value={s.value}>
-                    {s.label}
+                    {s.value === "ACTIVE"
+                      ? t("admin2.productForm.statusActive")
+                      : s.value === "INACTIVE"
+                        ? t("admin2.productForm.statusInactive")
+                        : s.value === "OUT_OF_STOCK"
+                          ? t("admin2.productForm.statusOutOfStock")
+                          : t("admin2.productForm.statusDraft")}
                   </option>
                 ))}
               </select>
             </Field>
           </Section>
 
-          <Section title="Marketing">
-            <Field label="Image path">
-              <Input value={form.image} onChange={(e) => set("image", e.target.value)} placeholder="/images/products/slug.svg" />
+          <Section title={t("admin2.productForm.marketing")}>
+            <Field label={t("admin2.productForm.imageLabel")}>
+              <Input value={form.image} onChange={(e) => set("image", e.target.value)} placeholder={t("admin2.productForm.imagePlaceholder")} />
             </Field>
             <div className="space-y-3 pt-1">
-              <Toggle checked={form.isBestSeller} onChange={(v) => set("isBestSeller", v)} label="Mark as Best Seller" />
-              <Toggle checked={form.isFeatured} onChange={(v) => set("isFeatured", v)} label="Mark as Featured" />
+              <Toggle checked={form.isBestSeller} onChange={(v) => set("isBestSeller", v)} label={t("admin2.productForm.bestSellerToggle")} />
+              <Toggle checked={form.isFeatured} onChange={(v) => set("isFeatured", v)} label={t("admin2.productForm.featuredToggle")} />
             </div>
           </Section>
         </div>

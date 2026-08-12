@@ -7,6 +7,7 @@ import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle, Sparkles } from "
 import { useEffect, useState } from "react";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 interface Slide {
   tag: string;
@@ -27,68 +28,69 @@ interface Slide {
   glow: string;
 }
 
-const slides: Slide[] = [
-  {
-    tag: "Daily Wellness Essentials",
-    tagline: "Authentic Tanzanian herbal supplements",
-    headline: "Nature's Power,",
-    highlight: "Engineered for You",
-    sub: "Premium, quality-checked supplements for energy, immunity, weight management and more — delivered across Tanzania.",
-    image: "/images/products/moringa-power.svg",
-    imageLabel: "Moringa Power",
-    badge: "Trusted by 1,000+ customers",
-    badgeTone: "gold",
-    primaryLabel: "SHOP NOW",
-    primaryHref: "/shop",
-    secondaryLabel: "EXPLORE PRODUCTS",
-    secondaryHref: "/shop",
-    chat: true,
-    bg: "from-brand-50 via-cream to-cream",
-    glow: "rgba(47,143,78,0.10)",
-  },
-  {
-    tag: "New Arrivals",
-    tagline: "Fresh from our dispensary",
-    headline: "New this season,",
-    highlight: "straight from the clinic",
-    sub: "Discover the latest additions to our wellness collection, carefully selected and quality-checked by our specialists.",
-    image: "/images/products/black-seed-oil.svg",
-    imageLabel: "Black Seed Oil",
-    badge: "Just landed",
-    badgeTone: "green",
-    primaryLabel: "SHOP NEW ARRIVALS",
-    primaryHref: "/shop?sort=newest",
-    secondaryLabel: "EXPLORE PRODUCTS",
-    secondaryHref: "/shop",
-    chat: false,
-    bg: "from-gold-50 via-cream to-cream",
-    glow: "rgba(212,149,38,0.12)",
-  },
-  {
-    tag: "This Week's Offers",
-    tagline: "Limited-time marketplace prices",
-    headline: "Shop this week's",
-    highlight: "best deals",
-    sub: "Flash prices on customer favourites — while stock lasts. Pay with M-Pesa, Tigo Pesa or Airtel Money.",
-    image: "/images/products/male-vitality-plus.svg",
-    imageLabel: "Male Vitality Plus",
-    badge: "Up to 20% OFF",
-    badgeTone: "gold",
-    primaryLabel: "VIEW FLASH DEALS",
-    primaryHref: "/#flash-deals",
-    secondaryLabel: "EXPLORE PRODUCTS",
-    secondaryHref: "/shop",
-    chat: true,
-    bg: "from-brand-900 via-brand-800 to-brand-950",
-    glow: "rgba(231,177,58,0.18)",
-  },
-];
-
 export function Hero() {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
   const [direction, setDirection] = useState(1);
   const [paused, setPaused] = useState(false);
+  const { t } = useI18n();
+
+  const slides: Slide[] = [
+    {
+      tag: t("home.hero.s1.tag"),
+      tagline: t("home.hero.s1.tagline"),
+      headline: t("home.hero.s1.headline"),
+      highlight: t("home.hero.s1.highlight"),
+      sub: t("home.hero.s1.sub"),
+      image: "/images/products/moringa-power.svg",
+      imageLabel: "Moringa Power",
+      badge: t("home.hero.s1.badge"),
+      badgeTone: "gold",
+      primaryLabel: t("home.hero.s1.primaryLabel"),
+      primaryHref: "/shop",
+      secondaryLabel: t("home.hero.exploreProducts"),
+      secondaryHref: "/shop",
+      chat: true,
+      bg: "from-brand-50 via-cream to-cream",
+      glow: "rgba(47,143,78,0.10)",
+    },
+    {
+      tag: t("home.hero.s2.tag"),
+      tagline: t("home.hero.s2.tagline"),
+      headline: t("home.hero.s2.headline"),
+      highlight: t("home.hero.s2.highlight"),
+      sub: t("home.hero.s2.sub"),
+      image: "/images/products/black-seed-oil.svg",
+      imageLabel: "Black Seed Oil",
+      badge: t("home.hero.s2.badge"),
+      badgeTone: "green",
+      primaryLabel: t("home.hero.s2.primaryLabel"),
+      primaryHref: "/shop?sort=newest",
+      secondaryLabel: t("home.hero.exploreProducts"),
+      secondaryHref: "/shop",
+      chat: false,
+      bg: "from-gold-50 via-cream to-cream",
+      glow: "rgba(212,149,38,0.12)",
+    },
+    {
+      tag: t("home.hero.s3.tag"),
+      tagline: t("home.hero.s3.tagline"),
+      headline: t("home.hero.s3.headline"),
+      highlight: t("home.hero.s3.highlight"),
+      sub: t("home.hero.s3.sub"),
+      image: "/images/products/male-vitality-plus.svg",
+      imageLabel: "Male Vitality Plus",
+      badge: t("home.hero.s3.badge"),
+      badgeTone: "gold",
+      primaryLabel: t("home.hero.s3.primaryLabel"),
+      primaryHref: "/#flash-deals",
+      secondaryLabel: t("home.hero.exploreProducts"),
+      secondaryHref: "/shop",
+      chat: true,
+      bg: "from-brand-900 via-brand-800 to-brand-950",
+      glow: "rgba(231,177,58,0.18)",
+    },
+  ];
 
   useEffect(() => {
     if (paused) return;
@@ -186,7 +188,7 @@ export function Hero() {
                     className="btn-whatsapp btn-lg"
                   >
                     <MessageCircle className="h-5 w-5" />
-                    CHAT WITH SPECIALIST
+                    {t("home.hero.chat")}
                   </a>
                 )}
               </div>
@@ -259,7 +261,7 @@ export function Hero() {
       >
         <button
           onClick={() => go(active - 1, -1)}
-          aria-label="Previous slide"
+          aria-label={t("home.hero.prevSlide")}
           className={cn("flex h-8 w-8 items-center justify-center rounded-full transition-colors", dark ? "text-white/70 hover:bg-white/10" : "text-ink/60 hover:bg-ink/5")}
         >
           <ChevronLeft className="h-4 w-4" />
@@ -268,7 +270,7 @@ export function Hero() {
           <button
             key={s.image}
             onClick={() => go(i, i > active ? 1 : -1)}
-            aria-label={`Show slide ${i + 1}`}
+            aria-label={t("home.hero.showSlide").replace("{n}", String(i + 1))}
             className={cn(
               "h-2 rounded-full transition-all",
               i === active ? "w-8 bg-gold-500" : cn(dark ? "bg-white/30 hover:bg-white/60" : "bg-ink/20 hover:bg-ink/40")
@@ -277,7 +279,7 @@ export function Hero() {
         ))}
         <button
           onClick={() => go(active + 1, 1)}
-          aria-label="Next slide"
+          aria-label={t("home.hero.nextSlide")}
           className={cn("flex h-8 w-8 items-center justify-center rounded-full transition-colors", dark ? "text-white/70 hover:bg-white/10" : "text-ink/60 hover:bg-ink/5")}
         >
           <ChevronRight className="h-4 w-4" />

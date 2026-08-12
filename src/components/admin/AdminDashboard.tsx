@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { formatTZS, formatDate } from "@/lib/utils";
 import { StatusBadge, PaymentStatusBadge } from "@/components/dashboard/StatusBadge";
+import { useI18n } from "@/context/LanguageContext";
 
 interface Stats {
   totalSales: number;
@@ -39,6 +40,7 @@ interface Order {
 }
 
 export function AdminDashboard() {
+  const { t } = useI18n();
   const [stats, setStats] = useState<Stats | null>(null);
   const [sales, setSales] = useState<SalesPoint[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
@@ -58,25 +60,25 @@ export function AdminDashboard() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <p className="py-16 text-center text-sm text-ink/50">Loading dashboard...</p>;
+  if (loading) return <p className="py-16 text-center text-sm text-ink/50">{t("admin.dashboard.loading")}</p>;
 
   const maxSale = Math.max(1, ...sales.map((s) => s.total));
   const cardData = [
-    { label: "Total sales", value: formatTZS(stats?.totalSales || 0), icon: Wallet, accent: "text-emerald-600" },
-    { label: "Orders", value: String(stats?.orders || 0), icon: PackageCheck, accent: "text-blue-600" },
-    { label: "Customers", value: String(stats?.customers || 0), icon: Users, accent: "text-violet-600" },
-    { label: "Products", value: String(stats?.products || 0), icon: Package, accent: "text-amber-600" },
+    { label: t("admin.dashboard.totalSales"), value: formatTZS(stats?.totalSales || 0), icon: Wallet, accent: "text-emerald-600" },
+    { label: t("admin.dashboard.orders"), value: String(stats?.orders || 0), icon: PackageCheck, accent: "text-blue-600" },
+    { label: t("admin.dashboard.customers"), value: String(stats?.customers || 0), icon: Users, accent: "text-violet-600" },
+    { label: t("admin.dashboard.products"), value: String(stats?.products || 0), icon: Package, accent: "text-amber-600" },
   ];
 
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-bold text-brand-950">Dashboard</h1>
-          <p className="mt-1 text-sm text-ink/55">Store performance at a glance.</p>
+          <h1 className="font-display text-2xl font-bold text-brand-950">{t("admin.dashboard.title")}</h1>
+          <p className="mt-1 text-sm text-ink/55">{t("admin.dashboard.subtitle")}</p>
         </div>
         <Link href="/admin/products/new" className="btn-primary btn-sm">
-          + New product
+          + {t("admin.dashboard.newProduct")}
         </Link>
       </div>
 
@@ -84,9 +86,11 @@ export function AdminDashboard() {
         <div className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
           <AlertTriangle className="h-4 w-4 shrink-0" />
           <span>
-            {stats.pendingOrders} order{stats.pendingOrders > 1 ? "s" : ""} awaiting confirmation.{" "}
+            {t("admin.dashboard.pendingAlert")
+              .replace("{count}", String(stats.pendingOrders))
+              .replace("{plural}", stats.pendingOrders > 1 ? "s" : "")}{" "}
             <Link href="/admin/orders" className="font-semibold underline">
-              Review now
+              {t("admin.dashboard.reviewNow")}
             </Link>
           </span>
         </div>
@@ -104,7 +108,7 @@ export function AdminDashboard() {
 
       <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
         <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-          <h2 className="font-display text-lg font-bold text-brand-950">Sales (last 14 days)</h2>
+          <h2 className="font-display text-lg font-bold text-brand-950">{t("admin.dashboard.salesTitle")}</h2>
           <div className="mt-6 flex h-48 items-end gap-1.5">
             {sales.map((s) => (
               <div key={s.label} className="group relative flex flex-1 flex-col items-center justify-end">
@@ -118,21 +122,23 @@ export function AdminDashboard() {
             ))}
           </div>
           <p className="mt-4 text-xs text-ink/45">
-            {formatTZS(sales.reduce((sum, s) => sum + s.total, 0))} total · {sales.reduce((sum, s) => sum + s.orders, 0)} orders
+            {t("admin.dashboard.salesTotal")
+              .replace("{total}", formatTZS(sales.reduce((sum, s) => sum + s.total, 0)))
+              .replace("{orders}", String(sales.reduce((sum, s) => sum + s.orders, 0)))}
           </p>
         </div>
 
         <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-          <h2 className="font-display text-lg font-bold text-brand-950">Low stock alerts</h2>
+          <h2 className="font-display text-lg font-bold text-brand-950">{t("admin.dashboard.lowStockTitle")}</h2>
           {lowStock.length === 0 ? (
-            <p className="mt-4 text-sm text-ink/45">All products are sufficiently stocked.</p>
+            <p className="mt-4 text-sm text-ink/45">{t("admin.dashboard.allStocked")}</p>
           ) : (
             <ul className="mt-4 space-y-3">
               {lowStock.map((p) => (
                 <li key={p.id} className="flex items-center justify-between gap-3">
                   <span className="truncate text-sm font-medium text-brand-950">{p.name}</span>
                   <span className="rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-600">
-                    {p.stock} left
+                    {t("admin.dashboard.left").replace("{count}", String(p.stock))}
                   </span>
                 </li>
               ))}
@@ -143,23 +149,23 @@ export function AdminDashboard() {
 
       <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-display text-lg font-bold text-brand-950">Recent orders</h2>
+          <h2 className="font-display text-lg font-bold text-brand-950">{t("admin.dashboard.recentOrders")}</h2>
           <Link href="/admin/orders" className="flex items-center gap-1 text-sm font-semibold text-brand-700 hover:text-brand-800">
-            View all <ArrowUpRight className="h-3.5 w-3.5" />
+            {t("admin.dashboard.viewAll")} <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
         </div>
         {orders.length === 0 ? (
-          <p className="text-sm text-ink/45">No orders yet.</p>
+          <p className="text-sm text-ink/45">{t("admin.dashboard.noOrders")}</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-ink/10 text-xs uppercase tracking-wide text-ink/40">
-                  <th className="pb-3 pr-4 font-semibold">Order</th>
-                  <th className="pb-3 pr-4 font-semibold">Customer</th>
-                  <th className="pb-3 pr-4 font-semibold">Date</th>
-                  <th className="pb-3 pr-4 font-semibold">Total</th>
-                  <th className="pb-3 pr-4 font-semibold">Status</th>
+                  <th className="pb-3 pr-4 font-semibold">{t("admin.dashboard.colOrder")}</th>
+                  <th className="pb-3 pr-4 font-semibold">{t("admin.dashboard.colCustomer")}</th>
+                  <th className="pb-3 pr-4 font-semibold">{t("admin.dashboard.colDate")}</th>
+                  <th className="pb-3 pr-4 font-semibold">{t("admin.dashboard.colTotal")}</th>
+                  <th className="pb-3 pr-4 font-semibold">{t("admin.dashboard.colStatus")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-ink/5">

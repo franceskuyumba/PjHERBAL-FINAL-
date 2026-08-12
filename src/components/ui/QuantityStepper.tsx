@@ -2,6 +2,7 @@
 
 import { Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 interface QuantityStepperProps {
   value: number;
@@ -12,6 +13,7 @@ interface QuantityStepperProps {
 }
 
 export function QuantityStepper({ value, onChange, min = 1, max = 99, className }: QuantityStepperProps) {
+  const { t } = useI18n();
   return (
     <div
       className={cn(
@@ -24,7 +26,7 @@ export function QuantityStepper({ value, onChange, min = 1, max = 99, className 
         onClick={() => onChange(Math.max(min, value - 1))}
         disabled={value <= min}
         className="flex h-8 w-8 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-brand-50 hover:text-brand-700 disabled:opacity-30"
-        aria-label="Decrease quantity"
+        aria-label={t("ui.qtyDecrease")}
       >
         <Minus className="h-4 w-4" />
       </button>
@@ -34,7 +36,7 @@ export function QuantityStepper({ value, onChange, min = 1, max = 99, className 
         onClick={() => onChange(Math.min(max, value + 1))}
         disabled={value >= max}
         className="flex h-8 w-8 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-brand-50 hover:text-brand-700 disabled:opacity-30"
-        aria-label="Increase quantity"
+        aria-label={t("ui.qtyIncrease")}
       >
         <Plus className="h-4 w-4" />
       </button>

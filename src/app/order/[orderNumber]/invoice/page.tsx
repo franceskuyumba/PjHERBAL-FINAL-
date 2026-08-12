@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { formatTZS, formatDate } from "@/lib/utils";
 import { SITE } from "@/lib/constants";
 import { PrintButton } from "@/components/order/PrintButton";
+import { getLocale, t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Invoice",
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default async function InvoicePage({ params }: { params: { orderNumber: string } }) {
+  const lang = getLocale();
   const session = await getSession();
   if (!session) notFound();
 
@@ -43,7 +45,7 @@ export default async function InvoicePage({ params }: { params: { orderNumber: s
 
       <div className="no-print mb-6 flex flex-wrap items-center justify-between gap-3">
         <Link href={isBackOffice ? "/admin/orders" : `/customer-dashboard/orders/${order.orderNumber}`} className="btn-outline btn-sm">
-          ← Back to order
+          {t(lang, "invoice.backToOrder")}
         </Link>
         <PrintButton />
       </div>
@@ -59,10 +61,10 @@ export default async function InvoicePage({ params }: { params: { orderNumber: s
           </div>
           <div className="text-right">
             <p className="text-xs font-bold uppercase tracking-widest text-ink/40">
-              {isPaid ? "Official receipt" : "Invoice"}
+              {isPaid ? t(lang, "invoice.receipt") : t(lang, "invoice.title")}
             </p>
             <p className="mt-2 font-mono text-lg font-bold text-brand-950">{order.orderNumber}</p>
-            <p className="mt-1 text-sm text-ink/55">Issued: {formatDate(order.createdAt)}</p>
+            <p className="mt-1 text-sm text-ink/55">{t(lang, "invoice.issued").replace("{date}", formatDate(order.createdAt))}</p>
             <p className="mt-1 text-sm">
               <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ${isPaid ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
                 {isPaid ? "PAID" : order.paymentStatus}
@@ -73,7 +75,7 @@ export default async function InvoicePage({ params }: { params: { orderNumber: s
 
         <div className="mt-8 grid gap-8 sm:grid-cols-2">
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-ink/40">Bill to</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-ink/40">{t(lang, "invoice.billTo")}</p>
             <p className="mt-2 font-semibold text-brand-950">{order.customerName}</p>
             <p className="text-sm text-ink/60">{order.address}</p>
             <p className="text-sm text-ink/60">{order.district}, {order.region}</p>
@@ -81,11 +83,11 @@ export default async function InvoicePage({ params }: { params: { orderNumber: s
             <p className="text-sm text-ink/60">{order.customerEmail}</p>
           </div>
           <div className="sm:text-right">
-            <p className="text-xs font-bold uppercase tracking-widest text-ink/40">Payment method</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-ink/40">{t(lang, "invoice.paymentMethod")}</p>
             <p className="mt-2 text-sm font-semibold text-brand-950">{order.paymentMethod}</p>
             {order.paymentReference && (
               <>
-                <p className="mt-3 text-xs font-bold uppercase tracking-widest text-ink/40">Reference</p>
+                <p className="mt-3 text-xs font-bold uppercase tracking-widest text-ink/40">{t(lang, "invoice.reference")}</p>
                 <p className="mt-1 font-mono text-sm text-ink/70">{order.paymentReference}</p>
               </>
             )}
@@ -96,10 +98,10 @@ export default async function InvoicePage({ params }: { params: { orderNumber: s
         <table className="mt-8 w-full text-left text-sm">
           <thead>
             <tr className="border-b-2 border-ink/10 text-xs uppercase tracking-wide text-ink/40">
-              <th className="pb-3 pr-4 font-semibold">Item</th>
-              <th className="pb-3 pr-4 text-right font-semibold">Qty</th>
-              <th className="pb-3 pr-4 text-right font-semibold">Price</th>
-              <th className="pb-3 text-right font-semibold">Amount</th>
+              <th className="pb-3 pr-4 font-semibold">{t(lang, "invoice.item")}</th>
+              <th className="pb-3 pr-4 text-right font-semibold">{t(lang, "invoice.qty")}</th>
+              <th className="pb-3 pr-4 text-right font-semibold">{t(lang, "invoice.price")}</th>
+              <th className="pb-3 text-right font-semibold">{t(lang, "invoice.amount")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-ink/5">
@@ -118,21 +120,21 @@ export default async function InvoicePage({ params }: { params: { orderNumber: s
         <div className="mt-6 flex justify-end">
           <dl className="w-full max-w-xs space-y-2 text-sm">
             <div className="flex justify-between">
-              <dt className="text-ink/55">Subtotal</dt>
+              <dt className="text-ink/55">{t(lang, "invoice.subtotal")}</dt>
               <dd className="font-semibold">{formatTZS(order.subtotal)}</dd>
             </div>
             {order.discount > 0 && (
               <div className="flex justify-between text-brand-600">
-                <dt>Discount{order.couponCode ? ` (${order.couponCode})` : ""}</dt>
+                <dt>{t(lang, "invoice.discount")}{order.couponCode ? ` (${order.couponCode})` : ""}</dt>
                 <dd className="font-semibold">−{formatTZS(order.discount)}</dd>
               </div>
             )}
             <div className="flex justify-between">
-              <dt className="text-ink/55">Delivery ({order.region})</dt>
-              <dd className="font-semibold">{order.shipping > 0 ? formatTZS(order.shipping) : "Free"}</dd>
+              <dt className="text-ink/55">{t(lang, "invoice.delivery").replace("{region}", order.region)}</dt>
+              <dd className="font-semibold">{order.shipping > 0 ? formatTZS(order.shipping) : t(lang, "invoice.free")}</dd>
             </div>
             <div className="flex justify-between border-t border-ink/10 pt-3">
-              <dt className="font-bold text-brand-950">Total</dt>
+              <dt className="font-bold text-brand-950">{t(lang, "invoice.total")}</dt>
               <dd className="font-display text-xl font-bold text-brand-800">{formatTZS(order.total)}</dd>
             </div>
           </dl>
@@ -140,12 +142,12 @@ export default async function InvoicePage({ params }: { params: { orderNumber: s
 
         {!isPaid && (
           <div className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
-            This invoice is unpaid. Complete your payment and confirm it on WhatsApp to receive your official receipt.
+            {t(lang, "invoice.unpaidNote")}
           </div>
         )}
 
         <p className="mt-8 border-t border-ink/10 pt-4 text-center text-xs text-ink/40">
-          {SITE.name} · {SITE.address} · {SITE.phone} · Thank you for supporting health in Tanzania!
+          {SITE.name} · {SITE.address} · {SITE.phone} · {t(lang, "invoice.footerThanks")}
         </p>
       </div>
     </div>

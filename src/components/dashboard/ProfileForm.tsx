@@ -5,9 +5,11 @@ import { useState } from "react";
 import { UserRound } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { useI18n } from "@/context/LanguageContext";
 
 export function ProfileForm({ name, email, phone }: { name: string; email: string; phone: string | null }) {
   const router = useRouter();
+  const { t } = useI18n();
   const [profile, setProfile] = useState({ name, phone: phone || "" });
   const [profileMsg, setProfileMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
   const [savingProfile, setSavingProfile] = useState(false);
@@ -28,13 +30,13 @@ export function ProfileForm({ name, email, phone }: { name: string; email: strin
       });
       const data = await res.json();
       if (!res.ok) {
-        setProfileMsg({ type: "err", text: data.error || "Unable to save profile." });
+        setProfileMsg({ type: "err", text: data.error || t("dash.profile.saveError") });
         return;
       }
-      setProfileMsg({ type: "ok", text: "Profile updated." });
+      setProfileMsg({ type: "ok", text: t("dash.profile.updated") });
       router.refresh();
     } catch {
-      setProfileMsg({ type: "err", text: "Network error. Please try again." });
+      setProfileMsg({ type: "err", text: t("dash.profile.networkError") });
     } finally {
       setSavingProfile(false);
     }
@@ -44,7 +46,7 @@ export function ProfileForm({ name, email, phone }: { name: string; email: strin
     e.preventDefault();
     setPassMsg(null);
     if (pass.newPassword !== pass.confirm) {
-      setPassMsg({ type: "err", text: "New passwords do not match." });
+      setPassMsg({ type: "err", text: t("dash.profile.passMismatch") });
       return;
     }
     setSavingPass(true);
@@ -56,13 +58,13 @@ export function ProfileForm({ name, email, phone }: { name: string; email: strin
       });
       const data = await res.json();
       if (!res.ok) {
-        setPassMsg({ type: "err", text: data.error || "Unable to change password." });
+        setPassMsg({ type: "err", text: data.error || t("dash.profile.passError") });
         return;
       }
       setPass({ currentPassword: "", newPassword: "", confirm: "" });
-      setPassMsg({ type: "ok", text: "Password changed successfully." });
+      setPassMsg({ type: "ok", text: t("dash.profile.passChanged") });
     } catch {
-      setPassMsg({ type: "err", text: "Network error. Please try again." });
+      setPassMsg({ type: "err", text: t("dash.profile.networkError") });
     } finally {
       setSavingPass(false);
     }
@@ -70,13 +72,13 @@ export function ProfileForm({ name, email, phone }: { name: string; email: strin
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-brand-950">Settings</h1>
-      <p className="mt-1 text-sm text-ink/55">Update your personal information and password.</p>
+      <h1 className="font-display text-2xl font-bold text-brand-950">{t("dash.profile.title")}</h1>
+      <p className="mt-1 text-sm text-ink/55">{t("dash.profile.subtitle")}</p>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
           <h2 className="mb-4 flex items-center gap-2 font-display text-lg font-bold text-brand-950">
-            <UserRound className="h-5 w-5 text-brand-700" /> Profile details
+            <UserRound className="h-5 w-5 text-brand-700" /> {t("dash.profile.details")}
           </h2>
           {profileMsg && (
             <div
@@ -91,16 +93,16 @@ export function ProfileForm({ name, email, phone }: { name: string; email: strin
           )}
           <form onSubmit={saveProfile} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-brand-950">Full name</label>
+              <label className="text-sm font-medium text-brand-950">{t("dash.profile.fullName")}</label>
               <Input value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-brand-950">Email</label>
+              <label className="text-sm font-medium text-brand-950">{t("dash.profile.email")}</label>
               <Input value={email} disabled className="opacity-60" />
-              <p className="text-xs text-ink/45">Email cannot be changed.</p>
+              <p className="text-xs text-ink/45">{t("dash.profile.emailFixed")}</p>
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-brand-950">Phone number</label>
+              <label className="text-sm font-medium text-brand-950">{t("dash.profile.phone")}</label>
               <Input
                 type="tel"
                 value={profile.phone}
@@ -108,13 +110,13 @@ export function ProfileForm({ name, email, phone }: { name: string; email: strin
               />
             </div>
             <Button type="submit" loading={savingProfile}>
-              Save changes
+              {t("dash.profile.saveChanges")}
             </Button>
           </form>
         </div>
 
         <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-          <h2 className="mb-4 font-display text-lg font-bold text-brand-950">Change password</h2>
+          <h2 className="mb-4 font-display text-lg font-bold text-brand-950">{t("dash.profile.changePasswordTitle")}</h2>
           {passMsg && (
             <div
               className={
@@ -128,7 +130,7 @@ export function ProfileForm({ name, email, phone }: { name: string; email: strin
           )}
           <form onSubmit={savePassword} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-brand-950">Current password</label>
+              <label className="text-sm font-medium text-brand-950">{t("dash.profile.currentPassword")}</label>
               <Input
                 type="password"
                 value={pass.currentPassword}
@@ -137,7 +139,7 @@ export function ProfileForm({ name, email, phone }: { name: string; email: strin
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-brand-950">New password</label>
+              <label className="text-sm font-medium text-brand-950">{t("dash.profile.newPassword")}</label>
               <Input
                 type="password"
                 value={pass.newPassword}
@@ -146,7 +148,7 @@ export function ProfileForm({ name, email, phone }: { name: string; email: strin
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-brand-950">Confirm new password</label>
+              <label className="text-sm font-medium text-brand-950">{t("dash.profile.confirmPassword")}</label>
               <Input
                 type="password"
                 value={pass.confirm}
@@ -155,7 +157,7 @@ export function ProfileForm({ name, email, phone }: { name: string; email: strin
               />
             </div>
             <Button type="submit" loading={savingPass}>
-              Change password
+              {t("dash.profile.changePasswordBtn")}
             </Button>
           </form>
         </div>

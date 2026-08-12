@@ -7,6 +7,7 @@ import { BlogCard, type BlogCardData } from "./BlogCard";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 interface CategoryCount {
   name: string;
@@ -14,6 +15,7 @@ interface CategoryCount {
 }
 
 export function BlogExplorer({ posts, categories }: { posts: BlogCardData[]; categories: CategoryCount[] }) {
+  const { t } = useI18n();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [searching, setSearching] = useState(false);
@@ -55,13 +57,13 @@ export function BlogExplorer({ posts, categories }: { posts: BlogCardData[]; cat
     <section className="container-site pb-16 lg:pb-20">
       <div className="mx-auto max-w-2xl">
         <label className="relative block">
-          <span className="sr-only">Search articles</span>
+          <span className="sr-only">{t("blog.searchArticles")}</span>
           <Search className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-ink/35" />
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search wellness articles…"
+            placeholder={t("blog.searchPlaceholder")}
             autoComplete="off"
             className="input w-full rounded-2xl py-4 pl-13 text-base shadow-card"
             style={{ paddingLeft: "3.25rem" }}
@@ -107,11 +109,11 @@ export function BlogExplorer({ posts, categories }: { posts: BlogCardData[]; cat
         ) : filtered.length === 0 ? (
           <EmptyState
             icon={<SearchX className="h-7 w-7" />}
-            title="No articles found"
-            description="Try a different search term or category — our journal covers many wellness topics."
+            title={t("blog.noArticles")}
+            description={t("blog.noArticlesDesc")}
             action={
               <button onClick={clear} className="btn-outline btn-sm">
-                Clear search
+                {t("blog.clearSearch")}
               </button>
             }
           />

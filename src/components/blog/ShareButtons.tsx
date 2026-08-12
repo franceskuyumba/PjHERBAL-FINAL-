@@ -2,8 +2,10 @@
 
 import { Facebook, Link2, Linkedin, MessageCircle, Twitter } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
+import { useI18n } from "@/context/LanguageContext";
 
 export function ShareButtons({ title, url }: { title: string; url: string }) {
+  const { t } = useI18n();
   const { toast } = useToast();
 
   const currentUrl = typeof window !== "undefined" ? window.location.href : url;
@@ -11,25 +13,25 @@ export function ShareButtons({ title, url }: { title: string; url: string }) {
 
   const links = [
     {
-      name: "Share on WhatsApp",
+      name: t("blog.shareWhatsApp"),
       href: `https://wa.me/?text=${enc(title)}%0A${enc(currentUrl)}`,
       icon: MessageCircle,
       hover: "hover:bg-[#25D366] hover:text-white",
     },
     {
-      name: "Share on X",
+      name: t("blog.shareX"),
       href: `https://twitter.com/intent/tweet?text=${enc(title)}&url=${enc(currentUrl)}`,
       icon: Twitter,
       hover: "hover:bg-ink hover:text-white",
     },
     {
-      name: "Share on Facebook",
+      name: t("blog.shareFacebook"),
       href: `https://www.facebook.com/sharer/sharer.php?u=${enc(currentUrl)}`,
       icon: Facebook,
       hover: "hover:bg-[#1877F2] hover:text-white",
     },
     {
-      name: "Share on LinkedIn",
+      name: t("blog.shareLinkedIn"),
       href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(currentUrl)}`,
       icon: Linkedin,
       hover: "hover:bg-[#0A66C2] hover:text-white",
@@ -39,15 +41,15 @@ export function ShareButtons({ title, url }: { title: string; url: string }) {
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(currentUrl);
-      toast("Article link copied", "success");
+      toast(t("blog.linkCopied"), "success");
     } catch {
-      toast("Could not copy the link", "error");
+      toast(t("blog.linkCopyError"), "error");
     }
   };
 
   return (
     <div className="flex items-center gap-2">
-      <span className="mr-1 text-sm font-semibold text-ink/55">Share</span>
+      <span className="mr-1 text-sm font-semibold text-ink/55">{t("blog.share")}</span>
       {links.map((l) => (
         <a
           key={l.name}
@@ -62,7 +64,7 @@ export function ShareButtons({ title, url }: { title: string; url: string }) {
       ))}
       <button
         onClick={copyLink}
-        aria-label="Copy article link"
+        aria-label={t("blog.copyLinkAria")}
         className="btn-icon border border-ink/10 bg-white text-ink/55 shadow-sm transition-colors hover:bg-brand-600 hover:text-white"
       >
         <Link2 className="h-4 w-4" />

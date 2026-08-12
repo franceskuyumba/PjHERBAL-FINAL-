@@ -15,6 +15,7 @@ import { TrackProductView } from "@/components/product/TrackProductView";
 import { prisma } from "@/lib/prisma";
 import { toProductCard } from "@/lib/serializers";
 import { getCurrentUser } from "@/lib/auth";
+import { getLocale, t } from "@/lib/i18n";
 import { formatDate } from "@/lib/utils";
 import { SITE } from "@/lib/constants";
 import { absoluteUrl, generateJsonLd } from "@/lib/seo";
@@ -40,6 +41,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
+  const lang = getLocale();
   const [product, user] = await Promise.all([
     prisma.product.findUnique({
       where: { slug: params.slug },
@@ -60,10 +62,10 @@ export default async function ProductPage({ params }: { params: { slug: string }
   const isLoggedIn = Boolean(user);
 
   const tabs = [
-    { id: "benefits", label: "Benefits", content: product.benefits || product.shortDescription },
-    { id: "ingredients", label: "Ingredients", content: product.ingredients || "Full ingredients are listed on the product packaging." },
-    { id: "usage", label: "Usage", content: product.usage || "Follow the directions printed on the product label." },
-    { id: "precautions", label: "Precautions", content: product.precautions || "Keep out of reach of children. Consult a healthcare professional if you have a medical condition or are on medication." },
+    { id: "benefits", label: t(lang, "product.tabBenefits"), content: product.benefits || product.shortDescription },
+    { id: "ingredients", label: t(lang, "product.tabIngredients"), content: product.ingredients || t(lang, "product.defaultIngredients") },
+    { id: "usage", label: t(lang, "product.tabUsage"), content: product.usage || t(lang, "product.defaultUsage") },
+    { id: "precautions", label: t(lang, "product.tabPrecautions"), content: product.precautions || t(lang, "product.defaultPrecautions") },
   ];
 
   const jsonLd = generateJsonLd({
@@ -87,7 +89,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
       <div className="container-site py-6 sm:py-10">
         <Breadcrumbs
           crumbs={[
-            { label: "Shop", href: "/shop" },
+            { label: t(lang, "shop.title"), href: "/shop" },
             { label: product.category.name, href: `/category/${product.category.slug}` },
             { label: product.name },
           ]}
@@ -99,7 +101,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
           <div>
             <div className="flex items-center gap-2">
               {product.isBestSeller && (
-                <span className="badge bg-gold-500 text-brand-950">Best Seller</span>
+                <span className="badge bg-gold-500 text-brand-950">{t(lang, "product.bestSeller")}</span>
               )}
               <span className="badge bg-brand-50 text-brand-700">{product.category.name}</span>
             </div>
@@ -132,8 +134,8 @@ export default async function ProductPage({ params }: { params: { slug: string }
                   <Truck className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-brand-950">Fast delivery</p>
-                  <p className="text-xs text-ink/50">Dar same-day, TZ nationwide</p>
+                  <p className="text-sm font-bold text-brand-950">{t(lang, "product.fastDelivery")}</p>
+                  <p className="text-xs text-ink/50">{t(lang, "product.fastDeliverySub")}</p>
                 </div>
               </div>
               <div className="card flex items-center gap-3 p-4">
@@ -141,8 +143,8 @@ export default async function ProductPage({ params }: { params: { slug: string }
                   <ShieldCheck className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-brand-950">Genuine & tested</p>
-                  <p className="text-xs text-ink/50">Authentic, quality-checked</p>
+                  <p className="text-sm font-bold text-brand-950">{t(lang, "product.genuine")}</p>
+                  <p className="text-xs text-ink/50">{t(lang, "product.genuineSub")}</p>
                 </div>
               </div>
             </div>
@@ -150,7 +152,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
         </div>
 
         <div className="mt-14">
-          <h2 className="font-display text-2xl font-bold text-brand-950">Product details</h2>
+          <h2 className="font-display text-2xl font-bold text-brand-950">{t(lang, "product.details")}</h2>
           <div className="mt-4">
             <Tabs tabs={tabs} />
           </div>
@@ -159,12 +161,12 @@ export default async function ProductPage({ params }: { params: { slug: string }
         <div className="mt-14 grid gap-8 lg:grid-cols-[1fr_380px]">
           <div>
             <h2 className="font-display text-2xl font-bold text-brand-950">
-              Customer reviews ({product.reviews.length})
+              {t(lang, "product.reviewsCount").replace("{count}", String(product.reviews.length))}
             </h2>
             <div className="mt-6 space-y-4">
               {product.reviews.length === 0 ? (
                 <div className="rounded-3xl border-2 border-dashed border-ink/10 bg-white/60 p-8 text-center text-sm text-ink/55">
-                  No reviews yet. Be the first to review this product!
+                  {t(lang, "product.noReviews")}
                 </div>
               ) : (
                 product.reviews.map((review) => (
@@ -196,12 +198,12 @@ export default async function ProductPage({ params }: { params: { slug: string }
               <ReviewForm productId={product.id} />
             ) : (
               <div className="rounded-2xl bg-brand-50 p-6 text-center">
-                <h3 className="font-display text-lg font-bold text-brand-950">Bought this product?</h3>
+                <h3 className="font-display text-lg font-bold text-brand-950">{t(lang, "product.bought")}</h3>
                 <p className="mt-2 text-sm text-ink/60">
-                  Sign in to share your experience and help other customers.
+                  {t(lang, "product.signInPrompt")}
                 </p>
                 <Link href={`/login?next=/product/${product.slug}`} className="btn-primary btn-md mt-4">
-                  Sign in to review
+                  {t(lang, "product.signInReview")}
                 </Link>
               </div>
             )}
@@ -211,9 +213,9 @@ export default async function ProductPage({ params }: { params: { slug: string }
         {related.length > 0 && (
           <div className="mt-16">
             <div className="flex items-center justify-between">
-              <h2 className="font-display text-2xl font-bold text-brand-950">You may also like</h2>
+              <h2 className="font-display text-2xl font-bold text-brand-950">{t(lang, "product.related")}</h2>
               <Link href={`/category/${product.category.slug}`} className="btn-outline btn-sm">
-                View all
+                {t(lang, "product.viewAll")}
               </Link>
             </div>
             <div className="mt-6 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">

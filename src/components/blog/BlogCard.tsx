@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight, CalendarDays } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 export interface BlogCardData {
   slug: string;
@@ -19,6 +20,7 @@ export interface BlogCardData {
 }
 
 export function BlogCard({ post, index = 0 }: { post: BlogCardData; index?: number }) {
+  const { t } = useI18n();
   return (
     <motion.article
       initial={{ opacity: 0, y: 24 }}
@@ -47,14 +49,14 @@ export function BlogCard({ post, index = 0 }: { post: BlogCardData; index?: numb
               <CalendarDays className="h-3.5 w-3.5" />
               {formatDate(post.publishedAt)}
             </span>
-            <span>{post.readingTime} min read</span>
+            <span>{t("blog.minRead").replace("{n}", String(post.readingTime))}</span>
           </div>
           <h3 className="mt-2 line-clamp-2 font-display text-lg font-bold text-brand-950 transition-colors group-hover:text-brand-700">
             {post.title}
           </h3>
           <p className="mt-2 line-clamp-2 text-sm leading-6 text-ink/55">{post.excerpt}</p>
           <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
-            Read article
+            {t("blog.readArticle")}
             <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </span>
         </div>

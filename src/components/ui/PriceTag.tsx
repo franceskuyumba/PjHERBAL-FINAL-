@@ -1,5 +1,8 @@
+"use client";
+
 import { formatTZS } from "@/lib/utils";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 interface PriceTagProps {
   price: number;
@@ -15,6 +18,7 @@ const sizes = {
 };
 
 export function PriceTag({ price, compareAtPrice, size = "md", className }: PriceTagProps) {
+  const { t } = useI18n();
   const s = sizes[size];
   const discount =
     compareAtPrice && compareAtPrice > price
@@ -29,7 +33,7 @@ export function PriceTag({ price, compareAtPrice, size = "md", className }: Pric
           <span className={cn("text-ink/35 line-through", s.compare)}>
             {formatTZS(compareAtPrice!)}
           </span>
-          <span className="badge bg-red-50 text-red-600">{discount}% OFF</span>
+          <span className="badge bg-red-50 text-red-600">{discount}{t("ui.percentOff")}</span>
         </>
       )}
     </div>

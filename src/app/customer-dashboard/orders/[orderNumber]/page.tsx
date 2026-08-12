@@ -9,27 +9,29 @@ import { StatusBadge, PaymentStatusBadge } from "@/components/dashboard/StatusBa
 import { TrackingTimeline } from "@/components/dashboard/TrackingTimeline";
 import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { getLocale, t, type Locale } from "@/lib/i18n";
 
-function estimatedDelivery(status: string): string {
+function estimatedDelivery(status: string, lang: Locale): string {
   switch (status) {
     case "DELIVERED":
-      return "Delivered";
+      return t(lang, "dash.orderDetail.estDelivered");
     case "DISPATCHED":
-      return "Arriving within 1–2 days";
+      return t(lang, "dash.orderDetail.estDispatched");
     case "PROCESSING":
-      return "Expected dispatch within 1 day";
+      return t(lang, "dash.orderDetail.estProcessing");
     case "PAID":
-      return "We begin preparing after payment confirmation";
+      return t(lang, "dash.orderDetail.estPaid");
     case "PENDING":
-      return "Estimated after payment is confirmed";
+      return t(lang, "dash.orderDetail.estPending");
     case "CANCELLED":
-      return "Cancelled";
+      return t(lang, "dash.orderDetail.estCancelled");
     default:
-      return "Check back soon";
+      return t(lang, "dash.orderDetail.estDefault");
   }
 }
 
 export default async function OrderDetailPage({ params }: { params: { orderNumber: string } }) {
+  const lang = getLocale();
   const session = await getSession();
   if (!session) notFound();
 
@@ -44,7 +46,9 @@ export default async function OrderDetailPage({ params }: { params: { orderNumbe
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-display text-2xl font-bold text-brand-950">{order.orderNumber}</h1>
-          <p className="mt-1 text-sm text-ink/55">Placed on {formatDateTime(order.createdAt)}</p>
+          <p className="mt-1 text-sm text-ink/55">
+            {t(lang, "dash.orderDetail.placedOn").replace("{date}", formatDateTime(order.createdAt))}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <StatusBadge status={order.status} />
@@ -55,13 +59,13 @@ export default async function OrderDetailPage({ params }: { params: { orderNumbe
       <div className="mt-5 flex items-center gap-3 rounded-2xl border border-brand-100 bg-brand-50/60 px-4 py-3 text-sm text-brand-950">
         <Clock className="h-4 w-4 shrink-0 text-brand-600" />
         <span>
-          <span className="font-semibold">Estimated delivery:</span> {estimatedDelivery(order.status)}
+          <span className="font-semibold">{t(lang, "dash.orderDetail.estDeliveryLabel")}</span> {estimatedDelivery(order.status, lang)}
         </span>
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
         <a href={`/order/${order.orderNumber}/invoice`} target="_blank" className="btn-outline btn-sm">
-          <FileText className="h-4 w-4" /> Invoice / Receipt (PDF)
+          <FileText className="h-4 w-4" /> {t(lang, "dash.orderDetail.invoice")}
         </a>
       </div>
 
@@ -69,14 +73,14 @@ export default async function OrderDetailPage({ params }: { params: { orderNumbe
         <div className="space-y-6">
           <AnimatedReveal>
             <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-              <h2 className="mb-5 font-display text-lg font-bold text-brand-950">Order progress</h2>
+              <h2 className="mb-5 font-display text-lg font-bold text-brand-950">{t(lang, "dash.orderDetail.orderProgress")}</h2>
               <TrackingTimeline status={order.status} />
             </div>
           </AnimatedReveal>
 
           <AnimatedReveal>
             <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-              <h2 className="mb-4 font-display text-lg font-bold text-brand-950">Items</h2>
+              <h2 className="mb-4 font-display text-lg font-bold text-brand-950">{t(lang, "dash.orderDetail.items")}</h2>
               <ul className="divide-y divide-ink/5">
                 {order.items.map((item) => (
                   <li key={item.id} className="flex items-center gap-4 py-3">
@@ -94,7 +98,7 @@ export default async function OrderDetailPage({ params }: { params: { orderNumbe
                         {item.productName}
                       </Link>
                       <p className="mt-0.5 text-xs text-ink/50">
-                        Qty {item.quantity} × {formatTZS(item.price)}
+                        {t(lang, "dash.orderDetail.qty").replace("{qty}", String(item.quantity)).replace("{price}", formatTZS(item.price))}
                       </p>
                     </div>
                     <span className="text-sm font-bold text-brand-950">{formatTZS(item.subtotal)}</span>
@@ -108,28 +112,28 @@ export default async function OrderDetailPage({ params }: { params: { orderNumbe
         <div className="space-y-6">
           <AnimatedReveal>
             <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-              <h2 className="mb-4 font-display text-lg font-bold text-brand-950">Summary</h2>
+              <h2 className="mb-4 font-display text-lg font-bold text-brand-950">{t(lang, "dash.orderDetail.summary")}</h2>
               <dl className="space-y-2.5 text-sm">
-                <Row label="Subtotal" value={formatTZS(order.subtotal)} />
+                <Row label={t(lang, "dash.orderDetail.subtotal")} value={formatTZS(order.subtotal)} />
                 {order.discount > 0 && (
-                  <Row label={`Discount${order.couponCode ? ` (${order.couponCode})` : ""}`} value={`-${formatTZS(order.discount)}`} negative />
+                  <Row label={`${t(lang, "dash.orderDetail.discount")}${order.couponCode ? ` (${order.couponCode})` : ""}`} value={`-${formatTZS(order.discount)}`} negative />
                 )}
-                <Row label="Shipping" value={order.shipping > 0 ? formatTZS(order.shipping) : "Free"} />
+                <Row label={t(lang, "dash.orderDetail.shipping")} value={order.shipping > 0 ? formatTZS(order.shipping) : t(lang, "dash.orderDetail.free")} />
                 <div className="border-t border-ink/10 pt-2.5">
-                  <Row label="Total" value={formatTZS(order.total)} bold />
+                  <Row label={t(lang, "dash.orderDetail.total")} value={formatTZS(order.total)} bold />
                 </div>
                 <div className="flex justify-between pt-1">
-                  <dt className="text-ink/50">Payment method</dt>
+                  <dt className="text-ink/50">{t(lang, "dash.orderDetail.paymentMethod")}</dt>
                   <dd className="font-semibold text-brand-950">{order.paymentMethod}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-ink/50">Payment status</dt>
+                  <dt className="text-ink/50">{t(lang, "dash.orderDetail.paymentStatus")}</dt>
                   <dd className="font-semibold text-brand-950">{order.paymentStatus}</dd>
                 </div>
               </dl>
               {order.paymentStatus === "UNPAID" && (
                 <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
-                  Complete your payment and send the confirmation on WhatsApp to speed up dispatch.
+                  {t(lang, "dash.orderDetail.unpaidNote")}
                 </div>
               )}
             </div>
@@ -137,7 +141,7 @@ export default async function OrderDetailPage({ params }: { params: { orderNumbe
 
           <AnimatedReveal>
             <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
-              <h2 className="mb-4 font-display text-lg font-bold text-brand-950">Delivery address</h2>
+              <h2 className="mb-4 font-display text-lg font-bold text-brand-950">{t(lang, "dash.orderDetail.deliveryAddress")}</h2>
               <div className="flex gap-3 text-sm text-ink/65">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-700" />
                 <div>
@@ -146,7 +150,7 @@ export default async function OrderDetailPage({ params }: { params: { orderNumbe
                     {order.address}, {order.district}, {order.region}
                   </p>
                   <p className="mt-0.5">{order.customerPhone}</p>
-                  {order.notes && <p className="mt-1 text-ink/50">Note: {order.notes}</p>}
+                  {order.notes && <p className="mt-1 text-ink/50">{t(lang, "dash.orderDetail.note").replace("{notes}", order.notes)}</p>}
                 </div>
               </div>
             </div>
@@ -154,13 +158,13 @@ export default async function OrderDetailPage({ params }: { params: { orderNumbe
 
           <a
             href={buildWhatsAppUrl({
-              message: `Hello PJHERBAL Clinic, I have a question about my order ${order.orderNumber}.`,
+              message: t(lang, "dash.orderDetail.waMessage").replace("{num}", order.orderNumber),
             })}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-whatsapp flex w-full items-center justify-center"
           >
-            <MessageCircle className="mr-2 h-4 w-4" /> Ask about this order on WhatsApp
+            <MessageCircle className="mr-2 h-4 w-4" /> {t(lang, "dash.orderDetail.askWhatsApp")}
           </a>
         </div>
       </div>

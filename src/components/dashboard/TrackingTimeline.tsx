@@ -2,22 +2,25 @@
 
 import { Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const STEPS = [
-  { key: "PENDING", label: "Order placed", desc: "We have received your order" },
-  { key: "PAID", label: "Payment confirmed", desc: "Your payment has been received" },
-  { key: "PROCESSING", label: "Processing", desc: "We are preparing your order" },
-  { key: "DISPATCHED", label: "Dispatched", desc: "Your order is on its way" },
-  { key: "DELIVERED", label: "Delivered", desc: "Enjoy your order!" },
-];
-
-function stepIndex(status: string): number {
-  if (status === "CANCELLED") return -1;
-  const idx = STEPS.findIndex((s) => s.key === status);
-  return idx === -1 ? 0 : idx;
-}
+import { useI18n } from "@/context/LanguageContext";
 
 export function TrackingTimeline({ status }: { status: string }) {
+  const { t } = useI18n();
+
+  const STEPS = [
+    { key: "PENDING", label: t("dash.tracking.ordered"), desc: t("dash.tracking.orderedDesc") },
+    { key: "PAID", label: t("dash.tracking.paid"), desc: t("dash.tracking.paidDesc") },
+    { key: "PROCESSING", label: t("dash.tracking.processing"), desc: t("dash.tracking.processingDesc") },
+    { key: "DISPATCHED", label: t("dash.tracking.dispatched"), desc: t("dash.tracking.dispatchedDesc") },
+    { key: "DELIVERED", label: t("dash.tracking.delivered"), desc: t("dash.tracking.deliveredDesc") },
+  ];
+
+  const stepIndex = (s: string): number => {
+    if (s === "CANCELLED") return -1;
+    const idx = STEPS.findIndex((step) => step.key === s);
+    return idx === -1 ? 0 : idx;
+  };
+
   const current = stepIndex(status);
   const cancelled = status === "CANCELLED";
 
@@ -27,10 +30,8 @@ export function TrackingTimeline({ status }: { status: string }) {
         <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
           <X className="h-6 w-6" />
         </span>
-        <p className="mt-3 font-display text-lg font-bold text-red-800">Order cancelled</p>
-        <p className="mt-1 text-sm text-red-600/80">
-          This order was cancelled. If you believe this is a mistake, contact us on WhatsApp.
-        </p>
+        <p className="mt-3 font-display text-lg font-bold text-red-800">{t("dash.tracking.cancelled")}</p>
+        <p className="mt-1 text-sm text-red-600/80">{t("dash.tracking.cancelledDesc")}</p>
       </div>
     );
   }

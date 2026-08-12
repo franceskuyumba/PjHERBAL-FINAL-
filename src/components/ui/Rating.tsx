@@ -2,6 +2,7 @@
 
 import { Star, StarHalf } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 interface RatingProps {
   value: number;
@@ -14,10 +15,11 @@ interface RatingProps {
 const sizes = { sm: "h-3.5 w-3.5", md: "h-4 w-4", lg: "h-5 w-5" };
 
 export function Rating({ value, count, size = "md", showValue = true, className }: RatingProps) {
+  const { t } = useI18n();
   const stars = Array.from({ length: 5 }, (_, i) => i + 1);
 
   return (
-    <div className={cn("flex items-center gap-1.5", className)} aria-label={`Rated ${value} out of 5`}>
+    <div className={cn("flex items-center gap-1.5", className)} aria-label={t("ui.ratedOf").replace("{n}", value.toFixed(1))}>
       <div className="flex items-center gap-0.5">
         {stars.map((star) => {
           const full = value >= star;

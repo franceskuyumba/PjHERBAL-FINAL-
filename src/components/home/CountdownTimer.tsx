@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useI18n } from "@/context/LanguageContext";
 
 function getRemaining(): { hours: number; minutes: number; seconds: number } {
   const now = new Date();
@@ -19,6 +20,7 @@ function pad(n: number): string {
 }
 
 export function CountdownTimer() {
+  const { t } = useI18n();
   const [time, setTime] = useState<{ hours: number; minutes: number; seconds: number } | null>(null);
 
   useEffect(() => {
@@ -32,7 +34,7 @@ export function CountdownTimer() {
     : ["--", "--", "--"];
 
   return (
-    <div className="flex items-center gap-1.5" role="timer" aria-label="Time remaining in today's flash deals">
+    <div className="flex items-center gap-1.5" role="timer" aria-label={t("home.countdownTimer.label")}>
       {boxes.map((value, i) => (
         <span key={i} className="flex items-center gap-1.5">
           {i > 0 && <span className="text-base font-black text-gold-300">:</span>}
@@ -42,7 +44,7 @@ export function CountdownTimer() {
         </span>
       ))}
       <span className="ml-1 hidden text-[10px] font-bold uppercase tracking-widest text-white/50 sm:block">
-        left
+        {t("home.countdownTimer.left")}
       </span>
     </div>
   );

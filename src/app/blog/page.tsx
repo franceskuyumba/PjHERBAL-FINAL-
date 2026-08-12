@@ -4,6 +4,7 @@ import { normaliseCategory, publishedWhere } from "@/lib/blog";
 import { BlogExplorer } from "@/components/blog/BlogExplorer";
 import { FeaturedPost } from "@/components/blog/FeaturedPost";
 import type { BlogCardData } from "@/components/blog/BlogCard";
+import { getLocale, t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Wellness Journal",
@@ -20,6 +21,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
+  const lang = getLocale();
   const rows = await prisma.blogPost.findMany({
     where: publishedWhere(),
     orderBy: [{ isFeatured: "desc" }, { publishedAt: "desc" }],
@@ -42,9 +44,9 @@ export default async function BlogPage() {
       <div className="bg-brand-950 py-24 text-center text-white">
         <div className="container-site">
           <p className="eyebrow">PJHERBAL Journal</p>
-          <h1 className="mt-3 font-display text-3xl font-bold">Wellness Journal</h1>
+          <h1 className="mt-3 font-display text-3xl font-bold">{t(lang, "blog.emptyTitle")}</h1>
           <p className="mx-auto mt-3 max-w-xl text-white/70">
-            Articles coming soon. Check back for practical wellness guidance from the Segerea clinic team.
+            {t(lang, "blog.emptyText")}
           </p>
         </div>
       </div>
@@ -66,11 +68,10 @@ export default async function BlogPage() {
         <div className="container-site text-center">
           <p className="eyebrow">PJHERBAL Journal</p>
           <h1 className="mt-4 font-display text-4xl font-bold leading-tight sm:text-5xl">
-            The Wellness Journal
+            {t(lang, "blog.title")}
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/70 sm:text-base">
-            Practical, honest guidance for healthier living — written by the Segerea clinic team and
-            paired with the products we genuinely recommend.
+            {t(lang, "blog.intro")}
           </p>
         </div>
       </section>

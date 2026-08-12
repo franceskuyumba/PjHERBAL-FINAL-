@@ -1,22 +1,25 @@
 import { Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getLocale, t } from "@/lib/i18n";
 
 const STEPS = ["PENDING", "PAID", "PROCESSING", "DISPATCHED", "DELIVERED"] as const;
 
-const LABELS: Record<string, string> = {
-  PENDING: "Ordered",
-  PAID: "Paid",
-  PROCESSING: "Processing",
-  DISPATCHED: "Dispatched",
-  DELIVERED: "Delivered",
+const LABEL_KEYS: Record<string, string> = {
+  PENDING: "dash.orderprogress.ordered",
+  PAID: "dash.orderprogress.paid",
+  PROCESSING: "dash.orderprogress.processing",
+  DISPATCHED: "dash.orderprogress.dispatched",
+  DELIVERED: "dash.orderprogress.delivered",
 };
 
 /** Compact horizontal order progress used on tracking + order lists. */
 export function OrderProgress({ status }: { status: string }) {
+  const lang = getLocale();
+
   if (status === "CANCELLED") {
     return (
       <div className="flex items-center gap-2 rounded-xl bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">
-        <X className="h-4 w-4" /> Order cancelled
+        <X className="h-4 w-4" /> {t(lang, "dash.orderprogress.cancelled")}
       </div>
     );
   }
@@ -24,7 +27,11 @@ export function OrderProgress({ status }: { status: string }) {
   const current = STEPS.includes(status as (typeof STEPS)[number]) ? STEPS.indexOf(status as (typeof STEPS)[number]) : 0;
 
   return (
-    <div className="flex items-center" role="img" aria-label={`Order progress: ${LABELS[STEPS[current]]}`}>
+    <div
+      className="flex items-center"
+      role="img"
+      aria-label={t(lang, "dash.orderprogress.ariaLabel").replace("{label}", t(lang, LABEL_KEYS[STEPS[current]]))}
+    >
       {STEPS.map((step, i) => {
         const done = i <= current;
         const isCurrent = i === current;
@@ -45,7 +52,7 @@ export function OrderProgress({ status }: { status: string }) {
                   isCurrent ? "text-brand-700" : done ? "text-brand-950" : "text-ink/35"
                 )}
               >
-                {LABELS[step]}
+                {t(lang, LABEL_KEYS[step])}
               </span>
             </div>
             {i < STEPS.length - 1 && (

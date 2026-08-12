@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { Award, HeartHandshake, Leaf, ShieldCheck, Sprout, Users } from "lucide-react";
 import { SITE } from "@/lib/constants";
+import { getLocale, t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "About us",
@@ -10,38 +11,38 @@ export const metadata: Metadata = {
     "Learn about PJHERBAL Clinic – Segerea Branch, our mission, values and the people behind your trusted natural supplements.",
 };
 
-const values = [
-  {
-    icon: Leaf,
-    title: "Natural first",
-    text: "We prioritize plant-based ingredients with traditional wisdom backed by modern understanding.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Quality you can trust",
-    text: "Every product is sourced responsibly and quality-checked before it reaches your door.",
-  },
-  {
-    icon: HeartHandshake,
-    title: "Honest guidance",
-    text: "We recommend products that genuinely suit your needs — never push what you don't need.",
-  },
-  {
-    icon: Users,
-    title: "Community care",
-    text: "From Segerea to the rest of Tanzania, we are proud to serve our community's health.",
-  },
-];
-
 export default function AboutPage() {
+  const lang = getLocale();
+  const values = [
+    {
+      icon: Leaf,
+      title: t(lang, "about.values.naturalFirst.title"),
+      text: t(lang, "about.values.naturalFirst.text"),
+    },
+    {
+      icon: ShieldCheck,
+      title: t(lang, "about.values.trustedQuality.title"),
+      text: t(lang, "about.values.trustedQuality.text"),
+    },
+    {
+      icon: HeartHandshake,
+      title: t(lang, "about.values.honestGuidance.title"),
+      text: t(lang, "about.values.honestGuidance.text"),
+    },
+    {
+      icon: Users,
+      title: t(lang, "about.values.communityCare.title"),
+      text: t(lang, "about.values.communityCare.text"),
+    },
+  ];
   return (
     <div className="bg-cream">
       <section className="bg-brand-950 py-16 text-white">
         <div className="container-site text-center">
-          <p className="text-xs font-bold uppercase tracking-widest text-gold-300">Our story</p>
-          <h1 className="mt-3 font-display text-3xl font-bold sm:text-4xl">Nature, trusted &amp; delivered</h1>
+          <p className="text-xs font-bold uppercase tracking-widest text-gold-300">{t(lang, "about.storyEyebrow")}</p>
+          <h1 className="mt-3 font-display text-3xl font-bold sm:text-4xl">{t(lang, "about.heroTitle")}</h1>
           <p className="mx-auto mt-3 max-w-xl text-sm text-white/70 sm:text-base">
-            PJHERBAL Clinic – Segerea Branch blends traditional Tanzanian herbal knowledge with modern convenience.
+            {t(lang, "about.heroText")}
           </p>
         </div>
       </section>
@@ -52,22 +53,18 @@ export default function AboutPage() {
         </div>
         <div>
           <h2 className="font-display text-3xl font-bold text-brand-950">
-            Wellness that respects your roots
+            {t(lang, "about.storyTitle")}
           </h2>
           <p className="mt-4 leading-7 text-ink/65">
-            PJHERBAL Clinic began with a simple belief: the herbs that have supported Tanzanian families for
-            generations deserve a modern, trustworthy home. From our branch in Segerea, Dar es Salaam, we select
-            authentic natural supplements for men's health, weight management, immunity, brain focus, detox and
-            women's wellness.
+            {t(lang, "about.storyText1")}
           </p>
           <p className="mt-4 leading-7 text-ink/65">
-            Every product we list is chosen carefully, described honestly and delivered to your door — with a
-            real human on WhatsApp ready to answer your questions.
+            {t(lang, "about.storyText2")}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <span className="badge bg-brand-50 text-brand-700">Segerea Branch</span>
-            <span className="badge bg-gold-100 text-brand-900">Delivery across Tanzania</span>
-            <span className="badge bg-brand-50 text-brand-700">WhatsApp support</span>
+            <span className="badge bg-brand-50 text-brand-700">{t(lang, "about.badgeBranch")}</span>
+            <span className="badge bg-gold-100 text-brand-900">{t(lang, "about.badgeDelivery")}</span>
+            <span className="badge bg-brand-50 text-brand-700">{t(lang, "about.badgeWhatsApp")}</span>
           </div>
         </div>
       </section>
@@ -78,7 +75,7 @@ export default function AboutPage() {
             <span className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-50 text-brand-700">
               <Award className="h-5 w-5" />
             </span>
-            <h2 className="font-display text-2xl font-bold text-brand-950">Our promise</h2>
+            <h2 className="font-display text-2xl font-bold text-brand-950">{t(lang, "about.promiseTitle")}</h2>
           </div>
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {values.map((v) => (
@@ -96,14 +93,14 @@ export default function AboutPage() {
         <div className="container-site flex flex-col items-center gap-6 text-center">
           <Sprout className="h-8 w-8 text-gold-300" />
           <h2 className="max-w-2xl font-display text-2xl font-bold sm:text-3xl">
-            Ready to feel your best, naturally?
+            {t(lang, "about.ctaTitle")}
           </h2>
           <div className="flex flex-wrap justify-center gap-3">
             <Link href="/shop" className="btn-gold">
-              Shop supplements
+              {t(lang, "about.shopCta")}
             </Link>
             <Link href="/contact" className="btn bg-white/10 text-white hover:bg-white/20">
-              Talk to us
+              {t(lang, "about.talkCta")}
             </Link>
           </div>
           <p className="text-sm text-white/50">{SITE.address}</p>

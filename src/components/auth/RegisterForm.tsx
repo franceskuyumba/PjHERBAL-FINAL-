@@ -6,8 +6,10 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { useI18n } from "@/context/LanguageContext";
 
 export function RegisterForm() {
+  const { t } = useI18n();
   const router = useRouter();
   const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", confirm: "" });
   const [showPassword, setShowPassword] = useState(false);
@@ -19,11 +21,11 @@ export function RegisterForm() {
     setErrorMsg("");
 
     if (form.password !== form.confirm) {
-      setErrorMsg("Passwords do not match.");
+      setErrorMsg(t("auth.register.passwordMismatch"));
       return;
     }
     if (form.password.length < 8) {
-      setErrorMsg("Password must be at least 8 characters.");
+      setErrorMsg(t("auth.register.passwordTooShort"));
       return;
     }
 
@@ -41,13 +43,13 @@ export function RegisterForm() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setErrorMsg(data.error || "Unable to create your account. Please try again.");
+        setErrorMsg(data.error || t("auth.register.errorCreate"));
         return;
       }
       router.push("/customer-dashboard");
       router.refresh();
     } catch {
-      setErrorMsg("Network error. Please check your connection and try again.");
+      setErrorMsg(t("auth.networkError"));
     } finally {
       setLoading(false);
     }
@@ -61,7 +63,7 @@ export function RegisterForm() {
 
       <div className="space-y-1.5">
         <label htmlFor="name" className="text-sm font-medium text-brand-950">
-          Full name
+          {t("auth.fullName")}
         </label>
         <Input
           id="name"
@@ -74,7 +76,7 @@ export function RegisterForm() {
 
       <div className="space-y-1.5">
         <label htmlFor="email" className="text-sm font-medium text-brand-950">
-          Email address
+          {t("auth.email")}
         </label>
         <Input
           id="email"
@@ -89,7 +91,7 @@ export function RegisterForm() {
 
       <div className="space-y-1.5">
         <label htmlFor="phone" className="text-sm font-medium text-brand-950">
-          Phone number
+          {t("auth.phoneLabel")}
         </label>
         <Input
           id="phone"
@@ -104,7 +106,7 @@ export function RegisterForm() {
 
       <div className="space-y-1.5">
         <label htmlFor="password" className="text-sm font-medium text-brand-950">
-          Password
+          {t("auth.password")}
         </label>
         <div className="relative">
           <Input
@@ -112,7 +114,7 @@ export function RegisterForm() {
             type={showPassword ? "text" : "password"}
             autoComplete="new-password"
             required
-            placeholder="At least 8 characters"
+            placeholder={t("auth.register.passwordHint")}
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             className="pr-11"
@@ -121,7 +123,7 @@ export function RegisterForm() {
             type="button"
             onClick={() => setShowPassword((v) => !v)}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/40 transition-colors hover:text-brand-700"
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-label={showPassword ? t("auth.hidePassword") : t("auth.showPassword")}
           >
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
@@ -130,27 +132,27 @@ export function RegisterForm() {
 
       <div className="space-y-1.5">
         <label htmlFor="confirm" className="text-sm font-medium text-brand-950">
-          Confirm password
+          {t("auth.confirmPassword")}
         </label>
         <Input
           id="confirm"
           type={showPassword ? "text" : "password"}
           autoComplete="new-password"
           required
-          placeholder="Repeat your password"
+          placeholder={t("auth.register.confirmHint")}
           value={form.confirm}
           onChange={(e) => setForm({ ...form, confirm: e.target.value })}
         />
       </div>
 
       <Button type="submit" fullWidth loading={loading}>
-        {loading ? "Creating account..." : "Create account"}
+        {loading ? t("auth.register.creating") : t("auth.createAccount")}
       </Button>
 
       <p className="pt-1 text-center text-sm text-ink/60">
-        Already have an account?{" "}
+        {t("auth.register.hasAccount")}{" "}
         <Link href="/login" className="font-semibold text-brand-700 hover:text-brand-800">
-          Sign in
+          {t("auth.signIn")}
         </Link>
       </p>
     </form>

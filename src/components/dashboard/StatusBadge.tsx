@@ -1,5 +1,8 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { ORDER_STATUSES } from "@/lib/constants";
+import { useI18n } from "@/context/LanguageContext";
 
 const colorMap: Record<string, string> = {
   amber: "bg-amber-100 text-amber-800",
@@ -10,12 +13,22 @@ const colorMap: Record<string, string> = {
   red: "bg-red-100 text-red-800",
 };
 
+const labelKeys: Record<string, string> = {
+  PENDING: "dash.status.pending",
+  PAID: "dash.status.paid",
+  PROCESSING: "dash.status.processing",
+  DISPATCHED: "dash.status.dispatched",
+  DELIVERED: "dash.status.delivered",
+  CANCELLED: "dash.status.cancelled",
+};
+
 export function StatusBadge({ status }: { status: string }) {
+  const { t } = useI18n();
   const def = ORDER_STATUSES.find((s) => s.value === status);
   const color = colorMap[def?.color || "blue"];
   return (
     <span className={cn("inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold", color)}>
-      {def?.label || status}
+      {labelKeys[status] ? t(labelKeys[status]) : status}
     </span>
   );
 }

@@ -6,6 +6,7 @@ import { CheckCheck, Info, Package, Tag, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn, timeAgo } from "@/lib/utils";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { useI18n } from "@/context/LanguageContext";
 
 interface NotificationItem {
   id: string;
@@ -26,6 +27,7 @@ const typeStyles: Record<string, { icon: React.ComponentType<{ className?: strin
 
 export function NotificationsList({ notifications }: { notifications: NotificationItem[] }) {
   const router = useRouter();
+  const { t } = useI18n();
 
   const markRead = async (ids: string[]) => {
     await fetch("/api/account/notifications", {
@@ -51,14 +53,16 @@ export function NotificationsList({ notifications }: { notifications: Notificati
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-bold text-brand-950">Notifications</h1>
+          <h1 className="font-display text-2xl font-bold text-brand-950">{t("dash.notifications.title")}</h1>
           <p className="mt-1 text-sm text-ink/55">
-            {unread > 0 ? `${unread} unread notification${unread > 1 ? "s" : ""}` : "You are all caught up."}
+            {unread > 0
+              ? t(unread > 1 ? "dash.notifications.unreadMany" : "dash.notifications.unread").replace("{count}", String(unread))
+              : t("dash.notifications.allCaughtUp")}
           </p>
         </div>
         {unread > 0 && (
           <button onClick={markAllRead} className="btn-outline btn-sm">
-            <CheckCheck className="h-4 w-4" /> Mark all as read
+            <CheckCheck className="h-4 w-4" /> {t("dash.notifications.markAllRead")}
           </button>
         )}
       </div>
@@ -67,9 +71,9 @@ export function NotificationsList({ notifications }: { notifications: Notificati
         <div className="mt-8">
           <EmptyState
             icon={<Package className="h-7 w-7" />}
-            title="No notifications yet"
-            description="Order updates, promotions and account messages will appear here."
-            action={<Link href="/shop" className="btn-primary btn-sm">Start shopping</Link>}
+            title={t("dash.notifications.emptyTitle")}
+            description={t("dash.notifications.emptyDesc")}
+            action={<Link href="/shop" className="btn-primary btn-sm">{t("dash.notifications.startShopping")}</Link>}
           />
         </div>
       ) : (
@@ -94,7 +98,7 @@ export function NotificationsList({ notifications }: { notifications: Notificati
                   </div>
                   <p className={cn("mt-1 text-sm leading-6", n.read ? "text-ink/50" : "text-ink/65")}>{n.message}</p>
                 </div>
-                {!n.read && <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-brand-600" aria-label="Unread" />}
+                {!n.read && <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-brand-600" aria-label={t("dash.notifications.unreadAria")} />}
               </div>
             );
 
@@ -113,7 +117,7 @@ export function NotificationsList({ notifications }: { notifications: Notificati
                   <button
                     onClick={() => !n.read && markRead([n.id])}
                     className="block w-full text-left"
-                    aria-label={n.read ? n.title : `Mark "${n.title}" as read`}
+                    aria-label={n.read ? n.title : t("dash.notifications.markReadAria").replace("{title}", n.title)}
                   >
                     {content}
                   </button>

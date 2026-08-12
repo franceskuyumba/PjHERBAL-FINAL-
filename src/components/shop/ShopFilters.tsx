@@ -5,6 +5,7 @@ import { useCallback, useMemo, useState, useTransition } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 import { trackClientEvent } from "@/lib/client-analytics";
 
 export interface FilterCategory {
@@ -17,20 +18,21 @@ export interface ShopFiltersProps {
   maxPossiblePrice: number;
 }
 
-const sortOptions = [
-  { value: "featured", label: "Featured" },
-  { value: "newest", label: "Newest" },
-  { value: "price-asc", label: "Price: Low to High" },
-  { value: "price-desc", label: "Price: High to Low" },
-  { value: "rating", label: "Top Rated" },
-  { value: "best-selling", label: "Best Selling" },
-];
-
 export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { t } = useI18n();
   const [, startTransition] = useTransition();
+
+  const sortOptions = [
+    { value: "featured", label: t("shop.sortFeatured") },
+    { value: "newest", label: t("shop.sortNewest") },
+    { value: "price-asc", label: t("shop.sortPriceAsc") },
+    { value: "price-desc", label: t("shop.sortPriceDesc") },
+    { value: "rating", label: t("shop.sortTopRated") },
+    { value: "best-selling", label: t("shop.sortBestSelling") },
+  ];
 
   const search = searchParams.get("search") || "";
   const category = searchParams.get("category") || "";
@@ -76,7 +78,7 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
   const filterControls = (
     <div className="space-y-6">
       <div>
-        <label className="label">Search</label>
+        <label className="label">{t("shop.searchLabel")}</label>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -90,14 +92,14 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
           <input
             name="q"
             defaultValue={search}
-            placeholder="Search products..."
+            placeholder={t("shop.searchPlaceholder")}
             className="w-full bg-transparent text-sm focus:outline-none"
           />
         </form>
       </div>
 
       <div>
-        <label className="label">Category</label>
+        <label className="label">{t("shop.category")}</label>
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => updateParams({ category: null })}
@@ -106,7 +108,7 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
               category === "" ? "bg-brand-600 text-white" : "bg-white text-ink/70 hover:bg-brand-50 hover:text-brand-700 border border-ink/10"
             )}
           >
-            All
+            {t("shop.all")}
           </button>
           {categories.map((c) => (
             <button
@@ -124,7 +126,7 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
       </div>
 
       <div>
-        <label className="label">Sort by</label>
+        <label className="label">{t("shop.sortBy")}</label>
         <select
           value={sort}
           onChange={(e) => updateParams({ sort: e.target.value })}
@@ -137,7 +139,7 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
       </div>
 
       <div>
-        <label className="label">Max price (TZS)</label>
+        <label className="label">{t("shop.maxPrice")}</label>
         <div className="flex items-center gap-2">
           <input
             type="number"
@@ -145,16 +147,16 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}
             className="input"
-            placeholder="Any"
+            placeholder={t("shop.any")}
           />
-          <button onClick={applyPrice} className="btn-outline btn-sm shrink-0">Apply</button>
+          <button onClick={applyPrice} className="btn-outline btn-sm shrink-0">{t("shop.apply")}</button>
         </div>
       </div>
 
       {activeFilters > 0 && (
         <button onClick={clearAll} className="btn-ghost btn-sm w-full text-red-600 hover:bg-red-50">
           <X className="h-4 w-4" />
-          Clear all filters ({activeFilters})
+          {t("shop.clearAll").replace("{count}", String(activeFilters))}
         </button>
       )}
     </div>
@@ -166,9 +168,9 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
       <aside className="hidden w-64 shrink-0 lg:block">
         <div className="card sticky top-24 p-6">
           <div className="mb-5 flex items-center justify-between">
-            <h3 className="font-display text-lg font-bold text-brand-950">Filters</h3>
+            <h3 className="font-display text-lg font-bold text-brand-950">{t("shop.filters")}</h3>
             <span className={cn("badge bg-brand-50 text-brand-700", pending && "animate-pulse")}>
-              {pending ? "..." : `${activeFilters} active`}
+              {pending ? "..." : `${activeFilters} ${t("shop.filtersActive")}`}
             </span>
           </div>
           {filterControls}
@@ -182,7 +184,7 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
           className="btn-outline btn-sm mb-5 w-full"
         >
           <SlidersHorizontal className="h-4 w-4" />
-          Filters {activeFilters > 0 && `(${activeFilters})`}
+          {t("shop.filters")} {activeFilters > 0 && `(${activeFilters})`}
         </button>
         <AnimatePresence>
           {drawerOpen && (
@@ -201,11 +203,11 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
                 className="absolute right-0 top-0 flex h-full w-[85%] max-w-sm flex-col bg-cream"
               >
                 <div className="flex items-center justify-between border-b border-ink/5 px-5 py-4">
-                  <h3 className="font-display text-lg font-bold text-brand-950">Filters</h3>
+                  <h3 className="font-display text-lg font-bold text-brand-950">{t("shop.filters")}</h3>
                   <button
                     onClick={() => setDrawerOpen(false)}
                     className="flex h-9 w-9 items-center justify-center rounded-full bg-ink/5 text-ink/60"
-                    aria-label="Close filters"
+                    aria-label={t("shop.closeFilters")}
                   >
                     <X className="h-5 w-5" />
                   </button>
@@ -215,7 +217,7 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
                 </div>
                 <div className="border-t border-ink/5 p-4">
                   <button onClick={() => setDrawerOpen(false)} className="btn-primary btn-md w-full">
-                    Show results
+                    {t("shop.showResults")}
                   </button>
                 </div>
               </motion.div>

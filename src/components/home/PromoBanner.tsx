@@ -6,34 +6,36 @@ import { motion, useReducedMotion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import { ArrowRight, BadgePercent } from "lucide-react";
 import { useEffect, useState } from "react";
-
-const banners = [
-  {
-    title: "Summer Wellness Sale",
-    text: "Up to 20% off best-selling energy and immunity boosters.",
-    image: "/images/products/black-seed-oil.svg",
-    cta: "Shop the sale",
-    href: "/category/energy-immunity",
-  },
-  {
-    title: "New to PJHERBAL?",
-    text: "Enjoy 10% off your first order with code WELCOME10.",
-    image: "/images/products/moringa-power.svg",
-    cta: "Start shopping",
-    href: "/shop",
-  },
-  {
-    title: "Men's Vitality Range",
-    text: "Rebuild strength and stamina with our trusted men's formulas.",
-    image: "/images/products/male-vitality-plus.svg",
-    cta: "Shop men's health",
-    href: "/category/mens-health",
-  },
-];
+import { useI18n } from "@/context/LanguageContext";
 
 export function PromoBanner() {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
+  const { t } = useI18n();
+
+  const banners = [
+    {
+      title: t("home.promoBanner.b1.title"),
+      text: t("home.promoBanner.b1.text"),
+      image: "/images/products/black-seed-oil.svg",
+      cta: t("home.promoBanner.b1.cta"),
+      href: "/category/energy-immunity",
+    },
+    {
+      title: t("home.promoBanner.b2.title"),
+      text: t("home.promoBanner.b2.text"),
+      image: "/images/products/moringa-power.svg",
+      cta: t("home.promoBanner.b2.cta"),
+      href: "/shop",
+    },
+    {
+      title: t("home.promoBanner.b3.title"),
+      text: t("home.promoBanner.b3.text"),
+      image: "/images/products/male-vitality-plus.svg",
+      cta: t("home.promoBanner.b3.cta"),
+      href: "/category/mens-health",
+    },
+  ];
 
   useEffect(() => {
     const timer = setInterval(() => setActive((v) => (v + 1) % banners.length), 6000);
@@ -53,7 +55,7 @@ export function PromoBanner() {
           <div>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-gold-500/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-gold-300">
               <BadgePercent className="h-3.5 w-3.5" />
-              Promo
+              {t("home.promoBanner.badge")}
             </span>
             <AnimatePresence mode="wait">
               <motion.div

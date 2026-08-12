@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { Rating } from "@/components/ui/Rating";
 import { formatDate } from "@/lib/utils";
+import { useI18n } from "@/context/LanguageContext";
 
 interface Review {
   id: string;
@@ -17,6 +18,7 @@ interface Review {
 }
 
 export function AdminReviewsManager() {
+  const { t } = useI18n();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [pendingOnly, setPendingOnly] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -44,7 +46,7 @@ export function AdminReviewsManager() {
   };
 
   const onDelete = async (r: Review) => {
-    if (!confirm("Delete this review?")) return;
+    if (!confirm(t("admin.reviews.deleteConfirm"))) return;
     await fetch(`/api/admin/reviews?id=${r.id}`, { method: "DELETE" });
     load();
   };
@@ -53,21 +55,21 @@ export function AdminReviewsManager() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-bold text-brand-950">Reviews</h1>
-          <p className="mt-1 text-sm text-ink/55">{reviews.length} reviews</p>
+          <h1 className="font-display text-2xl font-bold text-brand-950">{t("admin.reviews.title")}</h1>
+          <p className="mt-1 text-sm text-ink/55">{t("admin.reviews.count").replace("{count}", String(reviews.length))}</p>
         </div>
         <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-brand-950">
           <input type="checkbox" checked={pendingOnly} onChange={(e) => setPendingOnly(e.target.checked)} className="h-4 w-4 accent-brand-700" />
-          Pending approval only
+          {t("admin.reviews.pendingOnly")}
         </label>
       </div>
 
       <div className="mt-5 space-y-4">
         {loading ? (
-          <p className="p-10 text-center text-sm text-ink/50">Loading reviews...</p>
+          <p className="p-10 text-center text-sm text-ink/50">{t("admin.reviews.loading")}</p>
         ) : reviews.length === 0 ? (
           <p className="rounded-3xl border border-dashed border-ink/15 bg-white p-10 text-center text-sm text-ink/50">
-            {pendingOnly ? "No pending reviews." : "No reviews yet."}
+            {pendingOnly ? t("admin.reviews.noPending") : t("admin.reviews.empty")}
           </p>
         ) : (
           reviews.map((r) => (
@@ -83,7 +85,7 @@ export function AdminReviewsManager() {
                     r.isApproved ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"
                   }`}
                 >
-                  {r.isApproved ? "Approved" : "Pending"}
+                  {r.isApproved ? t("admin.reviews.approved") : t("admin.reviews.pending")}
                 </span>
               </div>
               <p className="mt-3 text-sm font-medium text-brand-950">{r.product?.name}</p>
@@ -92,15 +94,15 @@ export function AdminReviewsManager() {
               <div className="mt-4 flex gap-2">
                 {!r.isApproved ? (
                   <button onClick={() => onApprove(r, true)} className="btn-primary btn-sm">
-                    Approve
+                    {t("admin.reviews.approve")}
                   </button>
                 ) : (
                   <button onClick={() => onApprove(r, false)} className="btn-outline btn-sm">
-                    Unpublish
+                    {t("admin.reviews.unpublish")}
                   </button>
                 )}
                 <button onClick={() => onDelete(r)} className="btn btn-sm bg-red-600 text-white hover:bg-red-700">
-                  <Trash2 className="mr-1 h-3.5 w-3.5" /> Delete
+                  <Trash2 className="mr-1 h-3.5 w-3.5" /> {t("admin.reviews.delete")}
                 </button>
               </div>
             </div>

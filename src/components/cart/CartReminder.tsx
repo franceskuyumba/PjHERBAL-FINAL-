@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ShoppingBag, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useI18n } from "@/context/LanguageContext";
 
 const SINCE_KEY = "pjherbal_cart_since";
 const REMIND_HOURS = 2;
@@ -14,6 +15,7 @@ const REMIND_HOURS = 2;
  */
 export function CartReminder() {
   const { items, count, hydrated } = useCart();
+  const { t } = useI18n();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -64,7 +66,7 @@ export function CartReminder() {
               /* ignore */
             }
           }}
-          aria-label="Dismiss reminder"
+          aria-label={t("cart.dismissReminder")}
           className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full text-gold-800/60 transition-colors hover:bg-gold-100"
         >
           <X className="h-4 w-4" />
@@ -74,14 +76,14 @@ export function CartReminder() {
             <ShoppingBag className="h-5 w-5" />
           </span>
           <div>
-            <p className="font-display text-base font-bold text-brand-950">You left {count} item{count === 1 ? "" : "s"} in your cart</p>
+            <p className="font-display text-base font-bold text-brand-950">{count === 1 ? t("cart.leftItem").replace("{count}", String(count)) : t("cart.leftItems").replace("{count}", String(count))}</p>
             <p className="text-sm text-ink/60">
-              {firstItem?.name || "Your items"} {count > 1 ? "and more are " : "is "}waiting for you — free delivery over TZS 200,000.
+              {firstItem?.name || t("cart.yourItems")} {count > 1 ? t("cart.waitingPlural") : t("cart.waitingSingular")}
             </p>
           </div>
         </div>
         <Link href="/cart" className="btn-primary btn-md shrink-0">
-          Complete your order
+          {t("cart.completeOrder")}
         </Link>
       </div>
     </div>

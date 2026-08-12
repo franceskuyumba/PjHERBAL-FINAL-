@@ -8,6 +8,7 @@ import { FileText, Loader2, PackageSearch, Search, Trash2, TrendingUp, X } from 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ProductCardProduct } from "@/components/product/ProductCard";
 import { useCart } from "@/context/CartContext";
+import { useI18n } from "@/context/LanguageContext";
 import { cn, formatTZS } from "@/lib/utils";
 
 const RECENT_KEY = "pjherbal:recent-searches";
@@ -53,6 +54,17 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
   const router = useRouter();
   const pathname = usePathname();
   const { addItem } = useCart();
+  const { t } = useI18n();
+
+  const categoryLinks = [
+    { label: t("search.catMen"), href: "/category/mens-health" },
+    { label: t("search.catWomen"), href: "/category/womens-wellness" },
+    { label: t("search.catEnergy"), href: "/category/energy-immunity" },
+    { label: t("search.catWeight"), href: "/category/weight-management" },
+    { label: t("search.catBrain"), href: "/category/brain-focus" },
+    { label: t("search.catDetox"), href: "/category/detox-digestion" },
+    { label: t("search.allProducts"), href: "/shop" },
+  ];
 
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResults | null>(null);
@@ -170,7 +182,7 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
           className="fixed inset-0 z-[90]"
           role="dialog"
           aria-modal="true"
-          aria-label="Search"
+          aria-label={t("search.search")}
         >
           <div className="absolute inset-0 bg-ink/40 backdrop-blur-sm" onClick={onClose} />
 
@@ -194,8 +206,8 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
                   ref={inputRef}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search products, categories and wellness topics..."
-                  aria-label="Search products, categories and wellness topics"
+                  placeholder={t("search.inputPlaceholder")}
+                  aria-label={t("search.inputPlaceholder")}
                   className="w-full bg-transparent text-[15px] text-ink focus:outline-none sm:text-base"
                   autoComplete="off"
                 />
@@ -203,14 +215,14 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
                   <button
                     type="button"
                     onClick={() => setQuery("")}
-                    aria-label="Clear search"
+                    aria-label={t("search.clearSearch")}
                     className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-ink/40 hover:bg-ink/5 hover:text-ink/70"
                   >
                     <X className="h-4 w-4" />
                   </button>
                 )}
                 <button type="submit" className="btn-primary btn-sm hidden shrink-0 sm:inline-flex">
-                  Search
+                  {t("search.search")}
                 </button>
               </form>
 
@@ -218,24 +230,24 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
                 {loading ? (
                   <div className="flex items-center justify-center gap-2 py-12 text-sm text-ink/50">
                     <Loader2 className="h-5 w-5 animate-spin text-brand-600" />
-                    Searching the wellness collection...
+                    {t("search.searching")}
                   </div>
                 ) : hasQuery && results && productCount === 0 && results.categories.length === 0 && results.articles.length === 0 ? (
                   <div className="flex flex-col items-center gap-2 py-12 text-center">
                     <PackageSearch className="h-10 w-10 text-ink/20" />
-                    <p className="font-display text-base font-bold text-brand-950">No results for &ldquo;{trimmed}&rdquo;</p>
+                    <p className="font-display text-base font-bold text-brand-950">{t("search.noResults").replace("{q}", trimmed)}</p>
                     <p className="max-w-sm text-sm text-ink/55">
-                      Try a different keyword, or browse our full collection.
+                      {t("search.noResultsHint")}
                     </p>
                     <Link href="/shop" onClick={() => go("/shop")} className="btn-outline btn-sm mt-2">
-                      Browse all products
+                      {t("search.browseAll")}
                     </Link>
                   </div>
                 ) : hasQuery && results ? (
                   <div className="p-4 sm:p-5">
                     {results.products.length > 0 && (
                       <div>
-                        <SectionLabel>Products</SectionLabel>
+                        <SectionLabel>{t("search.products")}</SectionLabel>
                         <div className="space-y-1">
                           {results.products.map((p) => (
                             <Link
@@ -256,10 +268,10 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
                               <span className="text-sm font-bold text-brand-700">{formatTZS(p.price)}</span>
                               <button
                                 onClick={(e) => quickAdd(p, e)}
-                                aria-label={`Add ${p.name} to cart`}
+                                aria-label={t("search.addAria").replace("{name}", p.name)}
                                 className="btn-primary btn-sm shrink-0"
                               >
-                                Add
+                                {t("search.add")}
                               </button>
                             </Link>
                           ))}
@@ -269,7 +281,7 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
 
                     {results.categories.length > 0 && (
                       <div className="mt-5">
-                        <SectionLabel>Categories</SectionLabel>
+                        <SectionLabel>{t("search.categories")}</SectionLabel>
                         <div className="flex flex-wrap gap-2">
                           {results.categories.map((c) => (
                             <button
@@ -286,7 +298,7 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
 
                     {results.articles.length > 0 && (
                       <div className="mt-5">
-                        <SectionLabel>Wellness articles</SectionLabel>
+                        <SectionLabel>{t("search.articles")}</SectionLabel>
                         <div className="space-y-1">
                           {results.articles.map((a) => (
                             <Link
@@ -313,7 +325,7 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
                     {recent.length > 0 && (
                       <div className="mb-5">
                         <div className="mb-2 flex items-center justify-between">
-                          <SectionLabel>Recent searches</SectionLabel>
+                          <SectionLabel>{t("search.recent")}</SectionLabel>
                           <button
                             onClick={() => {
                               writeRecent([]);
@@ -322,7 +334,7 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
                             className="flex items-center gap-1 text-xs font-semibold text-ink/40 transition-colors hover:text-red-500"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
-                            Clear
+                            {t("search.clear")}
                           </button>
                         </div>
                         <div className="flex flex-wrap gap-2">
@@ -344,7 +356,7 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
                     )}
 
                     <div className="mb-5">
-                      <SectionLabel>Popular right now</SectionLabel>
+                      <SectionLabel>{t("search.popular")}</SectionLabel>
                       <div className="flex flex-wrap gap-2">
                         {POPULAR.map((p) => (
                           <button
@@ -362,9 +374,9 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
                     </div>
 
                     <div className="mb-5">
-                      <SectionLabel>Browse categories</SectionLabel>
+                      <SectionLabel>{t("search.browseCategories")}</SectionLabel>
                       <div className="flex flex-wrap gap-2">
-                        {CATEGORY_LINKS.map((c) => (
+                        {categoryLinks.map((c) => (
                           <Link key={c.href} href={c.href} onClick={() => go(c.href)} className="chip">
                             {c.label}
                           </Link>
@@ -376,7 +388,7 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
                       <div>
                         <div className="mb-2 flex items-center gap-1.5">
                           <TrendingUp className="h-4 w-4 text-brand-600" />
-                          <SectionLabel>Trending products</SectionLabel>
+                          <SectionLabel>{t("search.trending")}</SectionLabel>
                         </div>
                         <div className="space-y-1">
                           {results.products.map((p) => (
@@ -403,7 +415,7 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
                     ) : (
                       <div className="flex items-center gap-2 rounded-xl bg-brand-50 p-3 text-xs text-brand-800">
                         <Search className="h-4 w-4 shrink-0" />
-                        Start typing to search products, categories and wellness articles instantly.
+                        {t("search.startTyping")}
                       </div>
                     )}
                   </div>
@@ -416,7 +428,7 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
                     onClick={goShopResults}
                     className="w-full text-center text-sm font-semibold text-brand-700 transition-colors hover:text-brand-800"
                   >
-                    See all results for &ldquo;{trimmed}&rdquo; →
+                    {t("search.seeAll").replace("{q}", trimmed)} →
                   </button>
                 </div>
               )}
@@ -433,13 +445,3 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     <p className={cn("mb-2 text-[11px] font-bold uppercase tracking-widest text-ink/40")}>{children}</p>
   );
 }
-
-const CATEGORY_LINKS = [
-  { label: "Men's Wellness", href: "/category/mens-health" },
-  { label: "Women's Wellness", href: "/category/womens-wellness" },
-  { label: "Energy & Immunity", href: "/category/energy-immunity" },
-  { label: "Weight Management", href: "/category/weight-management" },
-  { label: "Brain & Focus", href: "/category/brain-focus" },
-  { label: "Digestion & Detox", href: "/category/detox-digestion" },
-  { label: "All Products", href: "/shop" },
-];

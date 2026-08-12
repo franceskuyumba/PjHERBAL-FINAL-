@@ -1,37 +1,40 @@
 import { MessageCircle, Search, ShoppingBag, Truck } from "lucide-react";
 import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-
-const steps = [
-  {
-    icon: <Search className="h-6 w-6" />,
-    title: "Browse & choose",
-    description: "Explore our curated range of premium herbal supplements.",
-  },
-  {
-    icon: <ShoppingBag className="h-6 w-6" />,
-    title: "Order in minutes",
-    description: "Add to cart and checkout — pay with M-Pesa or your preferred method.",
-  },
-  {
-    icon: <MessageCircle className="h-6 w-6" />,
-    title: "Get expert advice",
-    description: "Our specialists confirm your order and guide you on WhatsApp.",
-  },
-  {
-    icon: <Truck className="h-6 w-6" />,
-    title: "Fast delivery",
-    description: "Same-day in Dar es Salaam, nationwide within 1–3 days.",
-  },
-];
+import { getLocale, t } from "@/lib/i18n";
 
 export function HowItWorks() {
+  const lang = getLocale();
+
+  const steps = [
+    {
+      icon: <Search className="h-6 w-6" />,
+      title: t(lang, "home.howItWorks.step1.title"),
+      description: t(lang, "home.howItWorks.step1.description"),
+    },
+    {
+      icon: <ShoppingBag className="h-6 w-6" />,
+      title: t(lang, "home.howItWorks.step2.title"),
+      description: t(lang, "home.howItWorks.step2.description"),
+    },
+    {
+      icon: <MessageCircle className="h-6 w-6" />,
+      title: t(lang, "home.howItWorks.step3.title"),
+      description: t(lang, "home.howItWorks.step3.description"),
+    },
+    {
+      icon: <Truck className="h-6 w-6" />,
+      title: t(lang, "home.howItWorks.step4.title"),
+      description: t(lang, "home.howItWorks.step4.description"),
+    },
+  ];
+
   return (
     <section className="container-site py-16 sm:py-20">
       <SectionHeading
-        eyebrow="Simple process"
-        title="How to order"
-        subtitle="From browsing to your doorstep in four simple steps."
+        eyebrow={t(lang, "home.howItWorks.eyebrow")}
+        title={t(lang, "home.howItWorks.title")}
+        subtitle={t(lang, "home.howItWorks.subtitle")}
       />
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {steps.map((step, i) => (

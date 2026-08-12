@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 import { AuthLayout } from "@/components/auth/AuthLayout";
+import { getLocale, t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Create account",
@@ -9,8 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function RegisterPage() {
+  const lang = getLocale();
   return (
-    <AuthLayout title="Create your account" subtitle="Join PJHERBAL Clinic for faster checkout and order tracking.">
+    <AuthLayout title={t(lang, "auth.register.title")} subtitle={t(lang, "auth.register.subtitle")}>
       <RegisterForm />
     </AuthLayout>
   );

@@ -52,6 +52,16 @@ export function generateOrderNumber(): string {
   return `PJH-${y}${m}${d}-${rand}`;
 }
 
+export function generateDocNumber(type: string): string {
+  const date = new Date();
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  const rand = Math.floor(100000 + Math.random() * 900000);
+  const prefix = type === "INVOICE" ? "INV" : "RCP";
+  return `${prefix}-${y}${m}${d}-${rand}`;
+}
+
 export function timeAgo(date: Date | string): string {
   const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
   const intervals: [number, string][] = [

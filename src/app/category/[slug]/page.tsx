@@ -11,6 +11,7 @@ import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import { toProductCard } from "@/lib/serializers";
 import { getCurrentUser } from "@/lib/auth";
+import { getLocale, t } from "@/lib/i18n";
 import { SITE } from "@/lib/constants";
 import { absoluteUrl } from "@/lib/seo";
 
@@ -30,6 +31,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
+  const lang = getLocale();
   const [category, products, otherCategories, user] = await Promise.all([
     prisma.category.findUnique({ where: { slug: params.slug } }),
     prisma.product.findMany({
@@ -56,13 +58,13 @@ export default async function CategoryPage({ params }: { params: { slug: string 
           <div>
             <Breadcrumbs
               crumbs={[
-                { label: "Shop", href: "/shop" },
+                { label: t(lang, "shop.title"), href: "/shop" },
                 { label: category.name },
               ]}
             />
             <div className="mt-4">
               <p className="text-xs font-bold uppercase tracking-widest text-gold-300">
-                PJHERBAL Clinic · {products.length} products
+                PJHERBAL Clinic · {products.length} {products.length === 1 ? t(lang, "shop.product") : t(lang, "shop.products")}
               </p>
               <h1 className="mt-2 font-display text-4xl font-bold text-white">{category.name}</h1>
               <p className="mt-3 max-w-xl text-white/75">{category.description}</p>
@@ -82,18 +84,21 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         {products.length === 0 ? (
           <EmptyState
             icon={<PackageSearch className="h-8 w-8" />}
-            title="Products coming soon"
-            description="This category is being restocked. Check back soon or explore other categories."
+            title={t(lang, "shop.productsComingSoon")}
+            description={t(lang, "shop.comingSoonDesc")}
             action={
               <Link href="/shop" className="btn-primary btn-md">
-                Browse all products
+                {t(lang, "shop.browseAll")}
               </Link>
             }
           />
         ) : (
           <>
             <p className="mb-6 text-sm text-ink/55">
-              Showing {products.length} {products.length === 1 ? "product" : "products"} in {category.name}
+              {t(lang, "shop.showingIn")
+                .replace("{count}", String(products.length))
+                .replace("{items}", products.length === 1 ? t(lang, "shop.product") : t(lang, "shop.products"))
+                .replace("{category}", category.name)}
             </p>
             <Suspense fallback={<GridSkeleton count={6} />}>
               <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
@@ -107,7 +112,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
 
         {otherCategories.length > 0 && (
           <div className="mt-16">
-            <h2 className="font-display text-2xl font-bold text-brand-950">Explore other categories</h2>
+            <h2 className="font-display text-2xl font-bold text-brand-950">{t(lang, "shop.exploreOthers")}</h2>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {otherCategories.map((c) => (
                 <Link
@@ -121,7 +126,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
                       {c.name}
                     </h3>
                     <span className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-brand-600">
-                      Shop now <ArrowRight className="h-3 w-3" />
+                      {t(lang, "shop.shopNow")} <ArrowRight className="h-3 w-3" />
                     </span>
                   </div>
                 </Link>

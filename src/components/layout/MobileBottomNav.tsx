@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Heart, Home, Search, ShoppingBag, User } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useSearch } from "@/context/SearchContext";
+import { useI18n } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
 
 interface MobileBottomNavProps {
@@ -15,15 +16,16 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
   const pathname = usePathname();
   const { count } = useCart();
   const { openSearch } = useSearch();
+  const { t } = useI18n();
 
   const accountHref = user ? (user.role === "ADMIN" ? "/admin" : "/customer-dashboard") : "/login";
 
   const items = [
-    { label: "Home", href: "/", icon: <Home className="h-5 w-5" />, active: pathname === "/" },
-    { label: "Search", href: null as string | null, icon: <Search className="h-5 w-5" />, active: false, action: openSearch },
-    { label: "Cart", href: "/cart", icon: <ShoppingBag className="h-5 w-5" />, active: pathname === "/cart", badge: count },
-    { label: "Wishlist", href: "/customer-dashboard/wishlist", icon: <Heart className="h-5 w-5" />, active: pathname === "/customer-dashboard/wishlist" },
-    { label: "Account", href: accountHref, icon: <User className="h-5 w-5" />, active: pathname.startsWith("/customer-dashboard") },
+    { label: t("nav.home"), href: "/", icon: <Home className="h-5 w-5" />, active: pathname === "/" },
+    { label: t("nav.search"), href: null as string | null, icon: <Search className="h-5 w-5" />, active: false, action: openSearch },
+    { label: t("nav.cart"), href: "/cart", icon: <ShoppingBag className="h-5 w-5" />, active: pathname === "/cart", badge: count },
+    { label: t("nav.wishlist"), href: "/customer-dashboard/wishlist", icon: <Heart className="h-5 w-5" />, active: pathname === "/customer-dashboard/wishlist" },
+    { label: t("nav.account"), href: accountHref, icon: <User className="h-5 w-5" />, active: pathname.startsWith("/customer-dashboard") },
   ];
 
   return (

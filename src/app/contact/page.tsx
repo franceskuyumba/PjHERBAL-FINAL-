@@ -3,6 +3,7 @@ import { Mail, MapPin, MessageCircle, Navigation, Phone } from "lucide-react";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { SITE, GOOGLE_MAPS } from "@/lib/constants";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { getLocale, t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Contact us",
@@ -10,14 +11,15 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  const lang = getLocale();
   return (
     <div className="bg-cream">
       <section className="bg-brand-950 py-16 text-white">
         <div className="container-site text-center">
-          <p className="text-xs font-bold uppercase tracking-widest text-gold-300">We are here to help</p>
-          <h1 className="mt-3 font-display text-3xl font-bold sm:text-4xl">Contact PJHERBAL Clinic</h1>
+          <p className="text-xs font-bold uppercase tracking-widest text-gold-300">{t(lang, "contact.helpEyebrow")}</p>
+          <h1 className="mt-3 font-display text-3xl font-bold sm:text-4xl">{t(lang, "contact.title")}</h1>
           <p className="mx-auto mt-3 max-w-xl text-sm text-white/70 sm:text-base">
-            Questions about a product, your order, or your health? Reach us any way you like.
+            {t(lang, "contact.subtitle")}
           </p>
         </div>
       </section>
@@ -26,18 +28,18 @@ export default function ContactPage() {
         <div className="space-y-4">
           <ContactCard
             icon={<MapPin className="h-5 w-5" />}
-            title="Visit us"
-            lines={[SITE.address, "Open Mon – Sat, 8:00 AM – 7:00 PM"]}
+            title={t(lang, "contact.visitUs")}
+            lines={[SITE.address, t(lang, "contact.openHours")]}
           />
           <ContactCard
             icon={<Phone className="h-5 w-5" />}
-            title="Call us"
+            title={t(lang, "contact.callUs")}
             lines={[SITE.phone]}
             href={`tel:${SITE.phone.replace(/\s/g, "")}`}
           />
           <ContactCard
             icon={<Mail className="h-5 w-5" />}
-            title="Email us"
+            title={t(lang, "contact.emailUs")}
             lines={[SITE.email]}
             href={`mailto:${SITE.email}`}
           />
@@ -47,13 +49,13 @@ export default function ContactPage() {
             rel="noopener noreferrer"
             className="btn-whatsapp flex w-full items-center justify-center"
           >
-            <MessageCircle className="mr-2 h-4 w-4" /> Chat on WhatsApp
+            <MessageCircle className="mr-2 h-4 w-4" /> {t(lang, "contact.chatWhatsApp")}
           </a>
         </div>
 
         <div className="rounded-3xl border border-ink/5 bg-white p-8 shadow-card">
-          <h2 className="font-display text-2xl font-bold text-brand-950">Send us a message</h2>
-          <p className="mt-1 text-sm text-ink/55">We usually reply within a few hours.</p>
+          <h2 className="font-display text-2xl font-bold text-brand-950">{t(lang, "contact.sendMessage")}</h2>
+          <p className="mt-1 text-sm text-ink/55">{t(lang, "contact.replyTime")}</p>
           <div className="mt-6">
             <ContactForm />
           </div>
@@ -62,7 +64,7 @@ export default function ContactPage() {
 
       <section className="container-site pb-14">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-display text-2xl font-bold text-brand-950">Find us on the map</h2>
+          <h2 className="font-display text-2xl font-bold text-brand-950">{t(lang, "contact.findMap")}</h2>
           {GOOGLE_MAPS.businessUrl && (
             <a
               href={GOOGLE_MAPS.businessUrl}
@@ -70,7 +72,7 @@ export default function ContactPage() {
               rel="noopener noreferrer"
               className="btn-outline btn-sm"
             >
-              <Navigation className="h-4 w-4" /> Get directions on Google Maps
+              <Navigation className="h-4 w-4" /> {t(lang, "contact.directions")}
             </a>
           )}
         </div>

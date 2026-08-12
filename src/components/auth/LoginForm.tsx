@@ -6,8 +6,10 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { useI18n } from "@/context/LanguageContext";
 
 export function LoginForm() {
+  const { t } = useI18n();
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
@@ -26,13 +28,13 @@ export function LoginForm() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setErrorMsg(data.error || "Unable to sign in. Please try again.");
+        setErrorMsg(data.error || t("auth.login.errorSignIn"));
         return;
       }
       router.push(data.user?.role === "ADMIN" ? "/admin" : "/customer-dashboard");
       router.refresh();
     } catch {
-      setErrorMsg("Network error. Please check your connection and try again.");
+      setErrorMsg(t("auth.networkError"));
     } finally {
       setLoading(false);
     }
@@ -46,7 +48,7 @@ export function LoginForm() {
 
       <div className="space-y-1.5">
         <label htmlFor="email" className="text-sm font-medium text-brand-950">
-          Email address
+          {t("auth.email")}
         </label>
         <Input
           id="email"
@@ -61,7 +63,7 @@ export function LoginForm() {
 
       <div className="space-y-1.5">
         <label htmlFor="password" className="text-sm font-medium text-brand-950">
-          Password
+          {t("auth.password")}
         </label>
         <div className="relative">
           <Input
@@ -78,7 +80,7 @@ export function LoginForm() {
             type="button"
             onClick={() => setShowPassword((v) => !v)}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/40 transition-colors hover:text-brand-700"
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-label={showPassword ? t("auth.hidePassword") : t("auth.showPassword")}
           >
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
@@ -86,13 +88,13 @@ export function LoginForm() {
       </div>
 
       <Button type="submit" fullWidth loading={loading} icon={loading ? undefined : undefined}>
-        {loading ? "Signing in..." : "Sign in"}
+        {loading ? t("auth.login.signingIn") : t("auth.signIn")}
       </Button>
 
       <p className="pt-1 text-center text-sm text-ink/60">
-        New to PJHERBAL Clinic?{" "}
+        {t("auth.login.newHere")}{" "}
         <Link href="/register" className="font-semibold text-brand-700 hover:text-brand-800">
-          Create an account
+          {t("auth.createAccount")}
         </Link>
       </p>
     </form>
