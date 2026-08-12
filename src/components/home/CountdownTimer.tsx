@@ -19,20 +19,25 @@ function pad(n: number): string {
 }
 
 export function CountdownTimer() {
-  const [time, setTime] = useState(getRemaining);
+  const [time, setTime] = useState<{ hours: number; minutes: number; seconds: number } | null>(null);
 
   useEffect(() => {
+    setTime(getRemaining());
     const timer = setInterval(() => setTime(getRemaining()), 1000);
     return () => clearInterval(timer);
   }, []);
 
+  const boxes = time
+    ? (["hours", "minutes", "seconds"] as const).map((unit) => pad(time[unit]))
+    : ["--", "--", "--"];
+
   return (
     <div className="flex items-center gap-1.5" role="timer" aria-label="Time remaining in today's flash deals">
-      {(["hours", "minutes", "seconds"] as const).map((unit, i) => (
-        <span key={unit} className="flex items-center gap-1.5">
+      {boxes.map((value, i) => (
+        <span key={i} className="flex items-center gap-1.5">
           {i > 0 && <span className="text-base font-black text-gold-300">:</span>}
           <span className="flex h-10 min-w-11 items-center justify-center rounded-lg bg-brand-950 px-2 font-mono text-lg font-bold text-gold-300 shadow-inner">
-            {pad(time[unit])}
+            {value}
           </span>
         </span>
       ))}

@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import {
   Activity,
   BookOpen,
+  Boxes,
   LayoutDashboard,
   LogOut,
   Package,
@@ -21,6 +22,7 @@ import { cn } from "@/lib/utils";
 const allNavItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true, adminOnly: false },
   { href: "/admin/products", label: "Products", icon: ShoppingBag, adminOnly: false },
+  { href: "/admin/inventory", label: "Inventory", icon: Boxes, adminOnly: false },
   { href: "/admin/orders", label: "Orders", icon: Package, adminOnly: false },
   { href: "/admin/customers", label: "Customers", icon: Users, adminOnly: false },
   { href: "/admin/coupons", label: "Coupons", icon: Tag, adminOnly: false },

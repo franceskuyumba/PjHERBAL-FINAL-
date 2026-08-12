@@ -11,6 +11,18 @@ Premium natural supplement e-commerce platform for the PJHERBAL Clinic (Segerea 
 - Payment adapter pattern: `manual` (WhatsApp-confirmed), `selcom`, `flutterwave`, `dpo`
 - Built-in **ChatBot** (FAQ) + WhatsApp live support, **abandoned-cart reminders**, region-aware **delivery fee calculator**, Google Maps embed and social links
 
+## Documentation
+
+| Doc | Purpose |
+| --- | ------- |
+| [docs/SRS.md](docs/SRS.md) | Software Requirements Specification (master reference) |
+| [docs/USER_MANUAL.md](docs/USER_MANUAL.md) | Customer guide |
+| [docs/ADMIN_MANUAL.md](docs/ADMIN_MANUAL.md) | Admin & staff guide |
+| [docs/API.md](docs/API.md) | REST API reference |
+| [docs/DATABASE.md](docs/DATABASE.md) | Database schema & data dictionary |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | Hosting, SSL, Postgres, backups, go-live |
+| [docs/FUTURE_ROADMAP.md](docs/FUTURE_ROADMAP.md) | Refunds, WhatsApp Business API, email/SMS, reports |
+
 ## Getting started
 
 ```bash
