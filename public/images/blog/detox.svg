@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1f733d"/>
+      <stop offset="100%" stop-color="#0d2b18"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <circle cx="1050" cy="150" r="260" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+  <circle cx="150" cy="560" r="180" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2"/>
+  <g transform="translate(600 320) scale(2.4)">
+    <path d="M0 -120 C 90 -90, 130 -20, 0 130 C -130 -20, -90 -90, 0 -120 Z" fill="rgba(255,255,255,0.12)" stroke="#e7b13a" stroke-width="2"/>
+    <path d="M0 -100 C 30 -60, 40 0, 0 100" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+    <path d="M0 -60 C -25 -40, -30 0, -15 55" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+    <path d="M0 -40 C 25 -25, 32 10, 12 45" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+  </g>
+  <text x="600" y="560" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="rgba(255,255,255,0.95)">Detox</text>
+</svg>

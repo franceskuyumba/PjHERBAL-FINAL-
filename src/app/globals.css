@@ -1,0 +1,198 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-600: #1f733d;
+  --gold-500: #d49526;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-cream text-ink font-sans;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: #2f8f4e;
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid #1f733d;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #f0efe9;
+}
+::-webkit-scrollbar-thumb {
+  background: #b9cfc1;
+  border-radius: 999px;
+  border: 2px solid #f0efe9;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2f8f4e;
+}
+
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 active:scale-[0.97];
+  }
+
+  .btn-primary {
+    @apply btn bg-brand-600 text-white shadow-card hover:bg-brand-700 hover:shadow-lift;
+  }
+
+  .btn-gold {
+    @apply btn bg-gold-500 text-brand-950 shadow-card hover:bg-gold-400 hover:shadow-lift;
+  }
+
+  .btn-outline {
+    @apply btn border-2 border-brand-600/20 text-brand-700 hover:border-brand-600 hover:bg-brand-50;
+  }
+
+  .btn-outline-light {
+    @apply btn border-2 border-white/30 text-white hover:border-white hover:bg-white/10;
+  }
+
+  .btn-ghost {
+    @apply btn text-brand-700 hover:bg-brand-50;
+  }
+
+  .btn-white {
+    @apply btn bg-white text-brand-800 shadow-card hover:bg-brand-50 hover:shadow-lift;
+  }
+
+  .btn-whatsapp {
+    @apply btn bg-[#25D366] text-white shadow-card hover:bg-[#1eb958] hover:shadow-lift;
+  }
+
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+  .btn-md {
+    @apply px-6 py-3 text-sm;
+  }
+  .btn-lg {
+    @apply px-8 py-4 text-base;
+  }
+
+  .btn-icon {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 hover:scale-105 active:scale-95;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-ink/10 bg-white px-4 py-3 text-sm text-ink shadow-sm transition-colors placeholder:text-ink/35 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10;
+  }
+
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-ink/80;
+  }
+
+  .card {
+    @apply rounded-3xl bg-white shadow-card;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-ink/10 bg-white px-4 py-2 text-sm font-semibold text-ink/60 transition-all duration-200 hover:border-brand-500/40 hover:text-brand-700 active:scale-95;
+  }
+  .chip-active {
+    @apply border-brand-600 bg-brand-600 text-white shadow-card hover:border-brand-700 hover:text-white;
+  }
+
+  .section-title {
+    @apply font-display text-3xl font-bold tracking-tight text-brand-950 sm:text-4xl;
+  }
+
+  .section-subtitle {
+    @apply mt-3 text-base text-ink/60 sm:text-lg;
+  }
+
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.2em] text-gold-600;
+  }
+
+  .section-rule {
+    @apply mx-auto mt-5 flex items-center justify-center gap-2;
+  }
+  .section-rule::before,
+  .section-rule::after {
+    content: "";
+    @apply h-px w-10 bg-gradient-to-r from-transparent via-gold-400 to-transparent;
+  }
+
+  /* ----- Premium blog reading typography ----- */
+  .prose-herbal {
+    @apply text-[16.5px] leading-[1.85] text-ink/80;
+  }
+  .prose-herbal h2,
+  .prose-herbal h3 {
+    @apply scroll-mt-28;
+  }
+  .prose-herbal h2 {
+    @apply mt-12 mb-4 font-display text-[1.65rem] font-bold leading-snug text-brand-950;
+  }
+  .prose-herbal h3 {
+    @apply mt-9 mb-3 font-display text-[1.35rem] font-bold leading-snug text-brand-950;
+  }
+  .prose-herbal p {
+    @apply mb-5 text-ink/80;
+  }
+  .prose-herbal p strong {
+    @apply font-semibold text-brand-900;
+  }
+  .prose-herbal ul,
+  .prose-herbal ol {
+    @apply mb-5 space-y-2 pl-1;
+  }
+  .prose-herbal ol {
+    @apply list-decimal pl-6 marker:font-semibold marker:text-gold-600;
+  }
+  .prose-herbal blockquote {
+    @apply my-6 rounded-2xl border-l-4 border-gold-500 bg-gold-50/70 px-5 py-4 text-brand-950;
+  }
+  .prose-herbal blockquote p {
+    @apply mb-0 font-medium text-brand-900;
+  }
+  .prose-herbal hr {
+    @apply my-8 border-ink/10;
+  }
+}
+
+/* Better link style inside reading content */
+.prose-herbal a {
+  @apply font-semibold text-brand-700 underline decoration-gold-400 decoration-2 underline-offset-2 transition-colors hover:text-brand-800;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

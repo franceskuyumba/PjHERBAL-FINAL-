@@ -1,0 +1,281 @@
+// PJHERBAL Clinic - database schema
+// Default provider is SQLite so the project runs out-of-the-box locally.
+// For production, switch to PostgreSQL: change the provider below to "postgresql"
+// and set DATABASE_URL to your Postgres connection string (see README).
+// NOTE: SQLite does not support Prisma enums, so statuses are stored as strings
+// and validated in the application layer.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  phone        String?
+  passwordHash String
+  role         String        @default("CUSTOMER") // CUSTOMER | ADMIN
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  addresses    Address[]
+  orders       Order[]
+  reviews      Review[]
+  wishlist     WishlistItem[]
+  notifications Notification[]
+  productViews  ProductView[]
+}
+
+model Address {
+  id          String  @id @default(cuid())
+  userId      String
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label       String  @default("Home")
+  recipientName String
+  phone       String
+  region      String
+  district    String
+  street      String
+  isDefault   Boolean @default(false)
+
+  createdAt   DateTime @default(now())
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String
+  image       String
+  icon        String
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+
+  products    Product[]
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  name          String
+  shortDescription String
+  description   String
+  ingredients   String?
+  usage         String?
+  benefits      String?
+  precautions   String?
+  price         Float
+  compareAtPrice Float?
+  sku           String   @unique
+  stock         Int      @default(0)
+  lowStockThreshold Int @default(5)
+  status        String   @default("ACTIVE") // ACTIVE | INACTIVE | DRAFT | OUT_OF_STOCK
+  isBestSeller  Boolean  @default(false)
+  isFeatured    Boolean  @default(false)
+  rating        Float    @default(0)
+  ratingCount   Int      @default(0)
+  images        String   @default("") // comma-separated paths
+  categoryId    String
+  category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  reviews       Review[]
+  orderItems    OrderItem[]
+  wishlist      WishlistItem[]
+  productViews  ProductView[]
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  author    String
+  rating    Int
+  title     String?
+  comment   String
+  isApproved Boolean @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id            String     @id @default(cuid())
+  orderNumber   String     @unique
+  userId        String?
+  user          User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  customerName  String
+  customerEmail String
+  customerPhone String
+  region        String
+  district      String
+  address       String
+  notes         String?
+  couponCode    String?
+  subtotal      Float
+  discount      Float      @default(0)
+  shipping      Float
+  total         Float
+  currency      String     @default("TZS")
+  status        String     @default("PENDING") // PENDING | PAID | PROCESSING | DISPATCHED | DELIVERED | CANCELLED
+  paymentMethod String
+  paymentStatus String     @default("UNPAID") // UNPAID | PAID | FAILED | REFUNDED
+  paymentReference String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  items         OrderItem[]
+  payments      Payment[]
+  paymentLogs   PaymentLog[]
+}
+
+model OrderItem {
+  id           String  @id @default(cuid())
+  orderId      String
+  order        Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String?
+  product      Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productName  String
+  productSlug  String
+  productImage String?
+  price        Float
+  quantity     Int
+  subtotal     Float
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  orderId       String?
+  order         Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  provider      String   // MANUAL | SELCOM | FLUTTERWAVE | DPO
+  amount        Float
+  status        String   @default("PENDING") // PENDING | SUCCESS | FAILED | REFUNDED
+  reference     String
+  transactionId String?
+  raw           String?
+  createdAt     DateTime @default(now())
+
+  logs          PaymentLog[]
+}
+
+// Payment status log: append-only history of every payment attempt/transition.
+model PaymentLog {
+  id            String   @id @default(cuid())
+  paymentId     String?
+  payment       Payment? @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  orderId       String
+  order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  provider      String
+  status        String   // CREATED | PENDING | SUCCESS | FAILED | REFUNDED
+  amount        Float?
+  reference     String?
+  message       String?
+  createdAt     DateTime @default(now())
+
+  @@index([orderId, createdAt])
+}
+
+// Activity log: audit trail of admin/system actions.
+model ActivityLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  actorName String?
+  role      String?
+  action    String   // e.g. ORDER_UPDATE, PRODUCT_CREATE, LOGIN
+  entity    String?
+  entityId  String?
+  details   String?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model Coupon {
+  id         String   @id @default(cuid())
+  code       String   @unique
+  type       String   @default("PERCENTAGE") // PERCENTAGE | FIXED
+  value      Float
+  minOrder   Float    @default(0)
+  maxDiscount Float?
+  maxUses    Int?
+  usedCount  Int      @default(0)
+  startsAt   DateTime? // scheduled promotions: not active before this time
+  expiresAt  DateTime?
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  event     String   // page_view | view_item | add_to_cart | begin_checkout | purchase | search | whatsapp_click
+  sessionId String?
+  url       String?
+  data      String?
+  createdAt DateTime @default(now())
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String
+  content     String
+  coverImage  String
+  category    String
+  author      String
+  authorRole  String?
+  publishedAt DateTime @default(now())
+  isPublished Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  scheduledFor DateTime?
+  seoTitle    String?
+  seoDescription String?
+  readingTime Int      @default(4)
+  createdAt   DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   @default("INFO") // ORDER | PROMO | ACCOUNT | INFO
+  title     String
+  message   String
+  href      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, read])
+}
+
+model ProductView {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}

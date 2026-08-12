@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="48" viewBox="0 0 220 48">
+  <g transform="translate(6 4)">
+    <circle cx="20" cy="20" r="16" fill="#1f733d"/>
+    <path d="M20 8 C 28 13, 30 20, 20 32 C 10 20, 12 13, 20 8 Z" fill="#f3dd8d"/>
+    <path d="M20 12 C 25 17, 26 22, 20 28" fill="none" stroke="#1f733d" stroke-width="1.4"/>
+  </g>
+  <text x="46" y="22" font-family="Georgia, serif" font-size="16" font-weight="bold" fill="#113c24">PJHERBAL</text>
+  <text x="46" y="36" font-family="Verdana, sans-serif" font-size="9" letter-spacing="3" fill="#b7741e">CLINIC · SEGEREA</text>
+</svg>

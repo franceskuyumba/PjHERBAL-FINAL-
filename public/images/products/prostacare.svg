@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1f733d"/>
+      <stop offset="100%" stop-color="#0f3b22"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="800" fill="url(#bg)"/>
+  <rect width="800" height="800" fill="url(#glow)"/>
+  <circle cx="150" cy="150" r="180" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+  <circle cx="660" cy="660" r="240" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+  <circle cx="680" cy="140" r="90" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2"/>
+  <g fill="rgba(255,255,255,0.18)">
+    <circle cx="120" cy="620" r="4"/><circle cx="200" cy="580" r="3"/>
+    <circle cx="640" cy="420" r="3"/><circle cx="580" cy="680" r="4"/>
+    <circle cx="90" cy="260" r="3"/><circle cx="720" cy="320" r="3"/>
+  </g>
+  <g transform="translate(400 380) scale(1.6)">
+    <path d="M0 -120 C 90 -90, 130 -20, 0 130 C -130 -20, -90 -90, 0 -120 Z" fill="rgba(255,255,255,0.12)" stroke="#e7b13a" stroke-width="2"/>
+    <path d="M0 -100 C 30 -60, 40 0, 0 100" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+    <path d="M0 -60 C -25 -40, -30 0, -15 55" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+    <path d="M0 -40 C 25 -25, 32 10, 12 45" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+  </g>
+  <text x="400" y="690" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="rgba(255,255,255,0.92)">ProstaCare</text>
+  <text x="400" y="726" text-anchor="middle" font-family="Verdana, sans-serif" font-size="16" letter-spacing="4" fill="rgba(255,255,255,0.5)">PJHERBAL CLINIC</text>
+</svg>
