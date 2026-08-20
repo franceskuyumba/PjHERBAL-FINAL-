@@ -17,6 +17,15 @@ interface StaffUser {
   _count?: { orders: number };
 }
 
+interface AdminRequest {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  status: string;
+  createdAt: string;
+}
+
 const ROLE_LABEL_KEY: Record<string, string> = {
   ADMIN: "admin.team.owner",
   STAFF: "admin.team.staff",
@@ -26,6 +35,7 @@ export function AdminTeamManager() {
   const { toast } = useToast();
   const { t } = useI18n();
   const [users, setUsers] = useState<StaffUser[]>([]);
+  const [pendingRequests, setPendingRequests] = useState<AdminRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", role: "STAFF" });
@@ -36,6 +46,7 @@ export function AdminTeamManager() {
     if (res.ok) {
       const data = await res.json();
       setUsers(data.users);
+      setPendingRequests(data.pendingAdminRequests || []);
     }
     setLoading(false);
   }, []);
@@ -57,9 +68,24 @@ export function AdminTeamManager() {
       toast(data.error || t("admin.team.createFailed"), "error");
       return;
     }
-    toast(t("admin.team.created"));
+    toast(data.pendingApproval ? t("admin.approval.submitted") : t("admin.team.created"));
     setForm({ name: "", email: "", phone: "", password: "", role: "STAFF" });
     setShowForm(false);
+    load();
+  };
+
+  const reviewAdminRequest = async (id: string, decision: "APPROVE" | "REJECT") => {
+    const res = await fetch(`/api/admin/admin-requests/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ decision }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      toast(data.error || "Could not review admin request.", "error");
+      return;
+    }
+    toast(decision === "APPROVE" ? t("admin.approval.approved") : t("admin.approval.rejected"));
     load();
   };
 
@@ -135,6 +161,26 @@ export function AdminTeamManager() {
               <Plus className="h-4 w-4" />
               {t("admin.team.createAccount")}
             </Button>
+          </div>
+        </div>
+      )}
+
+      {pendingRequests.length > 0 && (
+        <div className="mt-6 rounded-3xl border border-gold-200 bg-gold-50 p-6">
+          <h2 className="font-display text-lg font-bold text-gold-900">{t("admin.approval.heading")}</h2>
+          <div className="mt-4 space-y-3">
+            {pendingRequests.map((request) => (
+              <div key={request.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white p-4 shadow-sm">
+                <div>
+                  <p className="font-semibold text-brand-950">{request.name}</p>
+                  <p className="text-sm text-ink/60">{request.email}{request.phone ? ` · ${request.phone}` : ""}</p>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => reviewAdminRequest(request.id, "REJECT")} className="btn-outline btn-sm">{t("admin.approval.reject")}</button>
+                  <button onClick={() => reviewAdminRequest(request.id, "APPROVE")} className="btn-primary btn-sm">{t("admin.approval.approve")}</button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

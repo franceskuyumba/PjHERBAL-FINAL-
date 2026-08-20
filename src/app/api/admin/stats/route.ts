@@ -6,7 +6,7 @@ export async function GET(_request: NextRequest) {
   try {
     await requireApiAdmin();
 
-    const [salesAgg, orders, customers, products, lowStock, pendingOrders, recentOrders] =
+    const [salesAgg, orders, customers, products, lowStock, pendingOrders, recentOrders, cashSalesAgg] =
       await Promise.all([
         prisma.order.aggregate({
           _sum: { total: true },
@@ -25,6 +25,11 @@ export async function GET(_request: NextRequest) {
           take: 8,
           orderBy: { createdAt: "desc" },
           include: { items: true },
+        }),
+        prisma.cashSale.aggregate({
+          _sum: { total: true },
+          _count: true,
+          where: { status: "APPROVED" },
         }),
       ]);
 
@@ -51,6 +56,21 @@ export async function GET(_request: NextRequest) {
       const day = days.find((d) => d.date === key);
       if (day) {
         day.total += o.total;
+        day.orders += 1;
+      }
+    }
+
+    // Cash sales over time (last 14 days) for the financial report
+    const cashSalesSince = await prisma.cashSale.findMany({
+      where: { createdAt: { gte: since }, status: "APPROVED" },
+      select: { total: true, createdAt: true },
+    });
+
+    for (const cs of cashSalesSince) {
+      const key = cs.createdAt.toISOString().slice(0, 10);
+      const day = days.find((d) => d.date === key);
+      if (day) {
+        day.total += cs.total;
         day.orders += 1;
       }
     }
@@ -85,12 +105,16 @@ export async function GET(_request: NextRequest) {
 
     return json({
       stats: {
-        totalSales: salesAgg._sum.total || 0,
+        totalSales: (salesAgg._sum.total || 0) + (cashSalesAgg._sum.total || 0),
         orders,
         customers,
         products,
         pendingOrders,
         lowStockCount: lowStock.length,
+        cashSales: {
+          count: cashSalesAgg._count,
+          total: cashSalesAgg._sum.total || 0,
+        },
       },
       salesOverTime: days,
       popularProducts: popular.map((p) => ({ name: p.productName, quantity: p._sum.quantity })),

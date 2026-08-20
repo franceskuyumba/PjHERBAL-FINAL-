@@ -21,6 +21,7 @@ interface Stats {
   products: number;
   pendingOrders: number;
   lowStockCount: number;
+  cashSales?: { count: number; total: number };
 }
 
 interface SalesPoint {
@@ -45,6 +46,8 @@ export function AdminDashboard() {
   const [sales, setSales] = useState<SalesPoint[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [lowStock, setLowStock] = useState<{ id: string; name: string; stock: number }[]>([]);
+  const [reportFrom, setReportFrom] = useState("");
+  const [reportTo, setReportTo] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -68,6 +71,7 @@ export function AdminDashboard() {
     { label: t("admin.dashboard.orders"), value: String(stats?.orders || 0), icon: PackageCheck, accent: "text-blue-600" },
     { label: t("admin.dashboard.customers"), value: String(stats?.customers || 0), icon: Users, accent: "text-violet-600" },
     { label: t("admin.dashboard.products"), value: String(stats?.products || 0), icon: Package, accent: "text-amber-600" },
+    { label: t("admin.report.approvedCash"), value: formatTZS(stats?.cashSales?.total || 0), icon: Wallet, accent: "text-gold-600" },
   ];
 
   return (
@@ -77,9 +81,13 @@ export function AdminDashboard() {
           <h1 className="font-display text-2xl font-bold text-brand-950">{t("admin.dashboard.title")}</h1>
           <p className="mt-1 text-sm text-ink/55">{t("admin.dashboard.subtitle")}</p>
         </div>
-        <Link href="/admin/products/new" className="btn-primary btn-sm">
-          + {t("admin.dashboard.newProduct")}
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <input type="date" value={reportFrom} onChange={(event) => setReportFrom(event.target.value)} className="input h-9 text-xs" aria-label={t("admin.report.from")} />
+          <input type="date" value={reportTo} onChange={(event) => setReportTo(event.target.value)} className="input h-9 text-xs" aria-label={t("admin.report.to")} />
+          <a href={`/api/admin/reports/export${reportFrom || reportTo ? `?${new URLSearchParams({ ...(reportFrom ? { from: reportFrom } : {}), ...(reportTo ? { to: reportTo } : {}) }).toString()}` : ""}`} className="btn-outline btn-sm">{t("admin.report.download")}</a>
+          <a href={`/admin/reports${reportFrom || reportTo ? `?${new URLSearchParams({ ...(reportFrom ? { from: reportFrom } : {}), ...(reportTo ? { to: reportTo } : {}) }).toString()}` : ""}`} target="_blank" rel="noopener noreferrer" className="btn-outline btn-sm">{t("admin.report.print")}</a>
+          <Link href="/admin/products/new" className="btn-primary btn-sm">+ {t("admin.dashboard.newProduct")}</Link>
+        </div>
       </div>
 
       {stats && stats.pendingOrders > 0 && (
@@ -96,7 +104,7 @@ export function AdminDashboard() {
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {cardData.map((c) => (
           <div key={c.label} className="rounded-2xl border border-ink/5 bg-white p-5 shadow-card">
             <c.icon className={`h-5 w-5 ${c.accent}`} />

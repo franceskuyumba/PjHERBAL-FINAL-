@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { formatTZS } from "@/lib/utils";
 import { useI18n } from "@/context/LanguageContext";
@@ -26,7 +26,7 @@ export function AdminProductsTable() {
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const load = async (q = "") => {
+  const load = useCallback(async (q = "") => {
     setLoading(true);
     try {
       const res = await fetch(`/api/admin/products${q ? `?search=${encodeURIComponent(q)}` : ""}`);
@@ -38,11 +38,11 @@ export function AdminProductsTable() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
 
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();

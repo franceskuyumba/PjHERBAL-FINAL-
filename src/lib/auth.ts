@@ -15,7 +15,10 @@ export interface SessionPayload {
 }
 
 function getSecret(): Uint8Array {
-  const secret = process.env.AUTH_SECRET || "dev-only-secret-change-me";
+  const secret = process.env.AUTH_SECRET;
+  if (!secret || secret.length < 32) {
+    throw new Error("AUTH_SECRET must be configured with at least 32 characters.");
+  }
   return new TextEncoder().encode(secret);
 }
 
@@ -62,7 +65,14 @@ export function safeUser(user: User) {
 export async function getSession(): Promise<SessionPayload | null> {
   const token = cookies().get(SESSION_COOKIE)?.value;
   if (!token) return null;
-  return verifySession(token);
+  const session = await verifySession(token);
+  if (!session) return null;
+
+  // Roles and account activation are checked against current database state,
+  // not trusted solely from a long-lived JWT claim.
+  const user = await prisma.user.findUnique({ where: { id: session.sub } });
+  if (!user || !user.isActive) return null;
+  return { ...session, name: user.name, email: user.email, phone: user.phone, role: user.role };
 }
 
 export async function requireSession(): Promise<SessionPayload> {

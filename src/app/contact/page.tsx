@@ -26,31 +26,49 @@ export default function ContactPage() {
 
       <section className="container-site grid gap-10 py-14 lg:grid-cols-[1fr_1.2fr]">
         <div className="space-y-4">
-          <ContactCard
-            icon={<MapPin className="h-5 w-5" />}
-            title={t(lang, "contact.visitUs")}
-            lines={[SITE.address, t(lang, "contact.openHours")]}
-          />
-          <ContactCard
-            icon={<Phone className="h-5 w-5" />}
-            title={t(lang, "contact.callUs")}
-            lines={[SITE.phone]}
-            href={`tel:${SITE.phone.replace(/\s/g, "")}`}
-          />
-          <ContactCard
-            icon={<Mail className="h-5 w-5" />}
-            title={t(lang, "contact.emailUs")}
-            lines={[SITE.email]}
-            href={`mailto:${SITE.email}`}
-          />
-          <a
-            href={buildWhatsAppUrl()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-whatsapp flex w-full items-center justify-center"
-          >
-            <MessageCircle className="mr-2 h-4 w-4" /> {t(lang, "contact.chatWhatsApp")}
-          </a>
+          <div className="space-y-4">
+            <ContactCard
+              icon={<MapPin className="h-5 w-5" />}
+              title={t(lang, "contact.visitUs")}
+              lines={[SITE.address, t(lang, "contact.openHours")]}
+            />
+            <div className="flex gap-4 rounded-3xl border border-ink/5 bg-white p-5 shadow-card transition-shadow hover:shadow-lift">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-700">
+                <Phone className="h-5 w-5" />
+              </span>
+              <div className="flex-1">
+                <p className="font-display text-base font-bold text-brand-950">{t(lang, "contact.callUs")}</p>
+                {[
+                  { label: t(lang, "contact.headOffice"), number: SITE.headOfficePhone },
+                  { label: t(lang, "contact.specialist"), number: SITE.specialistPhone },
+                  { label: t(lang, "contact.customerCare"), number: SITE.customerCarePhone },
+                ].map((line) => (
+                  <a
+                    key={line.label}
+                    href={`tel:${line.number.replace(/\s/g, "")}`}
+                    className="mt-1.5 flex items-center justify-between gap-2 text-sm"
+                  >
+                    <span className="text-ink/60">{line.label}</span>
+                    <span className="font-semibold text-brand-700 hover:text-brand-800">{line.number}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+            <ContactCard
+              icon={<Mail className="h-5 w-5" />}
+              title={t(lang, "contact.emailUs")}
+              lines={[SITE.email]}
+              href={`mailto:${SITE.email}`}
+            />
+            <a
+              href={buildWhatsAppUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-whatsapp flex w-full items-center justify-center"
+            >
+              <MessageCircle className="mr-2 h-4 w-4" /> {t(lang, "contact.chatWhatsApp")}
+            </a>
+          </div>
         </div>
 
         <div className="rounded-3xl border border-ink/5 bg-white p-8 shadow-card">

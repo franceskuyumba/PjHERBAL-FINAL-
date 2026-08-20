@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Bot, MessageCircle, Send, X } from "lucide-react";
 import { getBotReply, botStarter } from "@/lib/chatbot";
@@ -28,12 +28,12 @@ export function ChatBot() {
   const [typing, setTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const starterChips = [
+  const starterChips = useMemo(() => [
     t("live.chatbot.chipProductsPrices"),
     t("live.chatbot.chipDeliveryFees"),
     t("live.chatbot.chipPaymentOptions"),
     t("live.chatbot.chipTrackOrder"),
-  ];
+  ], [t]);
 
   useEffect(() => {
     if (open && messages.length === 0) {
@@ -46,7 +46,7 @@ export function ChatBot() {
         },
       ]);
     }
-  }, [open, messages.length]);
+  }, [open, messages.length, starterChips, t]);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -78,6 +78,7 @@ export function ChatBot() {
   };
 
   const handoffUrl = buildWhatsAppUrl({
+    recipient: "specialist",
     message: messages.length > 0 ? messages.filter((m) => m.from === "user").at(-1)?.text || starterChips[0] : starterChips[0],
   });
 

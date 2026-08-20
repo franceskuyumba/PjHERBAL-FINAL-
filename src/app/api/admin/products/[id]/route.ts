@@ -53,7 +53,15 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
         compareAtPrice: parsed.data.compareAtPrice || null,
         isBestSeller: Boolean(body.isBestSeller),
         isFeatured: Boolean(body.isFeatured),
-        ...(body.image ? { images: String(body.image) } : {}),
+         ...(body.images || body.image
+           ? {
+               images: String(body.images || body.image)
+                 .split(/[\n,]+/)
+                 .map((value) => value.trim())
+                 .filter(Boolean)
+                 .join(","),
+             }
+           : {}),
       },
       include: { category: true },
     });

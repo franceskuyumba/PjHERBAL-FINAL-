@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Facebook, Instagram, Mail, MapPin, MessageCircle, Music2, Phone, Twitter } from "lucide-react";
-import { SITE, SOCIAL_LINKS } from "@/lib/constants";
+import { SITE } from "@/lib/constants";
+import { getSocialLinks } from "@/lib/site-settings";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { getLocale, t } from "@/lib/i18n";
 
@@ -23,8 +24,9 @@ const companyLinks = [
   { labelKey: "footer.myAccount", href: "/login" },
 ];
 
-export function Footer() {
+export async function Footer() {
   const lang = getLocale();
+  const socialLinks = await getSocialLinks();
   return (
     <footer className="mt-20 bg-brand-950 text-white">
       <div className="container-site grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
@@ -34,16 +36,16 @@ export function Footer() {
             {t(lang, "footer.tagline")}
           </p>
           <div className="mt-5 flex gap-3">
-            <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-brand-600">
+            <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-brand-600">
               <Facebook className="h-4 w-4" />
             </a>
-            <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-brand-600">
+            <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-brand-600">
               <Instagram className="h-4 w-4" />
             </a>
-            <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-brand-600">
+            <a href={socialLinks.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-brand-600">
               <Music2 className="h-4 w-4" />
             </a>
-            <a href={SOCIAL_LINKS.x} target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-brand-600">
+            <a href={socialLinks.x} target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-brand-600">
               <Twitter className="h-4 w-4" />
             </a>
             <a

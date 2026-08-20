@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { FileText, MapPin, MessageCircle, Receipt } from "lucide-react";
 import { prisma } from "@/lib/prisma";
@@ -65,7 +66,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                     <tr key={item.id}>
                       <td className="py-3 pr-4">
                         <div className="flex items-center gap-3">
-                          <img src={item.productImage || "/images/hero.svg"} alt="" className="h-10 w-10 rounded-lg object-cover" />
+                           <Image src={item.productImage || "/images/hero.svg"} alt={item.productName} width={40} height={40} className="h-10 w-10 rounded-lg object-cover" />
                           <span className="font-medium text-brand-950">{item.productName}</span>
                         </div>
                       </td>

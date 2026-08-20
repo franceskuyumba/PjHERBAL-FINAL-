@@ -3,10 +3,17 @@ import { json, handleApiError } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 import { publishedWhere } from "@/lib/blog";
 import { toProductCard } from "@/lib/serializers";
+import { checkRateLimit, requestIp } from "@/lib/rate-limit";
 
 export async function GET(request: NextRequest) {
   try {
+    const limited = checkRateLimit(`search:${requestIp(request)}`, 120, 60 * 1000);
+    if (!limited.allowed) {
+      return Response.json({ error: "Too many search requests." }, { status: 429, headers: { "Retry-After": String(limited.retryAfter) } });
+    }
     const q = request.nextUrl.searchParams.get("q")?.trim() || "";
+
+    if (q.length > 80) return Response.json({ error: "Search query is too long." }, { status: 400 });
 
     if (!q) {
       const [products, categories] = await Promise.all([

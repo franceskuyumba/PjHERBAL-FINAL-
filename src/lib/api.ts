@@ -10,6 +10,23 @@ export function error(message: string, status = 400) {
   return NextResponse.json({ error: message }, { status });
 }
 
+export function requireSameOrigin(request: Request) {
+  const origin = request.headers.get("origin");
+  if (!origin) return;
+
+  const requestUrl = new URL(request.url);
+  const sameOrigin = origin === requestUrl.origin || origin === `${requestUrl.protocol}//${request.headers.get("host")}`;
+  const allowedOrigins = (process.env.CORS_ALLOWED_ORIGINS || "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+  const developmentOrigin = process.env.NODE_ENV !== "production" && /^https?:\/\/(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3})(:\d+)?$/.test(origin);
+
+  if (!sameOrigin && !allowedOrigins.includes(origin) && !developmentOrigin) {
+    throw new ApiError("Cross-origin request rejected.", 403);
+  }
+}
+
 export async function getOptionalUser() {
   const session = await getSession();
   return session;

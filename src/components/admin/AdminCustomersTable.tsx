@@ -30,6 +30,30 @@ export function AdminCustomersTable() {
     setLoading(false);
   };
 
+  const toggleBlock = async (customer: Customer) => {
+    const nextActive = !customer.isActive;
+    if (!confirm(t("admin.security.confirmBlock").replace("{action}", nextActive ? t("admin.security.unblock") : t("admin.security.block")).replace("{name}", customer.name))) return;
+    const res = await fetch(`/api/admin/customers/${customer.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ isActive: nextActive }),
+    });
+    if (res.ok) load(search);
+  };
+
+  const sendSms = async (customer: Customer) => {
+    if (!customer.phone) return alert("Customer has no phone number.");
+    const message = prompt(`Send SMS to ${customer.name} (${customer.phone}):`);
+    if (!message || !message.trim()) return;
+    const res = await fetch("/api/admin/sms", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone: customer.phone, message: message.trim() }),
+    });
+    const data = await res.json().catch(() => null);
+    alert(res.ok ? "SMS sent." : data?.error || "Could not send SMS.");
+  };
+
   useEffect(() => {
     load();
   }, []);
@@ -75,6 +99,7 @@ export function AdminCustomersTable() {
                   <th className="px-5 py-3 font-semibold">{t("admin.customers.colJoined")}</th>
                   <th className="px-5 py-3 font-semibold">{t("admin.customers.colOrders")}</th>
                   <th className="px-5 py-3 font-semibold">{t("admin.customers.colTotalSpent")}</th>
+                  <th className="px-5 py-3 text-right font-semibold">{t("admin.security.heading")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-ink/5">
@@ -88,6 +113,15 @@ export function AdminCustomersTable() {
                     <td className="px-5 py-3 text-ink/50">{formatDate(c.createdAt)}</td>
                     <td className="px-5 py-3 text-ink/70">{c.orderCount}</td>
                     <td className="px-5 py-3 font-semibold text-brand-950">{formatTZS(c.totalSpent)}</td>
+                    <td className="px-5 py-3 text-right">
+                      {c.phone && (
+                        <>
+                          <button onClick={() => sendSms(c)} className="mr-2 text-xs font-semibold text-brand-700 hover:underline">SMS</button>
+                          <a className="mr-2 text-xs font-semibold text-brand-700 hover:underline" href={`https://wa.me/${c.phone.replace(/\D/g, "")}?text=${encodeURIComponent(`Hello ${c.name}, this is PJHERBAL Clinic regarding your order.`)}`} target="_blank" rel="noopener noreferrer">{t("admin.security.message")}</a>
+                        </>
+                      )}
+                      <button onClick={() => toggleBlock(c)} className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold ${c.isActive ? "bg-red-50 text-red-700" : "bg-emerald-50 text-emerald-700"}`}>{c.isActive ? t("admin.security.block") : t("admin.security.unblock")}</button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

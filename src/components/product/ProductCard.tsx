@@ -84,7 +84,7 @@ export function ProductCard({
       whileHover={{ y: -6 }}
       className="group card relative flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-lift"
     >
-      <div className="relative aspect-square overflow-hidden bg-brand-50">
+      <div className="relative aspect-[4/3] overflow-hidden bg-brand-50 sm:aspect-square">
         <Link href={`/product/${product.slug}`} aria-label={product.name}>
           <Image
             src={product.image}
@@ -142,7 +142,7 @@ export function ProductCard({
           <StockBadge stock={product.stock} />
         </div>
 
-        <div className="mt-4 flex items-center gap-2">
+        <div className="mt-4 grid gap-2">
           <button
             onClick={handleAddToCart}
             disabled={product.stock <= 0}
@@ -173,9 +173,10 @@ export function ProductCard({
             target="_blank"
             rel="noopener noreferrer"
             aria-label={t("product.askAbout").replace("{name}", product.name)}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#25D366]/30 text-[#1eb958] transition-colors hover:bg-[#25D366] hover:text-white"
+            className="flex h-10 items-center justify-center gap-2 rounded-xl border border-[#25D366]/40 text-sm font-semibold text-[#1eb958] transition-colors hover:bg-[#25D366] hover:text-white"
           >
             <MessageCircle className="h-4 w-4" />
+            <span>{t("product.whatsappInquiry")}</span>
           </a>
         </div>
       </div>

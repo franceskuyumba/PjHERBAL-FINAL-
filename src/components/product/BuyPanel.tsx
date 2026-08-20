@@ -69,6 +69,7 @@ export function BuyPanel({ productId, slug, name, price, image, stock }: BuyPane
         </button>
         <a
           href={buildWhatsAppUrl({
+            recipient: "specialist",
             productName: name,
             productPrice: formatTZS(price),
             page: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/product/${slug}`,

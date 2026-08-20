@@ -16,6 +16,8 @@ import { liveEn, liveSw } from "@/i18n/live";
 import { adminEn, adminSw } from "@/i18n/admin";
 import { admin2En, admin2Sw } from "@/i18n/admin2";
 import { uiEn, uiSw } from "@/i18n/ui";
+import { admin3En, admin3Sw } from "@/i18n/admin3";
+import { dashSpotlightEn, dashSpotlightSw } from "@/i18n/dashSpotlight";
 
 export type Locale = "en" | "sw";
 export const DEFAULT_LOCALE: Locale = "en";
@@ -34,14 +36,16 @@ export const en: Dict = {
   cart: cartEn,
   checkout: checkoutEn,
   search: searchEn,
-  dash: dashEn,
+  dash: { ...dashEn, spotlight: dashSpotlightEn },
   invoice: invoiceEn,
   blog: blogEn,
   about: aboutEn,
   contact: contactEn,
   live: liveEn,
   ui: uiEn,
-  admin: { ...adminEn, ...admin2En },
+  admin: { ...adminEn, ...admin2En, ...admin3En },
+  admin2: admin2En,
+  admin3: admin3En,
 };
 
 export const sw: Dict = {
@@ -54,14 +58,16 @@ export const sw: Dict = {
   cart: cartSw,
   checkout: checkoutSw,
   search: searchSw,
-  dash: dashSw,
+  dash: { ...dashSw, spotlight: dashSpotlightSw },
   invoice: invoiceSw,
   blog: blogSw,
   about: aboutSw,
   contact: contactSw,
   live: liveSw,
   ui: uiSw,
-  admin: { ...adminSw, ...admin2Sw },
+  admin: { ...adminSw, ...admin2Sw, ...admin3Sw },
+  admin2: admin2Sw,
+  admin3: admin3Sw,
 };
 
 export const dictionaries: Record<Locale, Dict> = { en, sw };

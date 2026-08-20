@@ -30,9 +30,9 @@ export const cartEn = {
   leftItems: "You left {count} items in your cart",
   yourItems: "Your items",
   waitingPlural:
-    "and more are waiting for you — free delivery over TZS 200,000.",
+    "and more are waiting for you — free delivery.",
   waitingSingular:
-    "is waiting for you — free delivery over TZS 200,000.",
+    "is waiting for you — free delivery.",
   completeOrder: "Complete your order",
   dismissReminder: "Dismiss reminder",
 };
@@ -69,9 +69,9 @@ export const cartSw = {
   leftItems: "Umeacha {count} bidhaa kwenye kikapu chako",
   yourItems: "Bidhaa zako",
   waitingPlural:
-    "na nyingine zinakusubiri — usafirishaji wa bure juu ya TZS 200,000.",
+    "na nyingine zinakusubiri — usafirishaji wa bure Tanzania nzima.",
   waitingSingular:
-    "inakusubiri — usafirishaji wa bure juu ya TZS 200,000.",
+    "inakusubiri — usafirishaji wa bure Tanzania nzima.",
   completeOrder: "Kamilisha oda yako",
   dismissReminder: "Funga ukumbusho",
 };

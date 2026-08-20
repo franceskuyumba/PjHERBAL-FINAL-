@@ -1,7 +1,7 @@
 /**
  * PJHERBAL Clinic - database & configuration backup script.
  *
- * Copies the SQLite database and environment file into backups/ with a
+ * Copies the SQLite database into backups/ with a
  * timestamped name, and prunes old backups beyond BACKUP_KEEP.
  *
  * Usage:
@@ -14,7 +14,6 @@ const path = require("path");
 const ROOT = path.resolve(__dirname, "..");
 const BACKUP_DIR = path.join(ROOT, "backups");
 const DB_PATH = path.join(ROOT, "prisma", "dev.db");
-const ENV_PATH = path.join(ROOT, ".env");
 const KEEP = Number(process.env.BACKUP_KEEP || 14);
 
 function stamp() {
@@ -62,10 +61,9 @@ function main() {
 
   const files = [];
   if (fs.existsSync(DB_PATH)) files.push(`prisma/dev.db`);
-  if (fs.existsSync(ENV_PATH)) files.push(`.env`);
 
   if (files.length === 0) {
-    console.error("Nothing to back up - prisma/dev.db and .env not found.");
+    console.error("Nothing to back up - prisma/dev.db not found.");
     process.exit(1);
   }
 

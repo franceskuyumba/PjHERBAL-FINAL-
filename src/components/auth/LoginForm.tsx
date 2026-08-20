@@ -47,15 +47,15 @@ export function LoginForm() {
       )}
 
       <div className="space-y-1.5">
-        <label htmlFor="email" className="text-sm font-medium text-brand-950">
-          {t("auth.email")}
+           <label htmlFor="email" className="text-sm font-medium text-brand-950">
+           {t("auth.emailOrPhone")}
         </label>
         <Input
           id="email"
-          type="email"
-          autoComplete="email"
-          required
-          placeholder="you@example.com"
+           type="text"
+           autoComplete="username"
+           required
+           placeholder="you@example.com or 0765754024"
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
@@ -90,6 +90,10 @@ export function LoginForm() {
       <Button type="submit" fullWidth loading={loading} icon={loading ? undefined : undefined}>
         {loading ? t("auth.login.signingIn") : t("auth.signIn")}
       </Button>
+
+      <Link href="/forgot-password" className="block pt-2 text-center text-sm font-semibold text-brand-700 hover:text-brand-800">
+        Forgot password?
+      </Link>
 
       <p className="pt-1 text-center text-sm text-ink/60">
         {t("auth.login.newHere")}{" "}

@@ -18,9 +18,13 @@ export function AuthLayout({
     <div className="bg-cream">
       <div className="container-site grid min-h-[calc(100vh-5rem)] items-center gap-12 py-12 lg:grid-cols-2 lg:gap-16">
         <div className="hidden lg:block">
-          <Link href="/" className="relative mb-8 block h-14 w-64">
-            <Image src="/images/logo.svg" alt="PJHERBAL Clinic" fill className="object-contain object-left" />
-          </Link>
+          <div className="relative mb-8 h-20 w-64">
+            <span className="absolute -left-3 -top-3 h-20 w-20 animate-pulse rounded-full border border-gold-300/60" />
+            <span className="absolute -left-1 -top-1 h-16 w-16 motion-safe:animate-spin rounded-full border-2 border-brand-200 border-t-brand-600" />
+            <Link href="/" className="relative z-10 block h-14 w-64 pt-3">
+              <Image src="/images/logo.svg" alt="PJHERBAL Clinic" fill className="object-contain object-left" />
+            </Link>
+          </div>
           <h1 className="font-display text-4xl font-bold leading-tight text-brand-950">
             {t(lang, "auth.benefits.heading")}
           </h1>
@@ -36,9 +40,10 @@ export function AuthLayout({
         </div>
 
         <div className="mx-auto w-full max-w-md">
-          <Link href="/" className="relative mb-8 block h-12 w-56 lg:hidden">
-            <Image src="/images/logo.svg" alt="PJHERBAL Clinic" fill className="object-contain object-left" />
-          </Link>
+           <Link href="/" className="relative mb-8 block h-12 w-56 lg:hidden">
+             <span className="absolute -left-2 -top-2 h-14 w-14 animate-pulse rounded-full border border-gold-300/60" />
+             <Image src="/images/logo.svg" alt="PJHERBAL Clinic" fill className="relative z-10 object-contain object-left" />
+           </Link>
           <div className="rounded-3xl border border-ink/5 bg-white p-8 shadow-lift">
             <h2 className="font-display text-2xl font-bold text-brand-950">{title}</h2>
             <p className="mt-1 text-sm text-ink/55">{subtitle}</p>

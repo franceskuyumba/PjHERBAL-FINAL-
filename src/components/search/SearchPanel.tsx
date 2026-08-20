@@ -86,7 +86,7 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
     if (!open) return;
     setResults(null);
     setLoading(false);
-  }, [pathname]);
+  }, [open, pathname]);
 
   const runSearch = useCallback((q: string) => {
     abortRef.current?.abort();
@@ -99,13 +99,20 @@ export function SearchPanel({ open, onClose }: { open: boolean; onClose: () => v
     abortRef.current = controller;
     setLoading(true);
     fetch(`/api/search?q=${encodeURIComponent(q.trim())}`, { signal: controller.signal })
-      .then((r) => r.json())
+      .then(async (response) => {
+        const data = await response.json().catch(() => null);
+        if (!response.ok) throw new Error(data?.error || "Search is temporarily unavailable.");
+        return data as SearchResults;
+      })
       .then((data: SearchResults) => {
-        setResults(data);
+        setResults({ products: data.products || [], categories: data.categories || [], articles: data.articles || [] });
         setLoading(false);
       })
       .catch(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if (!controller.signal.aborted) {
+          setResults({ products: [], categories: [], articles: [] });
+          setLoading(false);
+        }
       });
   }, []);
 

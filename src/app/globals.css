@@ -21,6 +21,74 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+body:has(.vikoba-app) {
+  background: #f1f5f9;
+}
+
+body:has(.vikoba-app) .site-chrome {
+  display: none;
+}
+
+.vikoba-app {
+  --viko-navy: #0a2540;
+  --viko-cyan: #0284c7;
+  --viko-gold: #d97706;
+  --viko-ice: #f1f5f9;
+  --viko-ink: #0f172a;
+  min-height: 100svh;
+  color: var(--viko-ink);
+  background: var(--viko-ice);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.vikoba-phone-shell { min-height: 100svh; max-width: 540px; margin: 0 auto; background: var(--viko-ice); padding-bottom: 94px; }
+.vikoba-header { padding: 20px 20px 17px; color: #fff; background: var(--viko-navy); box-shadow: 0 5px 18px #0a254026; }
+.vikoba-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 23px; }
+.vikoba-brand { display: flex; gap: 9px; align-items: center; font-size: 15px; font-weight: 800; letter-spacing: .07em; }
+.vikoba-brand b { color: #7dd3fc; font-weight: 500; }
+.vikoba-brand-mark { display: grid; place-items: center; height: 31px; width: 31px; border-radius: 9px; color: var(--viko-navy); background: #e0f2fe; }
+.vikoba-icon-button { border: 0; color: #dbeafe; background: transparent; cursor: pointer; }
+.vikoba-kicker, .vikoba-overline { color: #7dd3fc; text-transform: uppercase; font-size: 10px; font-weight: 800; letter-spacing: .15em; }
+.vikoba-meeting-name { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 6px; font-size: 25px; line-height: 1.12; font-weight: 800; letter-spacing: -.04em; }
+.vikoba-date { display: flex; align-items: center; gap: 6px; margin-top: 10px; color: #bfdbfe; font-size: 12px; }
+.vikoba-date span { color: #6b91b4; }
+.vikoba-sync { display: inline-flex; align-items: center; gap: 5px; padding: 6px 8px; border: 1px solid #4ade8050; border-radius: 99px; color: #bbf7d0; background: #14532d80; font-size: 9px; font-weight: 700; letter-spacing: .01em; }
+.vikoba-sync span { height: 6px; width: 6px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 3px #4ade8030; }
+.vikoba-view-switch { display: flex; gap: 4px; margin-top: 22px; padding: 4px; border-radius: 10px; background: #071d33; }
+.vikoba-view-switch button { flex: 1; border: 0; border-radius: 7px; padding: 10px 8px; color: #a6c0d5; background: transparent; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.vikoba-view-switch button.active { color: var(--viko-navy); background: #fff; box-shadow: 0 2px 6px #0003; }
+.vikoba-content { padding: 25px 16px 0; }
+.vikoba-section-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; margin-bottom: 13px; }
+.vikoba-section-heading h1, .vikoba-section-heading h2 { margin: 4px 0 0; color: var(--viko-ink); font-size: 19px; line-height: 1.1; letter-spacing: -.03em; }
+.vikoba-section-heading h1 { font-size: 22px; }
+.vikoba-overline { color: #64748b; }
+.vikoba-count { display: inline-flex; align-items: center; gap: 5px; padding: 6px 8px; border-radius: 7px; color: #475569; background: #e2e8f0; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.vikoba-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.vikoba-metric { min-height: 128px; padding: 12px 10px; border: 1px solid #e2e8f0; border-radius: 13px; background: #fff; box-shadow: 0 3px 12px #0f172a0b; }
+.vikoba-metric-icon { display: grid; place-items: center; height: 27px; width: 27px; margin-bottom: 12px; border-radius: 8px; color: #0369a1; background: #e0f2fe; }
+.vikoba-metric-icon.gold { color: #b45309; background: #fef3c7; }
+.vikoba-metric-icon.green { color: #15803d; background: #dcfce7; }
+.vikoba-metric-label { min-height: 27px; color: #64748b; font-size: 10px; line-height: 1.25; font-weight: 700; }
+.vikoba-metric-value { margin-top: 3px; font-size: 16px; font-weight: 800; letter-spacing: -.04em; white-space: nowrap; }
+.vikoba-metric-note { margin-top: 5px; color: #16a34a; font-size: 8px; font-weight: 700; line-height: 1.2; }
+.vikoba-feed-section { margin-top: 29px; }
+.vikoba-text-button { display: inline-flex; align-items: center; gap: 3px; padding: 0; border: 0; color: var(--viko-cyan); background: transparent; font: inherit; font-size: 11px; font-weight: 800; cursor: pointer; }
+.vikoba-activity-card, .vikoba-loan-card { border: 1px solid #e2e8f0; border-radius: 14px; background: #fff; box-shadow: 0 3px 12px #0f172a0b; overflow: hidden; }
+.vikoba-feed-row { display: flex; align-items: center; gap: 10px; padding: 14px 12px; border-bottom: 1px solid #e2e8f0; }
+.vikoba-feed-row:last-child { border-bottom: 0; }
+.vikoba-avatar { display: grid; flex: 0 0 35px; place-items: center; height: 35px; border-radius: 11px; font-size: 10px; font-weight: 800; }
+.vikoba-avatar.blue { color: #075985; background: #e0f2fe; }.vikoba-avatar.purple { color: #6b21a8; background: #f3e8ff; }.vikoba-avatar.orange { color: #9a3412; background: #ffedd5; }.vikoba-avatar.teal { color: #115e59; background: #ccfbf1; }
+.vikoba-feed-main { min-width: 0; flex: 1; }.vikoba-feed-main strong, .vikoba-feed-main span { display: block; }.vikoba-feed-main strong { font-size: 12px; }.vikoba-feed-main span { margin-top: 4px; color: #64748b; font-size: 10px; white-space: nowrap; }
+.vikoba-feed-side { display: flex; flex: 0 0 auto; flex-direction: column; align-items: flex-end; gap: 5px; }.vikoba-feed-side b { font-size: 12px; }.vikoba-status { display: inline-flex; align-items: center; gap: 4px; padding: 4px 6px; border-radius: 5px; font-size: 8px; font-weight: 800; white-space: nowrap; }.vikoba-status.verified { color: #166534; background: #dcfce7; }.vikoba-status.pending { color: #92400e; background: #fef3c7; }.vikoba-status-dot { height: 5px; width: 5px; border-radius: 50%; background: #d97706; }
+.vikoba-notice { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 12px; border: 1px solid #fcd34d; border-radius: 11px; color: #92400e; background: #fffbeb; }.vikoba-notice div { flex: 1; }.vikoba-notice strong, .vikoba-notice span { display: block; }.vikoba-notice strong { font-size: 11px; }.vikoba-notice span { margin-top: 3px; color: #a16207; font-size: 10px; }
+.vikoba-secure-note { display: flex; justify-content: center; align-items: center; gap: 5px; margin-top: 25px; color: #64748b; font-size: 10px; font-weight: 600; }
+.vikoba-bottom-bar { position: fixed; z-index: 2; bottom: 0; left: 50%; width: min(540px, 100%); padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); transform: translateX(-50%); border-top: 1px solid #cbd5e1; background: #f1f5f9ee; backdrop-filter: blur(12px); }.vikoba-lock-button { display: flex; justify-content: center; align-items: center; gap: 9px; width: 100%; min-height: 50px; border: 0; border-radius: 11px; color: #fff; background: var(--viko-navy); box-shadow: 0 5px 12px #0a254033; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }.vikoba-lock-button:active { transform: scale(.99); }
+.passbook-content { padding-top: 19px; }.vikoba-equity-card { padding: 19px; border-radius: 16px; color: #fff; background: var(--viko-navy); box-shadow: 0 5px 15px #0a25402b; }.vikoba-overline.light { color: #7dd3fc; }.vikoba-equity-top { display: flex; justify-content: space-between; }.vikoba-equity-value { margin-top: 8px; font-size: 27px; font-weight: 800; letter-spacing: -.05em; }.vikoba-equity-caption { display: block; margin-top: 5px; color: #b7d1e5; font-size: 10px; }.vikoba-equity-icon { display: grid; place-items: center; height: 36px; width: 36px; border-radius: 10px; color: #fbbf24; background: #d9770626; }.vikoba-rings { display: flex; align-items: center; gap: 14px; margin-top: 25px; }.vikoba-ring { display: grid; place-items: center; height: 78px; width: 78px; border-radius: 50%; background: conic-gradient(#38bdf8 0 78%, #1e486d 78% 100%); }.vikoba-ring.emergency { background: conic-gradient(#fbbf24 0 22%, #1e486d 22% 100%); }.vikoba-ring > div { display: grid; place-items: center; height: 60px; width: 60px; border-radius: 50%; background: var(--viko-navy); }.vikoba-ring strong { font-size: 15px; }.vikoba-ring span { color: #aac3d7; font-size: 8px; }.vikoba-ring-summary { flex: 1; color: #c3d7e6; font-size: 10px; line-height: 2.1; }.vikoba-ring-summary div { display: flex; gap: 5px; align-items: center; }.vikoba-ring-summary b { margin-left: auto; color: #fff; font-size: 10px; }.dot { display: inline-block; height: 6px; width: 6px; border-radius: 50%; }.blue-dot { background: #38bdf8; }.gold-dot { background: #fbbf24; }
+.vikoba-loan-card { margin-top: 25px; padding: 17px; }.vikoba-loan-card .vikoba-section-heading { margin-bottom: 21px; }.vikoba-loan-status { padding: 5px 7px; border-radius: 5px; color: #166534; background: #dcfce7; font-size: 9px; font-weight: 800; }.vikoba-loan-numbers { display: flex; justify-content: space-between; }.vikoba-loan-numbers span, .vikoba-loan-numbers strong { display: block; }.vikoba-loan-numbers span { color: #64748b; font-size: 10px; }.vikoba-loan-numbers strong { margin-top: 5px; font-size: 13px; }.vikoba-loan-numbers div:last-child { text-align: right; }.vikoba-progress { height: 9px; margin-top: 16px; border-radius: 99px; background: #e2e8f0; overflow: hidden; }.vikoba-progress span { display: block; width: 70%; height: 100%; border-radius: inherit; background: var(--viko-cyan); }.vikoba-progress-footer { display: flex; justify-content: space-between; margin-top: 8px; color: #64748b; font-size: 9px; font-weight: 700; }.vikoba-progress-footer span:first-child { color: #0369a1; }
+.vikoba-transactions { margin-top: 28px; }.vikoba-transaction-list { border: 1px solid #e2e8f0; border-radius: 14px; background: #fff; box-shadow: 0 3px 12px #0f172a0b; overflow: hidden; }.vikoba-transaction { display: flex; align-items: center; gap: 10px; padding: 13px 12px; border-bottom: 1px solid #e2e8f0; }.vikoba-transaction:last-child { border-bottom: 0; }.vikoba-receipt-icon { display: grid; place-items: center; height: 34px; width: 34px; border-radius: 9px; color: #0369a1; background: #e0f2fe; }.vikoba-transaction-copy { flex: 1; min-width: 0; }.vikoba-transaction-copy strong, .vikoba-transaction-copy span { display: block; }.vikoba-transaction-copy strong { font-size: 11px; }.vikoba-transaction-copy span { margin-top: 4px; color: #64748b; font-size: 9px; }.vikoba-transaction-end { display: flex; align-items: center; gap: 8px; }.vikoba-transaction-end b { color: #15803d; font-size: 10px; white-space: nowrap; }.vikoba-transaction-end button { display: grid; place-items: center; height: 28px; width: 28px; border: 1px solid #cbd5e1; border-radius: 7px; color: #475569; background: #fff; cursor: pointer; }.vikoba-transaction-end button:hover { color: var(--viko-cyan); border-color: var(--viko-cyan); }
+@media (min-width: 700px) { .vikoba-app { padding: 28px 0; }.vikoba-phone-shell { min-height: calc(100svh - 56px); border: 1px solid #dbe4ed; border-radius: 20px; overflow: hidden; box-shadow: 0 16px 50px #0f172a14; } .vikoba-bottom-bar { position: absolute; }.vikoba-app { position: relative; } }
+@media (max-width: 370px) { .vikoba-metric { padding-inline: 7px; }.vikoba-metric-value { font-size: 14px; }.vikoba-metric-label { font-size: 9px; }.vikoba-feed-row { gap: 7px; padding-inline: 9px; }.vikoba-feed-main span { font-size: 9px; }.vikoba-feed-side b { font-size: 10px; } }
+
 ::selection {
   background-color: #2f8f4e;
   color: #fff;
@@ -54,7 +122,7 @@ body {
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 active:scale-[0.97];
+    @apply inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 active:scale-[0.97];
   }
 
   .btn-primary {
@@ -100,7 +168,7 @@ body {
   }
 
   .input {
-    @apply w-full rounded-xl border border-ink/10 bg-white px-4 py-3 text-sm text-ink shadow-sm transition-colors placeholder:text-ink/35 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10;
+    @apply w-full rounded-md border border-ink/10 bg-white px-4 py-3 text-sm text-ink shadow-sm transition-colors placeholder:text-ink/35 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10;
   }
 
   .label {
@@ -108,7 +176,7 @@ body {
   }
 
   .card {
-    @apply rounded-3xl bg-white shadow-card;
+    @apply rounded-xl border border-ink/5 bg-white shadow-sm;
   }
 
   .badge {

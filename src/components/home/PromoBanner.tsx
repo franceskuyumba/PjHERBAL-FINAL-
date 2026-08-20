@@ -40,7 +40,7 @@ export function PromoBanner() {
   useEffect(() => {
     const timer = setInterval(() => setActive((v) => (v + 1) % banners.length), 6000);
     return () => clearInterval(timer);
-  }, []);
+  }, [banners.length]);
 
   return (
     <section className="container-site py-10 sm:py-14">
@@ -90,16 +90,17 @@ export function PromoBanner() {
           </div>
 
           <motion.div
-            className="hidden sm:block"
+             className="mx-auto block sm:mx-0"
             animate={reduceMotion ? {} : { y: [0, -10, 0] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           >
             <Image
               src={banners[active].image}
               alt={banners[active].title}
-              width={240}
-              height={240}
-              className="h-56 w-56 rounded-3xl border border-white/20 object-cover shadow-lift"
+               width={224}
+               height={224}
+               sizes="(max-width: 640px) 96px, 224px"
+               className="h-24 w-24 rounded-2xl border border-white/20 object-cover shadow-lift sm:h-56 sm:w-56"
             />
           </motion.div>
         </div>

@@ -48,6 +48,7 @@ export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: s
   const [form, setForm] = useState<BlogValues>({ ...empty, ...(editing || {}) });
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
 
   const set = <K extends keyof BlogValues>(k: K, v: BlogValues[K]) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -56,12 +57,21 @@ export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: s
     setErrorMsg("");
     setLoading(true);
     try {
-      const res = await fetch(editing?.id ? `/api/admin/blog/${editing.id}` : "/api/admin/blog", {
+        let coverImage = form.coverImage;
+        if (coverFile) {
+          const upload = new FormData();
+          upload.append("files", coverFile);
+          const uploadResponse = await fetch("/api/admin/uploads", { method: "POST", body: upload });
+          const uploadData = await uploadResponse.json();
+          if (!uploadResponse.ok) throw new Error(uploadData.error || "Cover image upload failed.");
+          coverImage = uploadData.urls?.[0] || coverImage;
+        }
+        const res = await fetch(editing?.id ? `/api/admin/blog/${editing.id}` : "/api/admin/blog", {
         method: editing?.id ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
-          coverImage: form.coverImage || `/images/blog/${form.slug || "post"}.svg`,
+          coverImage: coverImage || `/images/blog/${form.slug || "post"}.svg`,
           scheduledFor: form.scheduledFor ? new Date(form.scheduledFor).toISOString() : null,
         }),
       });
@@ -169,6 +179,8 @@ export function BlogForm({ editing }: { editing?: Partial<BlogValues> & { id?: s
             </Field>
             <Field label={t("admin2.blogForm.coverImageLabel")}>
               <Input value={form.coverImage} onChange={(e) => set("coverImage", e.target.value)} placeholder={t("admin2.blogForm.coverImagePlaceholder")} />
+              <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={(event) => setCoverFile(event.target.files?.[0] || null)} className="mt-2 block w-full text-sm" />
+              {form.coverImage && <div className="relative mt-3 max-w-xs overflow-hidden rounded-lg border border-ink/10"><img src={form.coverImage} alt="Cover preview" className="aspect-video w-full object-cover" /><button type="button" onClick={async () => { if (form.coverImage.startsWith("/uploads/")) await fetch("/api/admin/uploads", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url: form.coverImage }) }); set("coverImage", ""); }} className="absolute bottom-2 left-2 rounded bg-red-600 px-2 py-1 text-xs font-semibold text-white">Remove photo</button></div>}
             </Field>
             <div className="grid grid-cols-2 gap-3">
               <Field label={t("admin2.blogForm.readingTimeLabel")}>

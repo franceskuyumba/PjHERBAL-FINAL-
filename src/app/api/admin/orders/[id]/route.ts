@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { json, error, requireApiStaff, handleApiError } from "@/lib/api";
+import { json, error, requireApiStaff, handleApiError, requireSameOrigin } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 import { notifyOrderStatus, notifyOrderDelivered } from "@/lib/notifications";
 import { logActivity } from "@/lib/activity";
@@ -11,6 +11,7 @@ const ALLOWED_PAYMENT = ["UNPAID", "PAID", "FAILED", "REFUNDED"];
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const session = await requireApiStaff();
+    requireSameOrigin(request);
     const body = await request.json().catch(() => null);
     const order = await prisma.order.findUnique({ where: { id: params.id }, include: { payments: true } });
     if (!order) return error("Order not found.", 404);
@@ -22,6 +23,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       data.status = body.status;
     }
     if (body?.paymentStatus) {
+      if (session.role !== "ADMIN") return error("Only an admin can change payment status.", 403);
       if (!ALLOWED_PAYMENT.includes(body.paymentStatus)) return error("Invalid payment status.");
       data.paymentStatus = body.paymentStatus;
     }

@@ -18,6 +18,7 @@ export const authEn = {
     hasAccount: "Already have an account?",
   },
   email: "Email address",
+  emailOrPhone: "Email or phone number",
   password: "Password",
   fullName: "Full name",
   phoneLabel: "Phone number",
@@ -33,7 +34,7 @@ export const authEn = {
       "Trusted herbal supplements from PJHERBAL Clinic – Segerea Branch. Shop with confidence, track your orders, and chat with our specialists on WhatsApp.",
     authentic: "Authentic, quality-tested natural products",
     fastDelivery: "Fast delivery across Tanzania",
-    freeDelivery: "Free delivery on orders over TZS 200,000",
+    freeDelivery: "Free delivery anywhere in Tanzania",
     tracking: "Real-time order tracking & support",
   },
 };
@@ -58,6 +59,7 @@ export const authSw = {
     hasAccount: "Tayari una akaunti?",
   },
   email: "Barua pepe",
+  emailOrPhone: "Barua pepe au nambari ya simu",
   password: "Nenosiri",
   fullName: "Jina kamili",
   phoneLabel: "Nambari ya simu",
@@ -73,7 +75,7 @@ export const authSw = {
       "Virutubisho vya mitishamba vinavyoaminika kutoka PJHERBAL Clinic – Tawi la Segerea. Nunua kwa ujasiri, fuatilia oda zako, na zungumza na wataalamu wetu kwa WhatsApp.",
     authentic: "Bidhaa za asili, zilizojaribiwa ubora",
     fastDelivery: "Usafirishaji wa haraka kote Tanzania",
-    freeDelivery: "Usafirishaji wa bure kwa oda zaidi ya TZS 200,000",
+    freeDelivery: "Usafirishaji wa bure Tanzania nzima",
     tracking: "Ufuatiliaji wa oda kwa wakati halisi na msaada",
   },
 };

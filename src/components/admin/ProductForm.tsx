@@ -29,7 +29,7 @@ interface ProductFormValues {
   benefits: string;
   precautions: string;
   sku: string;
-  image: string;
+  images: string;
   isBestSeller: boolean;
   isFeatured: boolean;
 }
@@ -49,7 +49,7 @@ const emptyForm: ProductFormValues = {
   benefits: "",
   precautions: "",
   sku: "",
-  image: "",
+  images: "",
   isBestSeller: false,
   isFeatured: false,
 };
@@ -69,18 +69,36 @@ export function ProductForm({
   });
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const set = (key: keyof ProductFormValues, value: string | boolean) => setForm((f) => ({ ...f, [key]: value }));
+
+  const removeImage = async (url: string) => {
+    if (url.startsWith("/uploads/")) await fetch("/api/admin/uploads", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url }) });
+    set("images", form.images.split(/[\n,]+/).map((value) => value.trim()).filter((value) => value && value !== url).join("\n"));
+  };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
     setLoading(true);
     try {
+      let images = form.images;
+      if (selectedFiles.length > 0) {
+        setUploading(true);
+        const uploadData = new FormData();
+        selectedFiles.forEach((file) => uploadData.append("files", file));
+        const uploadResponse = await fetch("/api/admin/uploads", { method: "POST", body: uploadData });
+        const uploadResult = await uploadResponse.json();
+        if (!uploadResponse.ok) throw new Error(uploadResult.error || "Image upload failed.");
+        images = [...images.split(/[\n,]+/).map((value) => value.trim()).filter(Boolean), ...(uploadResult.urls || [])].join("\n");
+        setUploading(false);
+      }
       const res = await fetch(editing?.id ? `/api/admin/products/${editing.id}` : "/api/admin/products", {
         method: editing?.id ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, images }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -92,6 +110,7 @@ export function ProductForm({
     } catch {
       setErrorMsg(t("admin2.productForm.networkError"));
     } finally {
+      setUploading(false);
       setLoading(false);
     }
   };
@@ -158,7 +177,6 @@ export function ProductForm({
             </Field>
             <Field label={t("admin2.productForm.shortDescLabel")}>
               <textarea
-                required
                 value={form.shortDescription}
                 onChange={(e) => set("shortDescription", e.target.value)}
                 rows={2}
@@ -168,7 +186,6 @@ export function ProductForm({
             </Field>
             <Field label={t("admin2.productForm.fullDescLabel")}>
               <textarea
-                required
                 value={form.description}
                 onChange={(e) => set("description", e.target.value)}
                 rows={6}
@@ -225,8 +242,40 @@ export function ProductForm({
           </Section>
 
           <Section title={t("admin2.productForm.marketing")}>
-            <Field label={t("admin2.productForm.imageLabel")}>
-              <Input value={form.image} onChange={(e) => set("image", e.target.value)} placeholder={t("admin2.productForm.imagePlaceholder")} />
+            <Field label={t("admin.media.photos")}>
+              <textarea
+                value={form.images}
+                onChange={(e) => set("images", e.target.value)}
+                rows={4}
+                placeholder={t("admin.media.photoPlaceholder")}
+                className="input w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+              />
+              <p className="mt-1 text-xs text-ink/50">{t("admin.media.photoHint")}</p>
+              <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
+                {form.images.split(/[\n,]+/).map((value) => value.trim()).filter(Boolean).map((url) => (
+                  <div key={url} className="relative overflow-hidden rounded-lg border border-ink/10 bg-cream">
+                    <img src={url} alt="Product" className="aspect-square w-full object-cover" />
+                    <button type="button" onClick={() => removeImage(url)} className="absolute inset-x-1 bottom-1 rounded bg-red-600/90 px-1 py-1 text-[10px] font-semibold text-white">{t("admin.media.remove")}</button>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <label className="btn-outline btn-sm cursor-pointer">
+                  {t("admin.media.chooseFiles")}
+                  <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" multiple className="sr-only" onChange={(event) => setSelectedFiles(Array.from(event.target.files || []))} />
+                </label>
+                <label className="btn-outline btn-sm cursor-pointer">
+                  {t("admin.media.camera")}
+                  <input type="file" accept="image/*" capture="environment" className="sr-only" onChange={(event) => setSelectedFiles((current) => [...current, ...Array.from(event.target.files || [])])} />
+                </label>
+                {selectedFiles.length > 0 && <span className="self-center text-xs text-ink/55">{selectedFiles.length} {t("admin.media.selected")}</span>}
+              </div>
+              {selectedFiles.length > 0 && (
+                <div className="mt-3 grid grid-cols-4 gap-2">
+                  {selectedFiles.map((file, index) => <img key={`${file.name}-${index}`} src={URL.createObjectURL(file)} alt={file.name} className="aspect-square rounded-lg object-cover" />)}
+                </div>
+              )}
+              {uploading && <p className="mt-2 text-xs font-semibold text-brand-700">{t("admin.media.uploading")}</p>}
             </Field>
             <div className="space-y-3 pt-1">
               <Toggle checked={form.isBestSeller} onChange={(v) => set("isBestSeller", v)} label={t("admin2.productForm.bestSellerToggle")} />

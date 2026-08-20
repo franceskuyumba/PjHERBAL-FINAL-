@@ -45,7 +45,29 @@ class ConsoleProvider implements NotifyProvider {
   }
 }
 
+class InfobipProvider implements NotifyProvider {
+  name = "infobip";
+  private baseUrl = (process.env.INFOBIP_BASE_URL || "https://api.infobip.com").replace(/\/$/, "");
+
+  async sendEmail(_message: EmailMessage): Promise<boolean> {
+    return false;
+  }
+
+  async sendSms(message: SmsMessage): Promise<boolean> {
+    const apiKey = process.env.INFOBIP_API_KEY;
+    const sender = process.env.INFOBIP_SENDER;
+    if (!apiKey || !sender) return false;
+    const response = await fetch(`${this.baseUrl}/sms/2/text/advanced`, {
+      method: "POST",
+      headers: { Authorization: `App ${apiKey}`, "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ messages: [{ from: sender, destinations: [{ to: message.to }], text: message.text }] }),
+    });
+    return response.ok;
+  }
+}
+
 const consoleProvider = new ConsoleProvider();
+const infobipProvider = new InfobipProvider();
 
 export function getEmailProvider(): NotifyProvider {
   // Future: switch on process.env.EMAIL_PROVIDER === "smtp" -> SMTP provider.
@@ -53,8 +75,7 @@ export function getEmailProvider(): NotifyProvider {
 }
 
 export function getSmsProvider(): NotifyProvider {
-  // Future: process.env.SMS_PROVIDER === "infobip" | "twilio" -> gateway.
-  return consoleProvider;
+  return process.env.SMS_PROVIDER?.toLowerCase() === "infobip" ? infobipProvider : consoleProvider;
 }
 
 /** Sends an order email if a provider is configured; never throws. */
@@ -93,5 +114,6 @@ export async function sendOrderConfirmation(order: {
       text,
     }),
     sendSms({ to: order.customerPhone, text }),
+    sendSms({ to: SITE.headOfficePhone, text: `New order ${order.orderNumber} from ${order.customerName}. Total TZS ${order.total.toLocaleString()}.` }),
   ]);
 }

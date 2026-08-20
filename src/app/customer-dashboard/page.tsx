@@ -12,6 +12,7 @@ import { WelcomeHeader } from "@/components/dashboard/WelcomeHeader";
 import { StatCards } from "@/components/dashboard/StatCards";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
+import { WellnessSpotlight } from "@/components/dashboard/WellnessSpotlight";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { getLocale, t } from "@/lib/i18n";
 
@@ -87,6 +88,7 @@ export default async function DashboardOverviewPage() {
       <WelcomeHeader firstName={user.name.split(" ")[0]} />
 
       <StatCards stats={stats} />
+      <WellnessSpotlight />
 
       {showWinBack && (
         <AnimatedReveal>

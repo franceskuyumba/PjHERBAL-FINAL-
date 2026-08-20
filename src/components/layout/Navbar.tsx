@@ -60,6 +60,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
   const [accountOpen, setAccountOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { t } = useI18n();
+  const showDesktopSearch = pathname.startsWith("/shop") || pathname.startsWith("/product") || pathname.startsWith("/category");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -113,7 +114,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
 
       <header
         className={cn(
-          "sticky top-0 z-50 border-b border-ink/5 bg-cream/95 backdrop-blur-lg transition-shadow",
+          "sticky top-0 z-50 border-b border-ink/10 bg-white transition-shadow",
           scrolled && "shadow-card"
         )}
       >
@@ -122,9 +123,16 @@ export function Navbar({ user }: { user: NavUser | null }) {
             <Image src="/images/logo.svg" alt="PJHERBAL Clinic" fill priority className="object-contain object-left" />
           </Link>
 
+          <nav className="hidden items-center gap-5 lg:flex" aria-label="Primary navigation">
+            <Link href="/" className="text-sm font-semibold text-ink/75 hover:text-brand-700">{t("nav.home")}</Link>
+            <Link href="/shop" className="text-sm font-semibold text-ink/75 hover:text-brand-700">{t("nav.allProducts")}</Link>
+            <Link href="/blog" className="text-sm font-semibold text-ink/75 hover:text-brand-700">{t("nav.blog")}</Link>
+            <Link href="/contact" className="text-sm font-semibold text-ink/75 hover:text-brand-700">{t("nav.contact")}</Link>
+          </nav>
+
           <button
             onClick={openSearch}
-            className="group hidden flex-1 items-center gap-2.5 rounded-full border border-brand-200 bg-white px-4 py-2.5 text-sm text-ink/45 shadow-sm transition-all hover:border-brand-400 hover:shadow-card sm:flex sm:max-w-2xl"
+            className={cn("group hidden flex-1 items-center gap-2.5 rounded-md border border-ink/15 bg-white px-4 py-2.5 text-sm text-ink/45 shadow-sm transition-all hover:border-brand-400 hover:shadow-card sm:max-w-2xl", showDesktopSearch && "sm:flex")}
             aria-label={t("nav.ariaOpenSearch")}
           >
             <Search className="h-4 w-4 text-brand-600" />
@@ -152,13 +160,14 @@ export function Navbar({ user }: { user: NavUser | null }) {
             </Link>
 
             <a
-              href={buildWhatsAppUrl()}
+              href={buildWhatsAppUrl({ recipient: "specialist" })}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden h-10 w-10 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-[#25D366]/10 hover:text-[#1eb958] sm:flex"
+              className="hidden h-10 items-center gap-2 rounded-lg bg-brand-950 px-3 text-white transition-colors hover:bg-brand-800 sm:flex"
               aria-label="Chat on WhatsApp"
             >
               <MessageCircle className="h-5 w-5" />
+              <span className="text-sm font-semibold">{t("nav.whatsappSpecialist")}</span>
             </a>
 
             <div className="relative">
@@ -244,7 +253,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
           </div>
         </div>
 
-        <nav className="hidden border-t border-ink/5 bg-white/60 lg:block" aria-label="Category navigation">
+        <nav className="hidden border-t border-ink/5 bg-brand-950 lg:block" aria-label="Category navigation">
           <div className="container-site flex items-center gap-1">
             <CategoryLink href="/shop" label={t("nav.allProducts")} active={pathname === "/shop"} />
             {CATEGORY_LINKS.map((link) => (

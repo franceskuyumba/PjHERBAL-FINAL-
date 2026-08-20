@@ -12,8 +12,6 @@ export default async function EditProductPage({ params }: { params: { id: string
   ]);
   if (!product) notFound();
 
-  const [image] = product.images.split(",").filter(Boolean);
-
   return (
     <ProductForm
       categories={categories.map((c) => ({ id: c.id, name: c.name, slug: c.slug }))}
@@ -33,7 +31,7 @@ export default async function EditProductPage({ params }: { params: { id: string
         benefits: product.benefits || "",
         precautions: product.precautions || "",
         sku: product.sku,
-        image: image || "",
+        images: product.images.split(",").filter(Boolean).join("\n"),
         isBestSeller: product.isBestSeller,
         isFeatured: product.isFeatured,
       }}

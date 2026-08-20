@@ -39,13 +39,17 @@ export async function POST(request: NextRequest) {
     if (existing) return error("A product with this slug already exists.", 409);
 
     const sku = body?.sku ? String(body.sku) : `PJH-${parsed.data.slug.replace(/-/g, "").toUpperCase().slice(0, 10)}`;
-    const image = body?.image || `/images/products/${parsed.data.slug}.svg`;
+    const images = String(body?.images || body?.image || `/images/products/${parsed.data.slug}.svg`)
+      .split(/[\n,]+/)
+      .map((value) => value.trim())
+      .filter(Boolean)
+      .join(",");
 
     const product = await prisma.product.create({
       data: {
         ...parsed.data,
         sku,
-        images: image,
+        images,
         categoryId: parsed.data.categoryId,
         compareAtPrice: parsed.data.compareAtPrice || null,
         isBestSeller: Boolean(body?.isBestSeller),

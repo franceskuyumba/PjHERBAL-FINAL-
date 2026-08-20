@@ -2,288 +2,89 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
-import { cn } from "@/lib/utils";
 import { useI18n } from "@/context/LanguageContext";
-
-interface Slide {
-  tag: string;
-  tagline: string;
-  headline: string;
-  highlight: string;
-  sub: string;
-  image: string;
-  imageLabel: string;
-  badge: string;
-  badgeTone: "gold" | "green";
-  primaryLabel: string;
-  primaryHref: string;
-  secondaryLabel: string;
-  secondaryHref: string;
-  chat: boolean;
-  bg: string;
-  glow: string;
-}
 
 export function Hero() {
   const reduceMotion = useReducedMotion();
-  const [active, setActive] = useState(0);
-  const [direction, setDirection] = useState(1);
-  const [paused, setPaused] = useState(false);
   const { t } = useI18n();
 
-  const slides: Slide[] = [
-    {
-      tag: t("home.hero.s1.tag"),
-      tagline: t("home.hero.s1.tagline"),
-      headline: t("home.hero.s1.headline"),
-      highlight: t("home.hero.s1.highlight"),
-      sub: t("home.hero.s1.sub"),
-      image: "/images/products/moringa-power.svg",
-      imageLabel: "Moringa Power",
-      badge: t("home.hero.s1.badge"),
-      badgeTone: "gold",
-      primaryLabel: t("home.hero.s1.primaryLabel"),
-      primaryHref: "/shop",
-      secondaryLabel: t("home.hero.exploreProducts"),
-      secondaryHref: "/shop",
-      chat: true,
-      bg: "from-brand-50 via-cream to-cream",
-      glow: "rgba(47,143,78,0.10)",
-    },
-    {
-      tag: t("home.hero.s2.tag"),
-      tagline: t("home.hero.s2.tagline"),
-      headline: t("home.hero.s2.headline"),
-      highlight: t("home.hero.s2.highlight"),
-      sub: t("home.hero.s2.sub"),
-      image: "/images/products/black-seed-oil.svg",
-      imageLabel: "Black Seed Oil",
-      badge: t("home.hero.s2.badge"),
-      badgeTone: "green",
-      primaryLabel: t("home.hero.s2.primaryLabel"),
-      primaryHref: "/shop?sort=newest",
-      secondaryLabel: t("home.hero.exploreProducts"),
-      secondaryHref: "/shop",
-      chat: false,
-      bg: "from-gold-50 via-cream to-cream",
-      glow: "rgba(212,149,38,0.12)",
-    },
-    {
-      tag: t("home.hero.s3.tag"),
-      tagline: t("home.hero.s3.tagline"),
-      headline: t("home.hero.s3.headline"),
-      highlight: t("home.hero.s3.highlight"),
-      sub: t("home.hero.s3.sub"),
-      image: "/images/products/male-vitality-plus.svg",
-      imageLabel: "Male Vitality Plus",
-      badge: t("home.hero.s3.badge"),
-      badgeTone: "gold",
-      primaryLabel: t("home.hero.s3.primaryLabel"),
-      primaryHref: "/#flash-deals",
-      secondaryLabel: t("home.hero.exploreProducts"),
-      secondaryHref: "/shop",
-      chat: true,
-      bg: "from-brand-900 via-brand-800 to-brand-950",
-      glow: "rgba(231,177,58,0.18)",
-    },
-  ];
-
-  useEffect(() => {
-    if (paused) return;
-    const timer = setInterval(() => {
-      setDirection(1);
-      setActive((prev) => (prev + 1) % slides.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, [paused]);
-
-  const go = (next: number, dir = 1) => {
-    setDirection(dir);
-    setActive((next + slides.length) % slides.length);
-  };
-
-  const slide = slides[active];
-  const dark = slide.badgeTone === "gold" && slide.bg.includes("brand-900");
+  const headline = t("home.hero.s1.headline");
+  const highlight = t("home.hero.s1.highlight");
+  const sub = t("home.hero.s1.sub");
+  const tag = t("home.hero.s1.tag");
+  const primaryLabel = t("home.hero.s1.primaryLabel");
+  const primaryHref = "/shop";
+  const secondaryLabel = t("home.hero.exploreProducts");
+  const secondaryHref = "/shop";
 
   return (
-    <section
-      className={cn("relative overflow-hidden transition-colors duration-700", dark ? "text-white" : "text-brand-950")}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      <AnimatePresence mode="sync">
+    <section className="relative overflow-hidden bg-gradient-to-br from-brand-950 via-brand-900 to-brand-800 text-white">
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: "radial-gradient(circle at 15% 20%, rgba(231,177,58,0.18), transparent 45%)",
+        }}
+      />
+
+      <div className="container-site relative grid min-h-[420px] items-center py-16 sm:py-24">
         <motion.div
-          key={active}
-          className="absolute inset-0"
-          initial={reduceMotion ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={reduceMotion ? undefined : { opacity: 0 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          style={{
-            backgroundImage: `radial-gradient(circle at 15% 20%, ${slide.glow}, transparent 40%), radial-gradient(circle at 85% 80%, transparent, transparent)`,
-          }}
-        />
-      </AnimatePresence>
+          className="relative mx-auto max-w-3xl text-center"
+        >
+          <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+            <span className="text-center sm:text-right">
+              <span className="block font-display text-lg font-bold tracking-wide text-white sm:text-xl lg:text-2xl">
+                Welcome to <span className="whitespace-nowrap text-gold-300">PJHERBAL Clinic</span>
+              </span>
+              <span className="mt-1 block text-[10px] font-semibold uppercase tracking-[0.25em] text-gold-200/80 sm:text-[11px] sm:tracking-[0.3em]">
+                Segerea Branch · Natural Wellness
+              </span>
+            </span>
+            <span className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-gold-400/40 bg-white/10 shadow-lift backdrop-blur sm:h-16 sm:w-16">
+              <Image src="/images/logo.svg" alt="PJHERBAL Clinic" width={48} height={48} priority className="h-10 w-10 object-contain sm:h-12 sm:w-12" />
+            </span>
+          </div>
 
-      <div
-        className={cn(
-          "bg-gradient-to-br transition-colors duration-700",
-          dark ? "from-brand-950 via-brand-900 to-brand-800" : slide.bg
-        )}
-      >
-        <div className="container-site relative grid min-h-[520px] items-center gap-10 py-14 sm:py-20 lg:grid-cols-2 lg:gap-8">
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={active}
-              custom={direction}
-              initial={reduceMotion ? false : { opacity: 0, x: direction * 32 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={reduceMotion ? undefined : { opacity: 0, x: direction * -32 }}
-              transition={{ duration: 0.5 }}
-              className="relative order-2 text-center lg:order-1 lg:text-left"
+          <div className="inline-flex items-center gap-2 rounded-full border border-gold-400/40 bg-gold-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-gold-300">
+            <Sparkles className="h-3.5 w-3.5" />
+            {tag}
+          </div>
+
+          <h1 className="mt-5 font-display text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
+            {headline}{" "}
+            <span className="bg-gradient-to-r from-gold-300 to-gold-400 bg-clip-text text-transparent">
+              {highlight}
+            </span>
+          </h1>
+
+          <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-white/70 sm:text-lg">
+            {sub}
+          </p>
+
+          <div className="mt-8 flex flex-col items-center justify-center gap-2.5 sm:flex-row sm:gap-3">
+            <Link href={primaryHref} className="btn-gold btn-md w-full max-w-xs sm:w-auto">
+              {primaryLabel}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href={secondaryHref} className="btn-outline-light btn-md w-full max-w-xs sm:w-auto">
+              {secondaryLabel}
+            </Link>
+            <a
+              href={buildWhatsAppUrl({ recipient: "specialist" })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-whatsapp btn-md w-full max-w-xs sm:w-auto"
             >
-              <div
-                className={cn(
-                  "inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-widest",
-                  dark ? "border-gold-400/40 bg-gold-500/10 text-gold-300" : "border-gold-300/60 bg-gold-50 text-gold-700"
-                )}
-              >
-                <Sparkles className="h-3.5 w-3.5" />
-                {slide.tag}
-              </div>
-
-              <h1
-                className={cn(
-                  "mt-5 font-display text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl",
-                  dark ? "text-white" : "text-brand-950"
-                )}
-              >
-                {slide.headline}{" "}
-                <span className={cn("bg-gradient-to-r bg-clip-text text-transparent", dark ? "from-gold-300 to-gold-400" : "from-brand-600 to-brand-400")}>
-                  {slide.highlight}
-                </span>
-              </h1>
-
-              <p className={cn("mx-auto mt-5 max-w-xl text-base leading-7 sm:text-lg lg:mx-0", dark ? "text-white/70" : "text-ink/65")}>
-                {slide.sub}
-              </p>
-
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-                <Link href={slide.primaryHref} className="btn-gold btn-lg">
-                  {slide.primaryLabel}
-                  <ArrowRight className="h-5 w-5" />
-                </Link>
-                <Link href={slide.secondaryHref} className={cn("btn-lg", dark ? "btn-outline-light" : "btn-outline")}>
-                  {slide.secondaryLabel}
-                </Link>
-                {slide.chat && (
-                  <a
-                    href={buildWhatsAppUrl()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-whatsapp btn-lg"
-                  >
-                    <MessageCircle className="h-5 w-5" />
-                    {t("home.hero.chat")}
-                  </a>
-                )}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="relative order-1 mx-auto w-full max-w-md lg:order-2 lg:max-w-lg"
-          >
-            <div className="relative aspect-square">
-              <div
-                className={cn(
-                  "absolute inset-0 rounded-full blur-2xl",
-                  dark ? "bg-gold-400/20" : "bg-gradient-to-tr from-brand-600/20 via-transparent to-gold-400/20"
-                )}
-              />
-              <div className={cn("relative h-full w-full overflow-hidden rounded-[2.5rem] shadow-lift", dark ? "border border-white/15 bg-brand-800" : "border border-white/60 bg-white")}>
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={active}
-                    initial={reduceMotion ? false : { opacity: 0, x: 40 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={reduceMotion ? undefined : { opacity: 0, x: -40 }}
-                    transition={{ duration: 0.5 }}
-                    className="absolute inset-0"
-                  >
-                    <Image
-                      src={slide.image}
-                      alt={slide.imageLabel}
-                      fill
-                      priority
-                      sizes="(max-width: 768px) 100vw, 512px"
-                      className="object-cover"
-                    />
-                  </motion.div>
-                </AnimatePresence>
-
-                <motion.div
-                  className="absolute bottom-4 left-4 right-4 rounded-2xl bg-white/90 p-4 shadow-card backdrop-blur-md"
-                  animate={reduceMotion ? {} : { y: [0, -6, 0] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-gold-600">{slide.tagline}</p>
-                  <p className="font-display text-lg font-bold text-brand-950">{slide.imageLabel}</p>
-                </motion.div>
-              </div>
-
-              <motion.div
-                className="absolute -right-3 -top-3 rounded-2xl bg-gold-500 px-4 py-2 text-center shadow-lift sm:-right-6"
-                animate={reduceMotion ? {} : { rotate: [0, 3, -3, 0] }}
-                transition={{ duration: 6, repeat: Infinity }}
-              >
-                <p className="text-[10px] font-bold uppercase tracking-wide text-brand-950">{slide.tag}</p>
-                <p className="font-display text-lg font-black text-white">{slide.badge}</p>
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      <div
-        className={cn(
-          "absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2",
-          dark ? "bg-brand-950/60" : "bg-white/60",
-          "rounded-full px-2 py-1.5 backdrop-blur"
-        )}
-      >
-        <button
-          onClick={() => go(active - 1, -1)}
-          aria-label={t("home.hero.prevSlide")}
-          className={cn("flex h-8 w-8 items-center justify-center rounded-full transition-colors", dark ? "text-white/70 hover:bg-white/10" : "text-ink/60 hover:bg-ink/5")}
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-        {slides.map((s, i) => (
-          <button
-            key={s.image}
-            onClick={() => go(i, i > active ? 1 : -1)}
-            aria-label={t("home.hero.showSlide").replace("{n}", String(i + 1))}
-            className={cn(
-              "h-2 rounded-full transition-all",
-              i === active ? "w-8 bg-gold-500" : cn(dark ? "bg-white/30 hover:bg-white/60" : "bg-ink/20 hover:bg-ink/40")
-            )}
-          />
-        ))}
-        <button
-          onClick={() => go(active + 1, 1)}
-          aria-label={t("home.hero.nextSlide")}
-          className={cn("flex h-8 w-8 items-center justify-center rounded-full transition-colors", dark ? "text-white/70 hover:bg-white/10" : "text-ink/60 hover:bg-ink/5")}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
+              <MessageCircle className="h-4 w-4" />
+              {t("home.hero.chat")}
+            </a>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

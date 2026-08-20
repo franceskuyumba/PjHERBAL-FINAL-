@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ShieldCheck, Truck } from "lucide-react";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { BuyPanel } from "@/components/product/BuyPanel";
+import { ProductShareButtons } from "@/components/product/ProductShareButtons";
 import { Tabs } from "@/components/product/Tabs";
 import { ReviewForm } from "@/components/product/ReviewForm";
 import { Rating } from "@/components/ui/Rating";
@@ -127,6 +128,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
                 stock={product.stock}
               />
             </div>
+            <ProductShareButtons title={product.name} slug={product.slug} />
 
             <div className="mt-6 grid grid-cols-2 gap-4">
               <div className="card flex items-center gap-3 p-4">

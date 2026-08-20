@@ -6,8 +6,13 @@ export const SITE = {
     "PJHERBAL Clinic – Segerea Branch is a trusted Tanzanian supplier of premium natural herbal supplements. Shop authentic products for men's health, weight management, energy, immunity, brain focus and detox.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   email: "info@pjherbal.co.tz",
-  phone: "+255 700 000 000",
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "255700000000",
+  phone: "+255 750 405 256",
+  headOfficePhone: process.env.NEXT_PUBLIC_HEAD_OFFICE_PHONE || "+255 750 405 256",
+  specialistPhone: process.env.NEXT_PUBLIC_SPECIALIST_PHONE || "+255 765 754 024",
+  customerCarePhone: process.env.NEXT_PUBLIC_CUSTOMER_CARE_PHONE || "+255 767 234 340",
+  specialistWhatsappNumber: process.env.NEXT_PUBLIC_SPECIALIST_WHATSAPP_NUMBER || "255765754024",
+  customerCareWhatsappNumber: process.env.NEXT_PUBLIC_CUSTOMER_CARE_WHATSAPP_NUMBER || "255767234340",
+  whatsappNumber: process.env.NEXT_PUBLIC_CUSTOMER_CARE_WHATSAPP_NUMBER || "255767234340",
   whatsappDefaultMessage:
     process.env.NEXT_PUBLIC_WHATSAPP_DEFAULT_MESSAGE ||
     "Hello PJHERBAL Clinic, I would like some assistance.",
@@ -17,7 +22,7 @@ export const SITE = {
 
 export const SHIPPING = {
   fee: Number(process.env.SHIPPING_FEE_TZS || 7000),
-  freeThreshold: Number(process.env.FREE_SHIPPING_THRESHOLD_TZS || 200000),
+  freeThreshold: Number(process.env.FREE_SHIPPING_THRESHOLD_TZS || 0),
 };
 
 export interface DeliveryZone {
@@ -135,6 +140,7 @@ export const PAYMENT_METHODS = [
   { id: "HALOPESA", name: "HaloPesa", description: "Halotel mobile money", icon: "mobile" },
   { id: "CRDB", name: "CRDB Bank", description: "Bank transfer to CRDB", icon: "bank" },
   { id: "NMB", name: "NMB Bank", description: "Bank transfer to NMB", icon: "bank" },
+  { id: "CASH", name: "Cash Payment", description: "Pay cash at the branch", icon: "cash" },
 ] as const;
 
 export const PRODUCT_STATUSES = [

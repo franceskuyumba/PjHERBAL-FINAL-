@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { formatTZS, formatDateTime } from "@/lib/utils";
 import { StatusBadge, PaymentStatusBadge } from "@/components/dashboard/StatusBadge";
@@ -16,16 +17,19 @@ interface Order {
   total: number;
   status: string;
   paymentStatus: string;
+  paymentMethod: string;
   createdAt: string;
   items: { productName: string; quantity: number }[];
 }
 
-export function AdminOrdersTable() {
+export function AdminOrdersTable({ canApprove = false }: { canApprove?: boolean }) {
   const { t } = useI18n();
+  const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [status, setStatus] = useState("");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [approving, setApproving] = useState<string | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -36,6 +40,42 @@ export function AdminOrdersTable() {
     const data = await res.json();
     setOrders(data.orders || []);
     setLoading(false);
+  };
+
+  const approve = async (order: Order) => {
+    if (!confirm(t("admin.orders.approveConfirm"))) return;
+    setApproving(order.id);
+    const res = await fetch(`/api/admin/orders/${order.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: "PROCESSING", paymentStatus: "PAID" }),
+    });
+    setApproving(null);
+    if (!res.ok) {
+      const data = await res.json().catch(() => null);
+      alert(data?.error || t("admin.orders.approveFailed"));
+      return;
+    }
+    router.refresh();
+    load();
+  };
+
+  const confirmCash = async (order: Order) => {
+    if (!confirm(`Confirm cash received for order ${order.orderNumber}?`)) return;
+    setApproving(order.id);
+    const res = await fetch(`/api/admin/orders/${order.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: "PROCESSING", paymentStatus: "PAID" }),
+    });
+    setApproving(null);
+    if (!res.ok) {
+      const data = await res.json().catch(() => null);
+      alert(data?.error || "Could not confirm cash payment.");
+      return;
+    }
+    router.refresh();
+    load();
   };
 
   useEffect(() => {
@@ -98,7 +138,9 @@ export function AdminOrdersTable() {
                   <th className="px-5 py-3 font-semibold">{t("admin.orders.colDate")}</th>
                   <th className="px-5 py-3 font-semibold">{t("admin.orders.colItems")}</th>
                   <th className="px-5 py-3 font-semibold">{t("admin.orders.colTotal")}</th>
+                  <th className="px-5 py-3 font-semibold">Payment</th>
                   <th className="px-5 py-3 font-semibold">{t("admin.orders.colStatus")}</th>
+                  <th className="px-5 py-3 text-right font-semibold">{t("admin.orders.approve")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-ink/5">
@@ -118,11 +160,24 @@ export function AdminOrdersTable() {
                       {o.items.reduce((n, i) => n + i.quantity, 0)}
                     </td>
                     <td className="px-5 py-3 font-semibold text-brand-950">{formatTZS(o.total)}</td>
+                    <td className="px-5 py-3 text-ink/70">{o.paymentMethod || "—"}</td>
                     <td className="px-5 py-3">
                       <div className="flex flex-wrap items-center gap-1.5">
                         <StatusBadge status={o.status} />
                         <PaymentStatusBadge status={o.paymentStatus} />
                       </div>
+                    </td>
+                    <td className="px-5 py-3 text-right">
+                      {canApprove && o.paymentMethod === "CASH" && o.paymentStatus !== "PAID" && (
+                        <button onClick={() => confirmCash(o)} disabled={approving === o.id} className="mr-2 rounded-lg bg-emerald-600 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700">
+                          {approving === o.id ? "..." : "Confirm cash"}
+                        </button>
+                      )}
+                      {canApprove && o.paymentMethod !== "CASH" && o.status === "PENDING" && (
+                        <button onClick={() => approve(o)} disabled={approving === o.id} className="btn-primary btn-sm">
+                          {approving === o.id ? "..." : t("admin.orders.approve")}
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}

@@ -19,6 +19,12 @@ export type ActivityAction =
   | "DOCUMENT_CREATE"
   | "DOCUMENT_UPDATE"
   | "DOCUMENT_DELETE"
+  | "CASH_SALE_UPDATE"
+  | "CASH_SALE_DELETE"
+  | "ADMIN_APPROVAL_REQUEST"
+  | "ADMIN_APPROVAL_UPDATE"
+  | "SITE_SETTINGS_UPDATE"
+  | "CUSTOMER_UPDATE"
   | "SYSTEM";
 
 export interface ActivityInput {

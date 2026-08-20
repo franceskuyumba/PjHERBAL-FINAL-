@@ -3,6 +3,8 @@ import { Hero } from "@/components/home/Hero";
 import { TrustBar } from "@/components/home/TrustBar";
 import { FlashDeals } from "@/components/home/FlashDeals";
 import { FeaturedCategories } from "@/components/home/FeaturedCategories";
+import { PromoTileGrid } from "@/components/home/PromoTileGrid";
+import { CategoryPicksRows } from "@/components/home/CategoryPicksRows";
 import { BestSellers } from "@/components/home/BestSellers";
 import { ProductGridSection } from "@/components/home/ProductGridSection";
 import { PromoBanner } from "@/components/home/PromoBanner";
@@ -107,8 +109,10 @@ export default async function HomePage() {
       />
       <Hero />
       <CartReminder />
-      <TrustBar />
+      <PromoTileGrid categories={categoryCards} />
       <FlashDeals products={flashProducts} isLoggedIn={isLoggedIn} />
+      <CategoryPicksRows categories={categoryCards} products={[...bestSellers.map((p) => toProductCard(p)), ...newArrivalCards]} isLoggedIn={isLoggedIn} />
+      <TrustBar />
       <FeaturedCategories categories={categoryCards} />
       {recommended.length > 0 && (
         <ProductGridSection
@@ -123,9 +127,9 @@ export default async function HomePage() {
       )}
       <BestSellers products={bestSellers.map((p) => toProductCard(p))} isLoggedIn={isLoggedIn} />
       <ProductGridSection
-        eyebrow={t(lang, "home.newArrivals.eyebrow")}
-        title={t(lang, "home.newArrivals.title")}
-        subtitle={t(lang, "home.newArrivals.subtitle")}
+        eyebrow={t(lang, "home.latestCollection.eyebrow")}
+        title={t(lang, "home.latestCollection.title")}
+        subtitle={t(lang, "home.latestCollection.subtitle")}
         href="/shop?sort=newest"
         linkLabel={t(lang, "home.viewAllProducts")}
         products={newArrivalCards}

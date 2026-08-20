@@ -5,6 +5,7 @@ export interface WhatsAppMessage {
   productPrice?: string;
   message?: string;
   page?: string;
+  recipient?: "specialist" | "customerCare";
 }
 
 /**
@@ -12,7 +13,7 @@ export interface WhatsAppMessage {
  * via NEXT_PUBLIC_WHATSAPP_NUMBER in .env (international format, digits only).
  */
 export function buildWhatsAppUrl(options: WhatsAppMessage = {}): string {
-  const number = SITE.whatsappNumber.replace(/\D/g, "");
+  const number = (options.recipient === "specialist" ? SITE.specialistWhatsappNumber : SITE.customerCareWhatsappNumber).replace(/\D/g, "");
 
   const lines: string[] = [];
   if (options.productName) {

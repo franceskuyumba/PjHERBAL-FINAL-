@@ -17,6 +17,10 @@ import {
   Tag,
   Users,
   UserCog,
+  Wallet,
+  Store,
+  Settings,
+  BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
@@ -27,13 +31,17 @@ const allNavItems = [
   { href: "/admin/products", labelKey: "admin.shell.products", icon: ShoppingBag, adminOnly: false },
   { href: "/admin/inventory", labelKey: "admin.shell.inventory", icon: Boxes, adminOnly: false },
   { href: "/admin/orders", labelKey: "admin.shell.orders", icon: Package, adminOnly: false },
+  { href: "/admin/cash-sales", labelKey: "admin.shell.cashSales", icon: Wallet, adminOnly: false },
+  { href: "/admin/walk-ins", labelKey: "admin.shell.walkIns", icon: Store, adminOnly: false },
   { href: "/admin/documents", labelKey: "admin.shell.receipts", icon: Receipt, adminOnly: false },
+  { href: "/admin/reports", labelKey: "admin.shell.reports", icon: BarChart3, adminOnly: false },
   { href: "/admin/customers", labelKey: "admin.shell.customers", icon: Users, adminOnly: false },
   { href: "/admin/coupons", labelKey: "admin.shell.coupons", icon: Tag, adminOnly: false },
   { href: "/admin/blog", labelKey: "admin.shell.blog", icon: BookOpen, adminOnly: false },
   { href: "/admin/reviews", labelKey: "admin.shell.reviews", icon: Star, adminOnly: false },
   { href: "/admin/activity", labelKey: "admin.shell.activityLog", icon: Activity, adminOnly: true },
   { href: "/admin/team", labelKey: "admin.shell.team", icon: UserCog, adminOnly: true },
+  { href: "/admin/settings", labelKey: "admin.shell.settings", icon: Settings, adminOnly: true },
 ];
 
 export function AdminShell({ children, role }: { children: ReactNode; role: string }) {

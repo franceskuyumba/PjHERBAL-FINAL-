@@ -24,7 +24,7 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
           alt={`${name} — ${t("product.imageAlt").replace("{n}", String(active + 1))}`}
           fill
           priority
-          sizes="(max-width: 1024px) 100vw, 50vw"
+          sizes="(max-width: 640px) 92vw, (max-width: 1024px) 70vw, 50vw"
           className="object-cover"
         />
       </motion.div>

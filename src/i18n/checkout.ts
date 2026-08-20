@@ -54,7 +54,7 @@ export const checkoutEn = {
   total: "Total",
   freeShippingCta: "Add",
   freeShippingCtaMore: "more to unlock",
-  freeDelivery: "FREE delivery",
+  freeDelivery: "Free delivery",
 };
 
 export const checkoutSw = {

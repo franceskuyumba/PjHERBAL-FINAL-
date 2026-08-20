@@ -1,5 +1,29 @@
 export const homeEn = {
   viewAllProducts: "View all products",
+  photoShowcase: {
+    eyebrow: "PJHERBAL wellness collection",
+    title: "Natural choices for everyday wellbeing",
+    subtitle: "Explore our clinic-selected products and discover what fits your wellness routine.",
+  },
+  photoArrivals: {
+    eyebrow: "Just arrived",
+    title: "New arrivals",
+    subtitle: "Fresh wellness visuals and products selected for the PJHERBAL collection.",
+    viewAll: "View all new arrivals",
+  },
+  latestCollection: {
+    eyebrow: "More from PJHERBAL",
+    title: "Latest clinic collection",
+    subtitle: "Explore the newest products currently available in our catalogue.",
+  },
+  discovery: {
+    eyebrow: "Find your wellness essentials",
+    title: "What are you looking for today?",
+    searchPlaceholder: "Search supplements, teas and natural products",
+    location: "Delivery location",
+    allTanzania: "All Tanzania",
+    search: "Search products",
+  },
   recommended: {
     eyebrow: "Personalised for you",
     title: "Recommended for you",
@@ -41,7 +65,7 @@ export const homeEn = {
       headline: "Shop this week's",
       highlight: "best deals",
       sub: "Flash prices on customer favourites — while stock lasts. Pay with M-Pesa, Tigo Pesa or Airtel Money.",
-      badge: "Up to 20% OFF",
+      badge: "",
       primaryLabel: "VIEW FLASH DEALS",
     },
   },
@@ -207,6 +231,30 @@ export const homeEn = {
 
 export const homeSw = {
   viewAllProducts: "Tazama Bidhaa Zote",
+  photoShowcase: {
+    eyebrow: "Mkusanyiko wa ustawi wa PJHERBAL",
+    title: "Chaguo za asili kwa ustawi wa kila siku",
+    subtitle: "Vinjari bidhaa zilizochaguliwa na kliniki yetu na pata inayofaa utaratibu wako wa ustawi.",
+  },
+  photoArrivals: {
+    eyebrow: "Zimewasili tu",
+    title: "Bidhaa mpya",
+    subtitle: "Picha na bidhaa mpya za ustawi zilizochaguliwa kwa mkusanyiko wa PJHERBAL.",
+    viewAll: "Tazama bidhaa mpya zote",
+  },
+  latestCollection: {
+    eyebrow: "Zaidi kutoka PJHERBAL",
+    title: "Mkusanyiko wa hivi karibuni wa kliniki",
+    subtitle: "Vinjari bidhaa mpya zinazopatikana sasa kwenye katalogi yetu.",
+  },
+  discovery: {
+    eyebrow: "Pata bidhaa zako za ustawi",
+    title: "Unatafuta nini leo?",
+    searchPlaceholder: "Tafuta virutubisho, chai na bidhaa za asili",
+    location: "Mahali pa usafirishaji",
+    allTanzania: "Tanzania yote",
+    search: "Tafuta bidhaa",
+  },
   recommended: {
     eyebrow: "Imeundwa kwa Ajili Yako",
     title: "Zinazopendekezwa Kwako",
@@ -248,7 +296,7 @@ export const homeSw = {
       headline: "Nunua wiki hii",
       highlight: "ofa bora zaidi",
       sub: "Bei za ofa kwa bidhaa zinazopendwa na wateja — mradi tu zipo. Lipa kwa M-Pesa, Tigo Pesa au Airtel Money.",
-      badge: "Punguzo la Hadi 20%",
+      badge: "",
       primaryLabel: "TAZAMA OFA ZA MUDA",
     },
   },

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import type { CSSProperties } from "react";
 import { Providers } from "@/components/Providers";
 import { SearchProvider } from "@/context/SearchContext";
 import { Navbar } from "@/components/layout/Navbar";
@@ -11,18 +11,6 @@ import { SITE } from "@/lib/constants";
 import { getCurrentUser } from "@/lib/auth";
 import { getLocale } from "@/lib/i18n";
 import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -103,7 +91,10 @@ export default async function RootLayout({
   const lang = getLocale();
 
   return (
-    <html lang={lang} className={`${inter.variable} ${playfair.variable}`}>
+    <html
+      lang={lang}
+      style={{ "--font-inter": "system-ui", "--font-playfair": "Georgia" } as CSSProperties}
+    >
       <body className="flex min-h-screen flex-col pb-16 lg:pb-0">
         <script
           type="application/ld+json"
@@ -111,12 +102,11 @@ export default async function RootLayout({
         />
         <Providers>
           <SearchProvider>
-            <Navbar user={user} />
+            <div className="site-chrome"><Navbar user={user} /></div>
             <main className="flex-1">{children}</main>
-            <Footer />
-            <MobileBottomNav user={user} />
-            <ChatBot />
-            <LiveSupport />
+            <div className="site-chrome"><Footer /></div>
+            <div className="site-chrome"><MobileBottomNav user={user} /></div>
+            <div className="site-chrome"><ChatBot /><LiveSupport /></div>
           </SearchProvider>
         </Providers>
       </body>

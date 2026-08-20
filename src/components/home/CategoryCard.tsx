@@ -37,9 +37,9 @@ export function CategoryCard({ category, index = 0 }: { category: CategoryCardDa
     >
       <Link
         href={`/category/${category.slug}`}
-        className="card relative block h-full overflow-hidden p-4 transition-shadow duration-300 hover:shadow-lift"
+        className="card relative block h-full overflow-hidden p-0 transition-shadow duration-300 hover:shadow-lift"
       >
-        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
+        <div className="relative aspect-[4/3] overflow-hidden">
           <Image
             src={category.image}
             alt={category.name}
@@ -47,27 +47,24 @@ export function CategoryCard({ category, index = 0 }: { category: CategoryCardDa
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-brand-950/40 to-transparent" />
-          <div className="absolute left-3 top-3 flex h-11 w-11 items-center justify-center rounded-xl bg-white/90 text-brand-700 shadow-card backdrop-blur transition-transform duration-300 group-hover:scale-110">
+          <div className="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-brand-950/20 to-transparent" />
+          <div className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-xl bg-white/90 text-brand-700 shadow-card backdrop-blur transition-transform duration-300 group-hover:scale-110">
             {iconMap[category.icon] || iconMap.leaf}
           </div>
-        </div>
-
-        <div className="p-4">
-          <div className="flex items-center justify-between gap-2">
-            <h3 className="font-display text-lg font-bold text-brand-950 transition-colors group-hover:text-brand-700">
+          <div className="absolute inset-x-4 bottom-4 text-white">
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="font-display text-lg font-bold transition-colors group-hover:text-gold-200">
               {category.name}
-            </h3>
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600 transition-all duration-300 group-hover:bg-brand-600 group-hover:text-white">
-              <ArrowUpRight className="h-4 w-4" />
-            </span>
-          </div>
-          <p className="mt-1.5 text-sm leading-6 text-ink/55">{category.description}</p>
-          {typeof category.productCount === "number" && (
-            <p className="mt-3 text-xs font-semibold text-brand-600">
+              </h3>
+              <ArrowUpRight className="h-5 w-5 text-gold-300" />
+            </div>
+            <p className="mt-1 text-xs leading-5 text-white/75">{category.description}</p>
+            {typeof category.productCount === "number" && (
+              <p className="mt-2 text-[11px] font-semibold text-gold-200">
               {t("home.categoryCard.productCount").replace("{count}", String(category.productCount))}
-            </p>
-          )}
+              </p>
+            )}
+          </div>
         </div>
       </Link>
     </motion.div>

@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
+  Banknote,
   Check,
   CheckCircle2,
   Landmark,
@@ -18,6 +19,7 @@ import { useCart } from "@/context/CartContext";
 import { useI18n } from "@/context/LanguageContext";
 import { PAYMENT_METHODS, SHIPPING, TANZANIA_REGIONS } from "@/lib/constants";
 import { formatTZS } from "@/lib/utils";
+import { calculateTotals } from "@/lib/cart";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -37,7 +39,7 @@ interface OrderResult {
 }
 
 export default function CheckoutPage() {
-  const { items, totals, coupon, clearCart } = useCart();
+  const { items, coupon, clearCart } = useCart();
   const { t } = useI18n();
   const { toast } = useToast();
 
@@ -63,6 +65,7 @@ export default function CheckoutPage() {
   const [result, setResult] = useState<OrderResult | null>(null);
 
   const totalItems = useMemo(() => items.reduce((s, i) => s + i.quantity, 0), [items]);
+  const totals = useMemo(() => calculateTotals(items, coupon, { region: form.region }), [items, coupon, form.region]);
 
   const update = (key: keyof typeof form, value: string) => setForm((f) => ({ ...f, [key]: value }));
 
@@ -140,8 +143,9 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="container-site py-8 sm:py-12">
-      <h1 className="font-display text-3xl font-bold text-brand-950">{t("checkout.title")}</h1>
+    <div className="min-h-screen bg-[#f9faf7] py-8 sm:py-12">
+      <div className="container-site">
+      <h1 className="sr-only">{t("checkout.title")}</h1>
 
       <div className="mt-6 flex items-center gap-1 sm:gap-2">
         {([1, 2, 3, 4] as Step[]).map((s) => (
@@ -150,12 +154,12 @@ export default function CheckoutPage() {
               onClick={() => s < step && step !== 4 && setStep(s)}
               disabled={s >= step || step === 4}
               className={cn(
-                "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-all",
+                 "flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-xs font-bold transition-all",
                 step > s || (step === 4 && s < 4)
                   ? "bg-brand-600 text-white"
                   : step === s
                     ? "bg-brand-600 text-white ring-4 ring-brand-100"
-                    : "bg-ink/10 text-ink/40"
+                     : "bg-[#e5e7eb] text-ink/50"
               )}
             >
               {step > s ? <Check className="h-4 w-4" /> : s}
@@ -262,9 +266,9 @@ export default function CheckoutPage() {
                     >
                       <span className={cn(
                         "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
-                        method.icon === "mobile" ? "bg-brand-50 text-brand-600" : "bg-gold-50 text-gold-600"
+                        method.icon === "mobile" ? "bg-brand-50 text-brand-600" : method.icon === "cash" ? "bg-emerald-50 text-emerald-600" : "bg-gold-50 text-gold-600"
                       )}>
-                        {method.icon === "mobile" ? <Smartphone className="h-5 w-5" /> : <Landmark className="h-5 w-5" />}
+                        {method.icon === "mobile" ? <Smartphone className="h-5 w-5" /> : method.icon === "cash" ? <Banknote className="h-5 w-5" /> : <Landmark className="h-5 w-5" />}
                       </span>
                       <span>
                         <span className="block font-bold text-brand-950">{method.name}</span>
@@ -359,7 +363,7 @@ export default function CheckoutPage() {
         </div>
 
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <div className="card p-6">
+             <div className="card rounded-xl p-6">
             <h2 className="font-display text-lg font-bold text-brand-950">{t("checkout.orderSummary")}</h2>
             <p className="mt-1 text-xs text-ink/45">{t("checkout.itemsCount").replace("{count}", String(totalItems))}</p>
             <div className="mt-4 max-h-52 space-y-3 overflow-y-auto pr-1">
@@ -412,6 +416,7 @@ export default function CheckoutPage() {
             )}
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

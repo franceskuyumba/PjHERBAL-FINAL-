@@ -34,6 +34,8 @@ export const shopEn = {
   apply: "Apply",
   clearAll: "Clear all filters ({count})",
   filtersActive: "active",
+  clinicalPromise: "Clinical Promise",
+  clinicalPromiseText: "Every supplement is curated by our Segerea branch specialists. Mobile-money and bank payments accepted.",
   showResults: "Show results",
   closeFilters: "Close filters",
 };
@@ -75,6 +77,8 @@ export const shopSw = {
   apply: "Omba",
   clearAll: "Ondoa futa zote ({count})",
   filtersActive: "zinazotumika",
+  clinicalPromise: "Ahadi ya Kliniki",
+  clinicalPromiseText: "Kila kirutubisho huchaguliwa na wataalamu wa tawi letu la Segerea. Malipo ya simu na benki yanakubaliwa.",
   showResults: "Onyesha matokeo",
   closeFilters: "Funga futa",
 };

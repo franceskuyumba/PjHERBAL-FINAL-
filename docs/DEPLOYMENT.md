@@ -3,7 +3,7 @@
 ## 1. Architecture decisions
 
 - **Hosting**: Vercel (recommended, zero-ops) or a VPS (Node + Nginx + PM2).
-- **Database**: PostgreSQL in production. Switch the Prisma provider and set `DATABASE_URL`.
+- **Database**: PostgreSQL through Prisma. Set `DATABASE_URL` for local or production PostgreSQL.
 - **Sessions**: stateless JWT cookie — no sticky sessions needed.
 - **Static assets**: served from `public/`; images are SVG placeholders today — swap
   for optimized real photography (WebP/AVIF) before launch.
@@ -23,11 +23,16 @@ Copy `.env.example` → `.env` (production). Critical variables:
 | `DATABASE_URL` | Postgres connection string (`postgresql://user:pass@host:5432/pjherbal?schema=public`) |
 | `AUTH_SECRET` | Strong random string — generate with `node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"` |
 | `NEXT_PUBLIC_SITE_URL` | Final domain, e.g. `https://pjherbal.co.tz` |
+| `CORS_ALLOWED_ORIGINS` | Optional comma-separated allowlist of trusted HTTPS frontend origins; never use `*` with cookies |
 | `NEXT_PUBLIC_WHATSAPP_NUMBER` | Digits only, e.g. `2557XXXXXXXX` |
+| `WHATSAPP_ACCESS_TOKEN` / `WHATSAPP_PHONE_NUMBER_ID` | Meta WhatsApp Business API credentials |
+| `WHATSAPP_APP_SECRET` / `WHATSAPP_WEBHOOK_VERIFY_TOKEN` | Required to verify webhook requests |
+| `NEXT_PUBLIC_HEAD_OFFICE_PHONE` / `NEXT_PUBLIC_SPECIALIST_PHONE` / `NEXT_PUBLIC_CUSTOMER_CARE_PHONE` | Public contact numbers in international format |
 | `PAYMENT_PROVIDER` | `manual` until gateway credentials are added |
 | `SHIPPING_FEE_TZS` / `FREE_SHIPPING_THRESHOLD_TZS` | Delivery calculator defaults |
 | `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_URL` / `NEXT_PUBLIC_GOOGLE_MAPS_URL` | Map embed + Google Business link |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_TIKTOK_PIXEL_ID` | Analytics/pixels (leave blank to disable) |
+| `SMS_PROVIDER`, `INFOBIP_API_KEY`, `INFOBIP_SENDER` | Set `SMS_PROVIDER=infobip` for real SMS; console mode only logs messages |
 
 > **Never** commit the real `.env`. It is git-ignored. In Vercel, set variables in the
 > project dashboard; on a VPS, use a secure `.env` file owned by the app user.
@@ -35,7 +40,7 @@ Copy `.env.example` → `.env` (production). Critical variables:
 ## 4. Database deployment
 
 ```bash
-# in prisma/schema.prisma change the provider to "postgresql"
+# PostgreSQL is already the active Prisma provider.
 prisma migrate deploy   # applies versioned migrations to Postgres
 npm run db:seed         # seed categories, products, coupons, demo accounts
 ```
@@ -85,8 +90,8 @@ certbot --nginx -d pjherbal.co.tz   # enables automatic HTTPS
 
 ## 7. Daily backups (Recovery System)
 
-`npm run backup` snapshots `prisma/dev.db` and `.env` into `backups/` (keeps last 14,
-tune with `BACKUP_KEEP`). In production, point it at a database dump instead.
+`npm run backup` snapshots only `prisma/dev.db` into `backups/` (keeps last 14,
+tune with `BACKUP_KEEP`). It deliberately never archives `.env` or secrets.
 
 **PostgreSQL daily dump + retention:**
 ```bash
@@ -118,6 +123,7 @@ schtasks /Create /TN "PJHERBAL Backup" /TR "cmd /c \"cd /d C:\path\to\project &&
 - [ ] Claim/verify the **Google Business Profile** and set `NEXT_PUBLIC_GOOGLE_MAPS_URL`
 - [ ] WhatsApp number receives order confirmations
 - [ ] Backups are running (`/var/backups/pjherbal` has today's file)
+- [ ] `/api/health` returns database status 200
 - [ ] Analytics pixels fire (GA debug view / Meta Events Manager test)
 
 ## 9. Go-live checklist
@@ -128,3 +134,17 @@ schtasks /Create /TN "PJHERBAL Backup" /TR "cmd /c \"cd /d C:\path\to\project &&
 4. Replace placeholder SVGs with optimized product photography.
 5. Set `NEXT_PUBLIC_SITE_URL` to the production domain.
 6. Configure email/SMS providers (see FUTURE_ROADMAP) or keep console logging.
+
+## 10. Safe load testing
+
+Run only against local/staging systems:
+
+```bash
+RATE=10 DURATION=10 npm run load:test
+RATE=50 DURATION=10 npm run load:test
+RATE=100 DURATION=10 npm run load:test
+RATE=200 DURATION=10 npm run load:test
+```
+
+Set `BASE_URL` and `ENDPOINT` to test another environment. The script targets
+`/api/health` by default and does not create orders or modify data.

@@ -10,7 +10,7 @@ export const registerSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  email: z.string().trim().min(3, "Please enter your email or phone number").max(120),
   password: z.string().min(1, "Please enter your password"),
 });
 
@@ -31,7 +31,16 @@ export const checkoutSchema = z.object({
   district: z.string().min(1, "Please enter your district"),
   address: z.string().min(3, "Please enter your delivery address"),
   notes: z.string().max(500).optional(),
-  paymentMethod: z.string().min(1, "Please select a payment method"),
+  paymentMethod: z.enum(["M-PESA", "TIGO_PESA", "AIRTEL_MONEY", "HALOPESA", "CRDB", "NMB", "CASH"], {
+    errorMap: () => ({ message: "Please select a valid payment method" }),
+  }),
+  items: z.array(
+    z.object({
+      productId: z.string().min(1),
+      quantity: z.coerce.number().int().min(1).max(99),
+    })
+  ).min(1, "Your cart is empty.").max(100),
+  coupon: z.object({ code: z.string().trim().min(1).max(30) }).nullable().optional(),
 });
 
 export const productSchema = z.object({
@@ -47,8 +56,8 @@ export const productSchema = z.object({
   stock: z.coerce.number().int().min(0),
   lowStockThreshold: z.coerce.number().int().min(0).default(5),
   status: z.string().min(1),
-  shortDescription: z.string().min(10).max(200),
-  description: z.string().min(20),
+  shortDescription: z.string().max(200).default(""),
+  description: z.string().default(""),
   ingredients: z.string().optional(),
   usage: z.string().optional(),
   benefits: z.string().optional(),

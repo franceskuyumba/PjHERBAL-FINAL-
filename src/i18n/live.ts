@@ -25,7 +25,7 @@ export const liveEn = {
     replyPayment:
       "We accept M-Pesa, Tigo Pesa, Airtel Money, HaloPesa and bank transfer to CRDB/NMB. After checkout you'll get payment instructions and can confirm your payment on WhatsApp — simply send the transaction reference.",
     replyDelivery:
-      "We deliver nationwide. Same-day delivery across Dar es Salaam, and 1–5 days to the rest of Tanzania depending on your region. Delivery fees start at TZS 7,000 and are free on orders over TZS 200,000. Delivery to {eta}.",
+      "We deliver nationwide with free delivery anywhere in Tanzania. Delivery to {eta}.",
     replyProducts:
       "Browse our full range at {shopUrl}. For example: Male Vitality Plus TZS 45,000, Moringa Power TZS 25,000, SlimHerbal Tea TZS 18,000. Flash deals with up to 18% off are on the homepage.",
     replyHours:
@@ -80,7 +80,7 @@ export const liveSw = {
     replyPayment:
       "Tunakubali M-Pesa, Tigo Pesa, Airtel Money, HaloPesa na uhamisho wa benki kwenda CRDB/NMB. Baada ya malipo utapata maelekezo ya malipo na unaweza kuthibitisha malipo yako kwa WhatsApp — tuma tu namba ya muamala.",
     replyDelivery:
-      "Tunafikisha kote nchini. Usafirishaji wa siku hiyo hiyo kote Dar es Salaam, na siku 1–5 kwenda maeneo mengine Tanzania kulingana na mkoa wako. Ada za usafirishaji zinaanzia TZS 7,000 na ni bure kwa oda zaidi ya TZS 200,000. Usafirishaji kwenda {eta}.",
+      "Tunafikisha kote nchini kwa usafirishaji wa bure Tanzania nzima. Usafirishaji kwenda {eta}.",
     replyProducts:
       "Vinjari bidhaa zetu zote kwenye {shopUrl}. Kwa mfano: Male Vitality Plus TZS 45,000, Moringa Power TZS 25,000, SlimHerbal Tea TZS 18,000. Ofa za flash hadi punguzo la 18% zipo kwenye ukurasa wa mwanzo.",
     replyHours:

@@ -174,6 +174,10 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
             </span>
           </div>
           {filterControls}
+          <div className="mt-8 rounded-xl border border-dashed border-gold-400/60 bg-cream p-4">
+            <p className="text-xs font-bold uppercase tracking-widest text-gold-700">{t("shop.clinicalPromise")}</p>
+            <p className="mt-3 text-xs leading-5 text-ink/60">{t("shop.clinicalPromiseText")}</p>
+          </div>
         </div>
       </aside>
 

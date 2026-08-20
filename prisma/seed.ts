@@ -508,15 +508,20 @@ const blogPosts = [
 async function main() {
   console.log("Seeding database...");
 
-  const adminPassword = await bcrypt.hash("Admin@12345", 10);
+  const adminEmail = process.env.SEED_ADMIN_EMAIL || "admin@pjherbal.co.tz";
+  const seedPassword = process.env.SEED_ADMIN_PASSWORD || (process.env.NODE_ENV === "production" ? "" : "Admin@12345");
+  if (!seedPassword || seedPassword.length < 12) {
+    throw new Error("Set SEED_ADMIN_PASSWORD to a strong password before production seeding.");
+  }
+  const adminPassword = await bcrypt.hash(seedPassword, 10);
   const customerPassword = await bcrypt.hash("Customer@123", 10);
 
   await prisma.user.upsert({
-    where: { email: "admin@pjherbal.co.tz" },
+    where: { email: adminEmail },
     update: {},
     create: {
       name: "PJHERBAL Admin",
-      email: "admin@pjherbal.co.tz",
+      email: adminEmail,
       phone: "255700000001",
       passwordHash: adminPassword,
       role: "ADMIN",

@@ -3,9 +3,14 @@ import { json, error } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 import { registerSchema } from "@/lib/validations";
 import { zodParseSafe } from "@/lib/zod-helpers";
+import { checkRateLimit, requestIp } from "@/lib/rate-limit";
 import { hashPassword, setSessionCookie, safeUser } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
+  const limited = checkRateLimit(`register:${requestIp(request)}`, 5, 60 * 60 * 1000);
+  if (!limited.allowed) {
+    return Response.json({ error: "Too many registration attempts. Please try again later." }, { status: 429, headers: { "Retry-After": String(limited.retryAfter) } });
+  }
   const body = await request.json().catch(() => null);
   const parsed = zodParseSafe(registerSchema, body || {});
   if (!parsed.ok) return error(parsed.message);
