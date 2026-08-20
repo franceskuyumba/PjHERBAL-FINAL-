@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: pjherbal-clinic
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npx prisma generate && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false
+      - key: NEXT_PUBLIC_WHATSAPP_NUMBER
+        value: 255765754024
+      - key: NEXT_PUBLIC_SPECIALIST_WHATSAPP_NUMBER
+        value: 255765754024
+      - key: NEXT_PUBLIC_CUSTOMER_CARE_WHATSAPP_NUMBER
+        value: 255767234340
+      - key: PAYMENT_PROVIDER
+        value: manual
+      - key: SMS_PROVIDER
+        value: infobip
+      - key: INFOBIP_SENDER
+        value: PJHERBAL
+      - key: INFOBIP_API_KEY
+        sync: false
+      - key: SELCOM_API_KEY
+        sync: false
+      - key: SELCOM_API_SECRET
+        sync: false
+      - key: SELCOM_MERCHANT_ID
+        sync: false
+      - key: WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: WHATSAPP_APP_SECRET
+        sync: false
+      - key: WHATSAPP_WEBHOOK_VERIFY_TOKEN
+        sync: false
