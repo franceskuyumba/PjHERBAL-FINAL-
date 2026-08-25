@@ -44,7 +44,7 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <div className="container-site py-16 sm:py-24">
-        <h1 className="mb-8 text-center font-display text-3xl font-bold text-brand-950">{t("cart.title")}</h1>
+        <h1 className="mb-8 text-center font-display text-3xl font-bold text-ink">{t("cart.title")}</h1>
         <EmptyState
           icon={<ShoppingBag className="h-8 w-8" />}
           title={t("cart.empty")}
@@ -64,17 +64,35 @@ export default function CartPage() {
   const remaining = SHIPPING.freeThreshold - totals.subtotal;
 
   return (
-    <div className="container-site py-8 sm:py-12">
-      <h1 className="font-display text-3xl font-bold text-brand-950">{t("cart.title")}</h1>
-      <p className="mt-1 text-sm text-ink/55">
+    <div className="min-h-screen bg-surface-muted py-10 sm:py-14">
+      <div className="container-site">
+      <div className="mx-auto flex max-w-2xl items-center justify-between gap-2 py-6">
+        <div className="flex flex-col items-center gap-1.5">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-sm font-bold text-white">1</span>
+          <span className="text-xs font-bold tracking-wide text-brand-700">Cart Summary</span>
+          <span className="h-0.5 w-12 bg-gold-500 sm:w-20" />
+        </div>
+        <div className="h-px flex-1 bg-ink/[0.08]" />
+        <div className="flex flex-col items-center gap-1.5 opacity-60">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-muted text-xs font-bold text-ink-muted">2</span>
+          <span className="text-xs font-medium text-ink-muted">Customer Details</span>
+        </div>
+        <div className="h-px flex-1 bg-ink/[0.08]" />
+        <div className="flex flex-col items-center gap-1.5 opacity-60">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-muted text-xs font-bold text-ink-muted">3</span>
+          <span className="text-xs font-medium text-ink-muted">Payment</span>
+        </div>
+      </div>
+      <h1 className="font-display text-3xl font-bold text-ink">{t("cart.title")}</h1>
+      <p className="mt-1 text-sm text-ink-muted">
         {items.length} {items.length === 1 ? t("cart.item") : t("cart.items")} {t("cart.inCart")}
       </p>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_380px]">
         <div className="space-y-4">
           {totals.subtotal < SHIPPING.freeThreshold && totals.subtotal > 0 && (
-            <div className="rounded-2xl border border-gold-200 bg-gold-50 p-4">
-              <p className="text-sm font-medium text-gold-800">
+            <div className="rounded-2xl border border-gold-200/60 bg-gold-50 p-4 shadow-soft">
+              <p className="text-sm font-medium text-gold-700">
                 {t("cart.freeShippingCta").replace("{amount}", formatTZS(remaining))} <strong>{t("cart.freeDelivery")}</strong> 🚚
               </p>
               <div className="mt-2 h-2 overflow-hidden rounded-full bg-gold-200">
@@ -96,18 +114,18 @@ export default function CartPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, x: -40 }}
-                className="card flex gap-4 p-4 sm:p-5"
+                className="flex gap-4 rounded-2xl border border-ink/[0.04] bg-white p-4 shadow-soft sm:p-5"
               >
-                <Link href={`/product/${item.slug}`} className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-brand-50">
+                <Link href={`/product/${item.slug}`} className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-surface-muted">
                   <Image src={item.image} alt={item.name} fill sizes="96px" className="object-cover" />
                 </Link>
                 <div className="flex min-w-0 flex-1 flex-col">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                      <Link href={`/product/${item.slug}`} className="line-clamp-1 font-display font-bold text-brand-950 hover:text-brand-700">
+                      <Link href={`/product/${item.slug}`} className="line-clamp-1 font-display font-bold text-ink hover:text-brand-600">
                         {item.name}
                       </Link>
-                      <p className="mt-0.5 text-xs text-ink/45">{formatTZS(item.price)} {t("cart.each")}</p>
+                      <p className="mt-0.5 text-xs text-ink-muted">{formatTZS(item.price)} {t("cart.each")}</p>
                     </div>
                     <button
                       onClick={() => {
@@ -122,7 +140,7 @@ export default function CartPage() {
                   </div>
                   <div className="mt-auto flex items-center justify-between gap-2 pt-3">
                     <QuantityStepper value={item.quantity} onChange={(q) => updateQuantity(item.productId, q)} max={item.stock || 99} />
-                    <p className="font-bold text-brand-800">{formatTZS(item.price * item.quantity)}</p>
+                    <p className="font-bold text-brand-700">{formatTZS(item.price * item.quantity)}</p>
                   </div>
                 </div>
               </motion.div>
@@ -135,8 +153,8 @@ export default function CartPage() {
         </div>
 
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <div className="card p-6">
-            <h2 className="font-display text-xl font-bold text-brand-950">{t("cart.orderSummary")}</h2>
+          <div className="rounded-2xl border border-ink/[0.04] bg-white p-6 shadow-soft">
+            <h2 className="font-display text-xl font-bold text-ink">{t("cart.orderSummary")}</h2>
 
             <div className="mt-5 flex gap-2">
               <input
@@ -152,7 +170,7 @@ export default function CartPage() {
             {coupon && (
               <button
                 onClick={() => setCoupon(null)}
-                className="mt-2 flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 hover:bg-brand-100"
+                className="mt-2 flex items-center gap-1.5 rounded-full bg-sage-50 px-3 py-1 text-xs font-semibold text-sage-700 hover:bg-sage-100"
               >
                 {coupon.code} ({coupon.type === "PERCENTAGE" ? `${coupon.value}%` : formatTZS(coupon.value)} {t("cart.off")})
                 <span className="ml-1">×</span>
@@ -161,7 +179,7 @@ export default function CartPage() {
 
             <dl className="mt-5 space-y-3 text-sm">
               <div className="flex justify-between">
-                <dt className="text-ink/60">{t("cart.subtotal")}</dt>
+                <dt className="text-ink-muted">{t("cart.subtotal")}</dt>
                 <dd className="font-semibold text-ink">{formatTZS(totals.subtotal)}</dd>
               </div>
               {totals.discount > 0 && (
@@ -171,14 +189,18 @@ export default function CartPage() {
                 </div>
               )}
               <div className="flex justify-between">
-                <dt className="text-ink/60">{t("cart.delivery")}</dt>
+                <dt className="text-ink-muted">{t("cart.delivery")}</dt>
                 <dd className="font-semibold text-ink">
                   {totals.shipping === 0 ? <span className="text-brand-600">{t("cart.free")}</span> : formatTZS(totals.shipping)}
                 </dd>
               </div>
-              <div className="flex justify-between border-t border-ink/10 pt-3">
-                <dt className="font-bold text-brand-950">{t("cart.total")}</dt>
-                <dd className="font-display text-xl font-bold text-brand-800">{formatTZS(totals.total)}</dd>
+              <div className="flex justify-between">
+                <dt className="text-ink-muted">Estimated VAT (18%)</dt>
+                <dd className="font-semibold text-ink">{formatTZS(Math.round(totals.subtotal * 0.18))}</dd>
+              </div>
+              <div className="flex justify-between border-t border-ink/[0.06] pt-3">
+                <dt className="font-bold text-ink">{t("cart.total")}</dt>
+                <dd className="font-display text-xl font-bold text-brand-700">{formatTZS(totals.total)}</dd>
               </div>
             </dl>
 
@@ -198,6 +220,7 @@ export default function CartPage() {
             </a>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

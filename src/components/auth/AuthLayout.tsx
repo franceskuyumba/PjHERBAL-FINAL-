@@ -44,7 +44,7 @@ export function AuthLayout({
              <span className="absolute -left-2 -top-2 h-14 w-14 animate-pulse rounded-full border border-gold-300/60" />
              <Image src="/images/logo.svg" alt="PJHERBAL Clinic" fill className="relative z-10 object-contain object-left" />
            </Link>
-          <div className="rounded-3xl border border-ink/5 bg-white p-8 shadow-lift">
+          <div className="rounded-xl border border-[#E5E7EB] bg-white p-8 shadow-sm">
             <h2 className="font-display text-2xl font-bold text-brand-950">{title}</h2>
             <p className="mt-1 text-sm text-ink/55">{subtitle}</p>
             <div className="mt-6">{children}</div>

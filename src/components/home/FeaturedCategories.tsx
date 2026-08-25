@@ -11,7 +11,7 @@ export function FeaturedCategories({
 }) {
   const lang = getLocale();
   return (
-    <section className="bg-white py-16 sm:py-20">
+    <section className="bg-white py-16 sm:py-24">
       <div className="container-site">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:items-end">
           <SectionHeading
@@ -27,13 +27,13 @@ export function FeaturedCategories({
           </Link>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
           {categories.map((category, i) => (
             <CategoryCard key={category.slug} category={category} index={i} />
           ))}
         </div>
 
-        <div className="mt-8 text-center sm:hidden">
+        <div className="mt-10 text-center sm:hidden">
           <Link href="/shop" className="btn-outline btn-md">
             {t(lang, "home.featuredCategories.browseAll")}
             <ArrowRight className="h-4 w-4" />

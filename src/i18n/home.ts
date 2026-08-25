@@ -44,11 +44,11 @@ export const homeEn = {
     s1: {
       tag: "Daily Wellness Essentials",
       tagline: "Authentic Tanzanian herbal supplements",
-      headline: "Nature's Power,",
-      highlight: "Engineered for You",
-      sub: "Premium, quality-checked supplements for energy, immunity, weight management and more — delivered across Tanzania.",
+      headline: "Unlock Your Body's",
+      highlight: "Natural Potential",
+      sub: "Discover carefully selected products for your wellness journey.",
       badge: "Trusted by 1,000+ customers",
-      primaryLabel: "SHOP NOW",
+      primaryLabel: "Order Now",
     },
     s2: {
       tag: "New Arrivals",

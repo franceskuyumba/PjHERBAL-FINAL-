@@ -8,21 +8,21 @@ export function LanguageSwitcher({ variant = "light" }: { variant?: "light" | "d
 
   const buttonClass = (active: boolean) =>
     cn(
-      "rounded-full px-2.5 py-1 text-[11px] font-bold transition-colors",
+      "rounded-full px-3 py-1.5 text-[11px] font-bold transition-all duration-base",
       active
         ? variant === "dark"
-          ? "bg-gold-400 text-brand-950"
-          : "bg-brand-600 text-white"
+          ? "bg-gold-500 text-brand-950 shadow-soft"
+          : "bg-brand-600 text-white shadow-soft"
         : variant === "dark"
-          ? "text-white/70 hover:text-white"
-          : "text-ink/55 hover:text-ink"
+          ? "text-white/55 hover:text-white/90"
+          : "text-ink-muted hover:text-ink"
     );
 
   return (
     <div
       className={cn(
         "flex shrink-0 items-center rounded-full border p-0.5",
-        variant === "dark" ? "border-white/15 bg-white/5" : "border-ink/10 bg-white"
+        variant === "dark" ? "border-white/[0.08] bg-white/[0.04]" : "border-ink/[0.06] bg-white"
       )}
       role="group"
       aria-label="Language"

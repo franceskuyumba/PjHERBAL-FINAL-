@@ -54,17 +54,17 @@ export function Testimonials() {
   const t = testimonials[index];
 
   return (
-    <section className="bg-gradient-to-b from-brand-950 to-brand-900 py-16 text-white sm:py-20">
+    <section className="bg-gradient-to-b from-brand-950 to-brand-900 py-16 text-white sm:py-24">
       <div className="container-site">
         <SectionHeading
           eyebrow={tr("home.testimonials.eyebrow")}
           title={tr("home.testimonials.title")}
           subtitle={tr("home.testimonials.subtitle")}
-          className="text-white [&_h2]:text-white [&_.eyebrow]:text-gold-300 [&_p]:text-white/60"
+          className="text-white [&_h2]:text-white [&_.eyebrow]:text-gold-300 [&_p]:text-white/55"
         />
 
         <div className="relative mx-auto max-w-3xl">
-          <div className="absolute -left-2 -top-4 text-gold-400/30">
+          <div className="absolute -left-2 -top-4 text-gold-400/25">
             <Quote className="h-20 w-20" />
           </div>
           <AnimatePresence mode="wait">
@@ -74,30 +74,30 @@ export function Testimonials() {
               animate={{ opacity: 1, y: 0 }}
               exit={reduceMotion ? undefined : { opacity: 0, y: -24 }}
               transition={{ duration: 0.45 }}
-              className="relative rounded-[2rem] border border-white/10 bg-white/5 p-8 text-center backdrop-blur sm:p-12"
+              className="relative rounded-3xl border border-white/[0.08] bg-white/[0.04] p-8 text-center backdrop-blur-sm sm:p-12"
             >
               <div className="flex justify-center">
                 <Rating value={t.rating} showValue={false} size="lg" />
               </div>
-              <p className="mt-6 font-display text-xl leading-relaxed text-white/90 sm:text-2xl">
+              <p className="mt-6 font-display text-xl leading-relaxed text-white/85 sm:text-2xl">
                 &ldquo;{t.text}&rdquo;
               </p>
               <footer className="mt-6">
                 <p className="font-display text-lg font-bold text-gold-300">{t.name}</p>
-                <p className="text-sm text-white/50">{t.role}</p>
+                <p className="text-sm text-white/45">{t.role}</p>
               </footer>
             </motion.blockquote>
           </AnimatePresence>
 
-          <div className="mt-6 flex justify-center gap-2">
+          <div className="mt-8 flex justify-center gap-2">
             {testimonials.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setIndex(i)}
                 aria-label={tr("home.testimonials.showTestimonial").replace("{n}", String(i + 1))}
                 className={cn(
-                  "h-2 rounded-full transition-all",
-                  i === index ? "w-8 bg-gold-400" : "w-2 bg-white/25 hover:bg-white/50"
+                  "h-2 rounded-full transition-all duration-300",
+                  i === index ? "w-8 bg-gold-400" : "w-2 bg-white/20 hover:bg-white/40"
                 )}
               />
             ))}

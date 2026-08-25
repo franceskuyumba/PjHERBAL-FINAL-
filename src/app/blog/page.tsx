@@ -64,15 +64,21 @@ export default async function BlogPage() {
 
   return (
     <div className="bg-cream">
-      <section className="bg-brand-950 pb-16 pt-14 text-white sm:pb-20 sm:pt-20">
-        <div className="container-site text-center">
-          <p className="eyebrow">PJHERBAL Journal</p>
-          <h1 className="mt-4 font-display text-4xl font-bold leading-tight sm:text-5xl">
-            {t(lang, "blog.title")}
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/70 sm:text-base">
-            {t(lang, "blog.intro")}
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-950 via-[#0f3d1f] to-brand-800 py-12 text-white sm:py-16">
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+          <div className="flex h-[400px] w-[400px] items-center justify-center rounded-full border border-gold-400/20 bg-white/5 backdrop-blur animate-[pulse_2s_ease-in-out_infinite]">
+            <img src="/images/logo.svg" alt="PJHERBAL Clinic" className="h-48 w-48 object-contain drop-shadow-2xl" />
+          </div>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-950/50 via-transparent to-transparent" />
+        <div className="container-site relative text-center">
+          <p className="inline-flex items-center gap-2 rounded-full border border-gold-400/30 bg-gold-500/15 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-gold-200">
+            Karibu PJ Herbal Clinic
           </p>
+          <h1 className="mx-auto mt-4 max-w-2xl font-display text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">
+            <span className="bg-gradient-to-r from-gold-300 to-gold-400 bg-clip-text text-transparent">{t(lang, "blog.title")}</span>
+          </h1>
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-white/70 sm:text-base">{t(lang, "blog.intro")}</p>
         </div>
       </section>
 

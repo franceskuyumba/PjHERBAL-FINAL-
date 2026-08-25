@@ -30,26 +30,28 @@ export function WhyUs() {
   ];
 
   return (
-    <section className="container-site py-16 sm:py-20">
-      <SectionHeading
-        eyebrow={t(lang, "home.whyUs.eyebrow")}
-        title={t(lang, "home.whyUs.title")}
-        subtitle={t(lang, "home.whyUs.subtitle")}
-      />
-      <div className="grid gap-6 sm:grid-cols-2">
-        {reasons.map((reason, i) => (
-          <AnimatedReveal key={reason.title} delay={i * 0.08}>
-            <div className="card flex h-full items-start gap-4 p-6 transition-shadow hover:shadow-lift">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gold-50 text-gold-600">
-                {reason.icon}
+    <section className="bg-surface-muted py-16 sm:py-24">
+      <div className="container-site">
+        <SectionHeading
+          eyebrow={t(lang, "home.whyUs.eyebrow")}
+          title={t(lang, "home.whyUs.title")}
+          subtitle={t(lang, "home.whyUs.subtitle")}
+        />
+        <div className="grid gap-5 sm:grid-cols-2">
+          {reasons.map((reason, i) => (
+            <AnimatedReveal key={reason.title} delay={i * 0.08}>
+              <div className="flex h-full items-start gap-4 rounded-2xl border border-ink/[0.04] bg-white p-6 shadow-soft transition-all duration-300 hover:shadow-lift">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gold-50 text-gold-600">
+                  {reason.icon}
+                </div>
+                <div>
+                  <h3 className="font-display text-lg font-bold text-ink">{reason.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-ink-muted">{reason.description}</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-display text-lg font-bold text-brand-950">{reason.title}</h3>
-                <p className="mt-1 text-sm leading-6 text-ink/55">{reason.description}</p>
-              </div>
-            </div>
-          </AnimatedReveal>
-        ))}
+            </AnimatedReveal>
+          ))}
+        </div>
       </div>
     </section>
   );

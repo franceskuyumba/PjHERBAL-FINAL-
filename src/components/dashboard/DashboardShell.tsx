@@ -109,7 +109,7 @@ export function DashboardShell({
       <div className="container-site grid gap-6 py-6 lg:grid-cols-[260px_1fr] lg:py-10 lg:pb-16">
         {/* Desktop sidebar */}
         <aside className="hidden lg:block">
-          <div className="sticky top-24 rounded-3xl border border-ink/5 bg-white p-5 shadow-card">
+          <div className="sticky top-24 rounded-xl border border-[#E5E7EB] bg-white p-5 shadow-sm">
             <div className="flex items-center gap-3 border-b border-ink/5 pb-4">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-brand-800 font-display text-lg font-bold text-gold-200">
                 {getInitials(name)}

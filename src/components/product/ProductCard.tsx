@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Check, Heart, MessageCircle, ShoppingCart } from "lucide-react";
+import { Check, Heart, MessageCircle, Pencil, ShoppingCart, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { Rating } from "@/components/ui/Rating";
 import { PriceTag } from "@/components/ui/PriceTag";
@@ -34,10 +34,12 @@ export function ProductCard({
   product,
   index = 0,
   isLoggedIn = false,
+  isAdmin = false,
 }: {
   product: ProductCardProduct;
   index?: number;
   isLoggedIn?: boolean;
+  isAdmin?: boolean;
 }) {
   const { addItem } = useCart();
   const { t } = useI18n();
@@ -45,6 +47,10 @@ export function ProductCard({
   const [wishlisted, setWishlisted] = useState(false);
   const [added, setAdded] = useState(false);
   const addedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [showEdit, setShowEdit] = useState(false);
+  const [editPrice, setEditPrice] = useState(String(product.price));
+  const [editDesc, setEditDesc] = useState(product.shortDescription);
+  const [saving, setSaving] = useState(false);
 
   const handleAddToCart = () => {
     if (product.stock <= 0) return;
@@ -75,15 +81,47 @@ export function ProductCard({
     }
   };
 
+  const saveQuickEdit = async () => {
+    setSaving(true);
+    const res = await fetch(`/api/admin/products/${product.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ price: Number(editPrice), shortDescription: editDesc, mode: "quick-edit" }),
+    });
+    setSaving(false);
+    if (!res.ok) { toast("Could not save", "error"); return; }
+    toast("Product updated", "success");
+    setShowEdit(false);
+    window.location.reload();
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-30px" }}
       transition={{ duration: 0.5, delay: Math.min(index * 0.06, 0.4) }}
-      whileHover={{ y: -6 }}
-      className="group card relative flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-lift"
+      whileHover={{ y: -4 }}
+      className="group card relative flex flex-col overflow-hidden rounded-2xl border border-ink/[0.04] bg-white shadow-soft transition-all duration-300 hover:shadow-lift"
     >
+      {isAdmin && (
+        <button onClick={() => setShowEdit(true)} className="absolute left-3 top-12 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white shadow hover:bg-brand-50">
+          <Pencil className="h-3.5 w-3.5 text-brand-700" />
+        </button>
+      )}
+      {showEdit && (
+        <div className="absolute inset-0 z-20 flex flex-col bg-white p-4">
+          <div className="flex items-center justify-between">
+            <p className="font-bold text-brand-950">Quick edit</p>
+            <button onClick={() => setShowEdit(false)}><X className="h-4 w-4" /></button>
+          </div>
+          <label className="mt-3 text-xs font-semibold">Price (TZS)</label>
+          <input value={editPrice} onChange={(e) => setEditPrice(e.target.value)} type="number" className="input mt-1" />
+          <label className="mt-3 text-xs font-semibold">Details</label>
+          <textarea value={editDesc} onChange={(e) => setEditDesc(e.target.value)} rows={3} className="input mt-1" />
+          <button onClick={saveQuickEdit} disabled={saving} className="btn-primary btn-sm mt-3">{saving ? "Saving..." : "Save"}</button>
+        </div>
+      )}
       <div className="relative aspect-[4/3] overflow-hidden bg-brand-50 sm:aspect-square">
         <Link href={`/product/${product.slug}`} aria-label={product.name}>
           <Image
@@ -94,9 +132,62 @@ export function ProductCard({
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </Link>
+        {isAdmin && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-brand-950/60 p-3 opacity-0 transition hover:opacity-100">
+            <label className="cursor-pointer rounded-full bg-white px-3 py-1.5 text-xs font-bold text-brand-800">
+              Choose file
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/avif"
+                className="hidden"
+                onChange={async (e) => {
+                  const f = e.target.files?.[0];
+                  if (!f) return;
+                  const fd = new FormData();
+                  fd.append("files", f);
+                  const res = await fetch("/api/admin/uploads", { method: "POST", body: fd });
+                  const data = await res.json().catch(() => null);
+                  const url = data?.urls?.[0];
+                  if (!res.ok || !url) { alert("Upload failed"); return; }
+                  await fetch(`/api/admin/products/${product.id}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ images: url, mode: "photo" }),
+                  });
+                  window.location.reload();
+                }}
+              />
+            </label>
+            <label className="cursor-pointer rounded-full bg-brand-600 px-3 py-1.5 text-xs font-bold text-white">
+              📷 Take photo
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+                onChange={async (e) => {
+                  const f = e.target.files?.[0];
+                  if (!f) return;
+                  const fd = new FormData();
+                  fd.append("files", f);
+                  const res = await fetch("/api/admin/uploads", { method: "POST", body: fd });
+                  const data = await res.json().catch(() => null);
+                  const url = data?.urls?.[0];
+                  if (!res.ok || !url) { alert("Upload failed"); return; }
+                  await fetch(`/api/admin/products/${product.id}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ images: url, mode: "photo" }),
+                  });
+                  window.location.reload();
+                }}
+              />
+            </label>
+          </div>
+        )}
 
         {product.isBestSeller && (
-          <span className="badge absolute left-3 top-3 bg-gold-500 text-brand-950 shadow-card">
+          <span className="badge absolute left-3 top-3 rounded-lg bg-gold-500 px-2.5 py-1 text-[11px] font-bold text-brand-950 shadow-soft">
             {t("product.bestSeller")}
           </span>
         )}
@@ -107,8 +198,8 @@ export function ProductCard({
           animate={wishlisted ? { scale: [1, 1.35, 1] } : { scale: 1 }}
           transition={{ duration: 0.35 }}
           className={cn(
-            "absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-card backdrop-blur transition-colors hover:scale-110",
-            wishlisted ? "text-red-500" : "text-ink/50 hover:text-red-500"
+            "absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 shadow-soft backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:shadow-card",
+            wishlisted ? "text-red-500" : "text-ink/40 hover:text-red-500"
           )}
         >
           <Heart className="h-4 w-4" fill={wishlisted ? "currentColor" : "none"} />
@@ -117,16 +208,16 @@ export function ProductCard({
 
       <div className="flex flex-1 flex-col p-4 sm:p-5">
         {product.categoryName && (
-          <p className="mb-1 text-[11px] font-bold uppercase tracking-widest text-brand-500">
+          <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-sage-600">
             {product.categoryName}
           </p>
         )}
         <Link href={`/product/${product.slug}`}>
-          <h3 className="line-clamp-1 font-display text-base font-bold text-brand-950 transition-colors group-hover:text-brand-700 sm:text-lg">
+          <h3 className="line-clamp-1 font-display text-[15px] font-bold text-ink transition-colors group-hover:text-brand-600 sm:text-base">
             {product.name}
           </h3>
         </Link>
-        <p className="mt-1 line-clamp-2 text-xs leading-5 text-ink/55 sm:text-sm">
+        <p className="mt-1.5 line-clamp-2 text-xs leading-5 text-ink-muted sm:text-sm">
           {product.shortDescription}
         </p>
 
@@ -173,7 +264,7 @@ export function ProductCard({
             target="_blank"
             rel="noopener noreferrer"
             aria-label={t("product.askAbout").replace("{name}", product.name)}
-            className="flex h-10 items-center justify-center gap-2 rounded-xl border border-[#25D366]/40 text-sm font-semibold text-[#1eb958] transition-colors hover:bg-[#25D366] hover:text-white"
+            className="flex h-10 items-center justify-center gap-2 rounded-xl border border-sage-500/30 text-sm font-semibold text-sage-700 transition-all duration-200 hover:border-[#25D366] hover:bg-[#25D366] hover:text-white"
           >
             <MessageCircle className="h-4 w-4" />
             <span>{t("product.whatsappInquiry")}</span>

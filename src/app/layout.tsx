@@ -95,7 +95,7 @@ export default async function RootLayout({
       lang={lang}
       style={{ "--font-inter": "system-ui", "--font-playfair": "Georgia" } as CSSProperties}
     >
-      <body className="flex min-h-screen flex-col pb-16 lg:pb-0">
+      <body className="flex min-h-screen flex-col overflow-x-hidden pb-16 lg:pb-0">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}

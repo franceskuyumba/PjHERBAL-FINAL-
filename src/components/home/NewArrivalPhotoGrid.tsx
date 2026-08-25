@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { useI18n } from "@/context/LanguageContext";
 
 const photos = [
-  "/uploads/saved/wellness-01.jpeg",
+  "/uploads/saved/pjherbal-01.jpeg",
   "/uploads/saved/wellness-02.jpeg",
   "/uploads/saved/wellness-03.jpeg",
   "/uploads/saved/wellness-04.jpeg",

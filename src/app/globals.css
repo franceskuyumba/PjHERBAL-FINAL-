@@ -3,8 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --brand-600: #1f733d;
-  --gold-500: #d49526;
+  --brand-600: #1B4332;
+  --gold-500: #C9A96E;
+  --surface: #FFFFFF;
+  --surface-muted: #F0F4F0;
+  --ink: #1A1A2E;
+  --ink-muted: #4A5568;
 }
 
 * {
@@ -90,12 +94,12 @@ body:has(.vikoba-app) .site-chrome {
 @media (max-width: 370px) { .vikoba-metric { padding-inline: 7px; }.vikoba-metric-value { font-size: 14px; }.vikoba-metric-label { font-size: 9px; }.vikoba-feed-row { gap: 7px; padding-inline: 9px; }.vikoba-feed-main span { font-size: 9px; }.vikoba-feed-side b { font-size: 10px; } }
 
 ::selection {
-  background-color: #2f8f4e;
+  background-color: #2D6A4F;
   color: #fff;
 }
 
 :focus-visible {
-  outline: 2px solid #1f733d;
+  outline: 2px solid #1B4332;
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -108,12 +112,12 @@ body:has(.vikoba-app) .site-chrome {
   background: #f0efe9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #b9cfc1;
+  background: #95D5B2;
   border-radius: 999px;
-  border: 2px solid #f0efe9;
+  border: 2px solid #F0F4F0;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2f8f4e;
+  background: #2D6A4F;
 }
 
 @layer components {
@@ -122,7 +126,7 @@ body:has(.vikoba-app) .site-chrome {
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 active:scale-[0.97];
+    @apply inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-all duration-base focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 active:scale-[0.97];
   }
 
   .btn-primary {
@@ -168,7 +172,7 @@ body:has(.vikoba-app) .site-chrome {
   }
 
   .input {
-    @apply w-full rounded-md border border-ink/10 bg-white px-4 py-3 text-sm text-ink shadow-sm transition-colors placeholder:text-ink/35 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10;
+    @apply w-full rounded-lg border border-ink/10 bg-white px-4 py-3 text-sm text-ink shadow-soft transition-colors placeholder:text-ink/35 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10;
   }
 
   .label {
@@ -176,7 +180,7 @@ body:has(.vikoba-app) .site-chrome {
   }
 
   .card {
-    @apply rounded-xl border border-ink/5 bg-white shadow-sm;
+    @apply rounded-xl border border-ink/[0.04] bg-white shadow-soft;
   }
 
   .badge {

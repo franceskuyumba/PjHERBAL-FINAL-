@@ -91,36 +91,40 @@ export function ChatBot() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={reduceMotion ? undefined : { opacity: 0, scale: 0.92, y: 12 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-24 left-4 z-[70] flex w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-ink/5 bg-white shadow-2xl sm:left-6 lg:bottom-6"
+            className="fixed bottom-24 left-4 z-[70] flex w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-ink/[0.04] bg-white shadow-2xl sm:left-6 lg:bottom-6"
             role="dialog"
             aria-label="PJHERBAL assistant chatbot"
           >
+            {/* Chat header */}
             <div className="flex items-center justify-between bg-brand-900 px-4 py-3.5 text-white">
               <div className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gold-500/20 text-gold-300">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gold-500/15 text-gold-300">
                   <Bot className="h-5 w-5" />
                 </span>
                 <div>
                   <p className="text-sm font-bold">{botStarter.title}</p>
-                  <p className="text-xs text-white/60">{t("live.chatbot.subtitle")}</p>
+                  <p className="text-xs text-white/55">{t("live.chatbot.subtitle")}</p>
                 </div>
               </div>
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close chatbot"
-                className="flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition-colors duration-base hover:bg-white/10 hover:text-white"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div ref={scrollRef} className="h-72 space-y-3 overflow-y-auto bg-cream p-3">
+            {/* Messages area */}
+            <div ref={scrollRef} className="h-72 space-y-3 overflow-y-auto bg-surface-muted/40 p-3">
               {messages.map((m) => (
                 <div key={m.id} className={cn("flex", m.from === "user" ? "justify-end" : "justify-start")}>
                   <div
                     className={cn(
-                      "max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed shadow-sm",
-                      m.from === "user" ? "bg-brand-600 text-white" : "bg-white text-ink/80"
+                      "max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed",
+                      m.from === "user"
+                        ? "bg-brand-600 text-white shadow-soft"
+                        : "bg-white text-ink/75 shadow-soft"
                     )}
                   >
                     {m.text}
@@ -130,10 +134,10 @@ export function ChatBot() {
 
               {typing && (
                 <div className="flex justify-start">
-                  <div className="flex items-center gap-1 rounded-2xl bg-white px-3.5 py-2.5 shadow-sm">
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink/30" />
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink/30 [animation-delay:120ms]" />
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink/30 [animation-delay:240ms]" />
+                  <div className="flex items-center gap-1 rounded-2xl bg-white px-3.5 py-2.5 shadow-soft">
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink/25" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink/25 [animation-delay:120ms]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink/25 [animation-delay:240ms]" />
                   </div>
                 </div>
               )}
@@ -144,7 +148,7 @@ export function ChatBot() {
                     <button
                       key={chip}
                       onClick={() => send(chip)}
-                      className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1.5 text-xs font-semibold text-brand-700 transition-colors hover:bg-brand-100"
+                      className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1.5 text-xs font-semibold text-brand-600 transition-colors duration-base hover:bg-brand-100"
                     >
                       {chip}
                     </button>
@@ -164,12 +168,13 @@ export function ChatBot() {
               )}
             </div>
 
+            {/* Input area */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 send();
               }}
-              className="flex items-center gap-2 border-t border-ink/5 bg-white p-3"
+              className="flex items-center gap-2 border-t border-ink/[0.04] bg-white p-3"
             >
               <input
                 value={input}
@@ -181,7 +186,7 @@ export function ChatBot() {
                 type="submit"
                 aria-label="Send message"
                 disabled={!input.trim() || typing}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white transition-colors hover:bg-brand-700 disabled:opacity-40"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white shadow-soft transition-colors duration-base hover:bg-brand-700 disabled:opacity-40"
               >
                 <Send className="h-4 w-4" />
               </button>
@@ -190,6 +195,7 @@ export function ChatBot() {
         )}
       </AnimatePresence>
 
+      {/* FAB trigger */}
       <motion.button
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Close assistant chatbot" : "Open assistant chatbot"}

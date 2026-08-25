@@ -93,17 +93,17 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   const filterCategories = categories.map((c) => ({ slug: c.slug, name: c.name }));
 
   return (
-    <div className="container-site py-8 sm:py-12">
-      <div className="mb-8">
+    <div className="container-site py-10 sm:py-14">
+      <div className="mb-10">
         <p className="eyebrow">PJHERBAL Clinic</p>
-        <h1 className="mt-2 font-display text-3xl font-bold text-brand-950 sm:text-4xl">
+        <h1 className="mt-2 font-display text-3xl font-bold text-ink sm:text-4xl">
           {categorySlug
             ? categories.find((c) => c.slug === categorySlug)?.name || t(lang, "shop.title")
             : search
               ? t(lang, "shop.resultsFor").replace("{q}", search)
               : t(lang, "shop.titleSupplements")}
         </h1>
-        <p className="mt-2 text-sm text-ink/55">
+        <p className="mt-2 text-sm text-ink-muted">
           {total} {total === 1 ? t(lang, "shop.product") : t(lang, "shop.products")} {t(lang, "shop.available")}
           {categorySlug ? " " + t(lang, "shop.inThisCategory") : ""}
         </p>
@@ -113,6 +113,10 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
         <ShopFilters categories={filterCategories} maxPossiblePrice={maxPriceRow._max.price || 100000} />
 
         <div className="min-w-0 flex-1">
+          <div className="mb-5 flex items-center justify-between gap-4 rounded-2xl border border-ink/[0.04] bg-white px-5 py-3.5 shadow-soft">
+            <p className="text-sm font-medium text-ink-muted">{total} {total === 1 ? t(lang, "shop.product") : t(lang, "shop.products")} · {sort}</p>
+            <span className="hidden text-xs font-semibold text-ink/40 sm:block">Sort by: {sort}</span>
+          </div>
           {total === 0 ? (
             <EmptyState
               icon={<PackageSearch className="h-8 w-8" />}
@@ -126,7 +130,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
             />
           ) : (
             <Suspense fallback={<GridSkeleton count={8} />}>
-               <div className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-3">
+               <div className="grid grid-cols-2 gap-4 sm:gap-6 xl:grid-cols-3">
                 {products.map((product, i) => (
                   <ProductCard key={product.id} product={toProductCard(product)} index={i} isLoggedIn={isLoggedIn} />
                 ))}
@@ -204,10 +208,10 @@ function PaginationLink({
     <Link
       href={href}
       aria-label={ariaLabel}
-      className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
+      className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold transition-all duration-200 ${
         active
-          ? "bg-brand-600 text-white"
-          : "border border-ink/10 bg-white text-ink/60 hover:border-brand-600 hover:text-brand-700"
+          ? "bg-brand-600 text-white shadow-soft"
+          : "border border-ink/[0.06] bg-white text-ink-muted hover:border-brand-600 hover:text-brand-600"
       }`}
     >
       {children}

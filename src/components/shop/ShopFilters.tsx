@@ -86,7 +86,7 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
             updateParams({ search: v });
             trackClientEvent("search", { query: v });
           }}
-          className="flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2.5"
+          className="flex items-center gap-2 rounded-full border border-ink/[0.06] bg-white px-4 py-2.5 shadow-soft"
         >
           <Search className="h-4 w-4 text-ink/40" />
           <input
@@ -105,7 +105,7 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
             onClick={() => updateParams({ category: null })}
             className={cn(
               "rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors",
-              category === "" ? "bg-brand-600 text-white" : "bg-white text-ink/70 hover:bg-brand-50 hover:text-brand-700 border border-ink/10"
+              category === "" ? "bg-brand-600 text-white shadow-soft" : "bg-white text-ink-muted hover:bg-sage-50 hover:text-brand-700 border border-ink/[0.06]"
             )}
           >
             {t("shop.all")}
@@ -116,7 +116,7 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
               onClick={() => updateParams({ category: c.slug })}
               className={cn(
                 "rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors",
-                category === c.slug ? "bg-brand-600 text-white" : "bg-white text-ink/70 hover:bg-brand-50 hover:text-brand-700 border border-ink/10"
+                category === c.slug ? "bg-brand-600 text-white shadow-soft" : "bg-white text-ink-muted hover:bg-sage-50 hover:text-brand-700 border border-ink/[0.06]"
               )}
             >
               {c.name}
@@ -165,18 +165,18 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden w-64 shrink-0 lg:block">
-        <div className="card sticky top-24 p-6">
+      <aside className="hidden w-72 shrink-0 lg:block">
+        <div className="sticky top-24 rounded-2xl border border-ink/[0.04] bg-white p-6 shadow-soft">
           <div className="mb-5 flex items-center justify-between">
-            <h3 className="font-display text-lg font-bold text-brand-950">{t("shop.filters")}</h3>
-            <span className={cn("badge bg-brand-50 text-brand-700", pending && "animate-pulse")}>
+            <h3 className="font-display text-lg font-bold text-ink">{t("shop.filters")}</h3>
+            <span className={cn("rounded-full bg-sage-50 px-2.5 py-1 text-xs font-bold text-sage-700", pending && "animate-pulse")}>
               {pending ? "..." : `${activeFilters} ${t("shop.filtersActive")}`}
             </span>
           </div>
           {filterControls}
-          <div className="mt-8 rounded-xl border border-dashed border-gold-400/60 bg-cream p-4">
-            <p className="text-xs font-bold uppercase tracking-widest text-gold-700">{t("shop.clinicalPromise")}</p>
-            <p className="mt-3 text-xs leading-5 text-ink/60">{t("shop.clinicalPromiseText")}</p>
+          <div className="mt-8 rounded-2xl border border-dashed border-gold-300/50 bg-gold-50/50 p-5">
+            <p className="text-xs font-bold uppercase tracking-[0.15em] text-gold-600">{t("shop.clinicalPromise")}</p>
+            <p className="mt-3 text-xs leading-5 text-ink-muted">{t("shop.clinicalPromiseText")}</p>
           </div>
         </div>
       </aside>
@@ -204,13 +204,13 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
                 animate={{ x: 0 }}
                 exit={{ x: "100%" }}
                 transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                className="absolute right-0 top-0 flex h-full w-[85%] max-w-sm flex-col bg-cream"
+                className="fixed right-0 top-0 flex h-full w-[85%] max-w-sm flex-col bg-white"
               >
-                <div className="flex items-center justify-between border-b border-ink/5 px-5 py-4">
-                  <h3 className="font-display text-lg font-bold text-brand-950">{t("shop.filters")}</h3>
+                <div className="flex items-center justify-between border-b border-ink/[0.06] px-5 py-4">
+                  <h3 className="font-display text-lg font-bold text-ink">{t("shop.filters")}</h3>
                   <button
                     onClick={() => setDrawerOpen(false)}
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-ink/5 text-ink/60"
+                    className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-muted text-ink-muted hover:text-ink"
                     aria-label={t("shop.closeFilters")}
                   >
                     <X className="h-5 w-5" />
@@ -219,7 +219,7 @@ export function ShopFilters({ categories, maxPossiblePrice }: ShopFiltersProps) 
                 <div className="flex-1 overflow-y-auto p-5">
                   {filterControls}
                 </div>
-                <div className="border-t border-ink/5 p-4">
+                <div className="border-t border-ink/[0.06] p-4">
                   <button onClick={() => setDrawerOpen(false)} className="btn-primary btn-md w-full">
                     {t("shop.showResults")}
                   </button>

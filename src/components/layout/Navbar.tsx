@@ -26,7 +26,6 @@ import { useI18n } from "@/context/LanguageContext";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 import { MobileMenu } from "@/components/layout/MobileMenu";
-import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { SITE } from "@/lib/constants";
 
 interface NavUser {
@@ -76,34 +75,46 @@ export function Navbar({ user }: { user: NavUser | null }) {
 
   return (
     <>
+      {/* ── Top utility bar ── */}
       <div className="bg-brand-950 text-white">
-        <div className="container-site flex h-9 items-center justify-between gap-4 text-[11px] font-medium sm:text-xs">
-          <div className="flex min-w-0 items-center gap-4">
-            <a href={`tel:${SITE.phone.replace(/\s/g, "")}`} className="hidden items-center gap-1.5 text-white/80 transition-colors hover:text-gold-300 md:flex">
-              <Phone className="h-3.5 w-3.5" />
+        <div className="container-site flex h-10 items-center justify-between gap-4 text-[11px] font-medium tracking-wide sm:text-xs">
+          <div className="flex min-w-0 items-center gap-5">
+            <a
+              href={`tel:${SITE.phone.replace(/\s/g, "")}`}
+              className="hidden items-center gap-1.5 text-white/70 transition-colors duration-base hover:text-gold-300 md:flex"
+            >
+              <Phone className="h-3.5 w-3.5 text-gold-400/60" />
               {SITE.phone}
             </a>
-            <a href={`mailto:${SITE.email}`} className="hidden items-center gap-1.5 text-white/80 transition-colors hover:text-gold-300 lg:flex">
-              <Mail className="h-3.5 w-3.5" />
+            <a
+              href={`mailto:${SITE.email}`}
+              className="hidden items-center gap-1.5 text-white/70 transition-colors duration-base hover:text-gold-300 lg:flex"
+            >
+              <Mail className="h-3.5 w-3.5 text-gold-400/60" />
               {SITE.email}
             </a>
-            <p className="flex items-center gap-1.5 text-white/80">
-              <Truck className="h-3.5 w-3.5 text-gold-300" />
+            <p className="flex items-center gap-1.5 text-white/70">
+              <Truck className="h-3.5 w-3.5 text-gold-400" />
               <span className="truncate">{t("nav.freeDelivery")}</span>
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-4 sm:gap-5">
-            <LanguageSwitcher variant="dark" />
-            <Link href={user ? "/customer-dashboard/orders" : "/login"} className="flex items-center gap-1.5 text-white/80 transition-colors hover:text-gold-300">
+            <Link
+              href={user ? "/customer-dashboard/orders" : "/login"}
+              className="flex items-center gap-1.5 text-white/70 transition-colors duration-base hover:text-gold-300"
+            >
               <PackageSearch className="h-3.5 w-3.5" />
               {t("nav.myOrders")}
             </Link>
-            <Link href="/contact" className="hidden text-white/80 transition-colors hover:text-gold-300 sm:block">
+            <Link
+              href="/contact"
+              className="hidden text-white/70 transition-colors duration-base hover:text-gold-300 sm:block"
+            >
               {t("nav.helpSupport")}
             </Link>
             <Link
               href={user ? (user.role === "ADMIN" ? "/admin" : "/customer-dashboard") : "/login"}
-              className="flex items-center gap-1.5 text-white/80 transition-colors hover:text-gold-300"
+              className="flex items-center gap-1.5 text-white/70 transition-colors duration-base hover:text-gold-300"
             >
               <User className="h-3.5 w-3.5" />
               {user ? t("nav.myAccount") : t("nav.signIn")}
@@ -112,68 +123,84 @@ export function Navbar({ user }: { user: NavUser | null }) {
         </div>
       </div>
 
+      {/* ── Main header ── */}
       <header
         className={cn(
-          "sticky top-0 z-50 border-b border-ink/10 bg-white transition-shadow",
-          scrolled && "shadow-card"
+          "sticky top-0 z-50 border-b border-surface-muted bg-white/95 backdrop-blur-md transition-shadow duration-base",
+          scrolled && "shadow-elevated"
         )}
       >
-        <div className="container-site flex h-16 items-center gap-3 sm:h-[4.5rem]">
-          <Link href="/" className="relative h-9 w-40 shrink-0 sm:h-10 sm:w-48" aria-label="PJHERBAL Clinic home">
+        <div className="container-site flex h-16 items-center gap-4 sm:h-[4.5rem] sm:gap-5">
+          {/* Logo */}
+          <Link
+            href="/"
+            className="relative h-9 w-40 shrink-0 sm:h-10 sm:w-48"
+            aria-label="PJHERBAL Clinic home"
+          >
             <Image src="/images/logo.svg" alt="PJHERBAL Clinic" fill priority className="object-contain object-left" />
           </Link>
 
-          <nav className="hidden items-center gap-5 lg:flex" aria-label="Primary navigation">
-            <Link href="/" className="text-sm font-semibold text-ink/75 hover:text-brand-700">{t("nav.home")}</Link>
-            <Link href="/shop" className="text-sm font-semibold text-ink/75 hover:text-brand-700">{t("nav.allProducts")}</Link>
-            <Link href="/blog" className="text-sm font-semibold text-ink/75 hover:text-brand-700">{t("nav.blog")}</Link>
-            <Link href="/contact" className="text-sm font-semibold text-ink/75 hover:text-brand-700">{t("nav.contact")}</Link>
+          {/* Desktop primary navigation */}
+          <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
+            <NavLink href="/" label="Home" active={pathname === "/"} />
+            <NavLink href="/shop" label="Herbal Supplements" active={pathname === "/shop"} />
+            <NavLink href="/shop" label="Wellness Packages" active={false} />
+            <NavLink href="/contact" label="Consultation" active={pathname === "/contact"} />
           </nav>
 
+          {/* Desktop search bar */}
           <button
             onClick={openSearch}
-            className={cn("group hidden flex-1 items-center gap-2.5 rounded-md border border-ink/15 bg-white px-4 py-2.5 text-sm text-ink/45 shadow-sm transition-all hover:border-brand-400 hover:shadow-card sm:max-w-2xl", showDesktopSearch && "sm:flex")}
+            className={cn(
+              "group hidden flex-1 items-center gap-2.5 rounded-xl border border-ink/[0.06] bg-surface-muted/60 px-4 py-2.5 text-sm text-ink/40 shadow-soft transition-all duration-base hover:border-brand-300/40 hover:bg-white hover:shadow-card sm:max-w-2xl",
+              showDesktopSearch && "sm:flex"
+            )}
             aria-label={t("nav.ariaOpenSearch")}
           >
-            <Search className="h-4 w-4 text-brand-600" />
+            <Search className="h-4 w-4 text-brand-500 transition-colors group-hover:text-brand-600" />
             <span className="truncate">{t("nav.searchPlaceholder")}</span>
-            <kbd className="ml-auto hidden rounded-md border border-ink/10 bg-cream px-1.5 py-0.5 text-[10px] font-semibold text-ink/40 lg:block">
+            <kbd className="ml-auto hidden rounded-md border border-ink/[0.06] bg-white px-1.5 py-0.5 text-[10px] font-semibold text-ink/30 lg:block">
               /
             </kbd>
           </button>
 
+          {/* Mobile search icon */}
           <button
             onClick={openSearch}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink/70 transition-colors hover:bg-brand-50 hover:text-brand-700 sm:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors duration-base hover:bg-brand-50 hover:text-brand-600 sm:hidden"
             aria-label={t("nav.ariaOpenSearch")}
           >
             <Search className="h-5 w-5" />
           </button>
 
-          <div className="flex shrink-0 items-center gap-0.5 sm:gap-1.5">
+          {/* Right-side action icons */}
+          <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
+            {/* Wishlist */}
             <Link
               href="/customer-dashboard/wishlist"
-              className="flex h-10 w-10 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-brand-50 hover:text-red-500"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-ink/50 transition-colors duration-base hover:bg-red-50 hover:text-red-400"
               aria-label={t("nav.ariaWishlist")}
             >
               <Heart className="h-5 w-5" />
             </Link>
 
+            {/* WhatsApp specialist */}
             <a
               href={buildWhatsAppUrl({ recipient: "specialist" })}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden h-10 items-center gap-2 rounded-lg bg-brand-950 px-3 text-white transition-colors hover:bg-brand-800 sm:flex"
+              className="hidden h-10 items-center gap-2 rounded-xl bg-brand-600 px-4 text-white shadow-soft transition-all duration-base hover:bg-brand-700 hover:shadow-card sm:flex"
               aria-label="Chat on WhatsApp"
             >
-              <MessageCircle className="h-5 w-5" />
-              <span className="text-sm font-semibold">{t("nav.whatsappSpecialist")}</span>
+              <MessageCircle className="h-4 w-4" />
+              <span className="text-[13px] font-semibold">{t("nav.whatsappSpecialist")}</span>
             </a>
 
+            {/* Account dropdown */}
             <div className="relative">
               <button
                 onClick={() => setAccountOpen((v) => !v)}
-                className="flex h-10 w-10 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-brand-50 hover:text-brand-700"
+                className="flex h-10 w-10 items-center justify-center rounded-full text-ink/50 transition-colors duration-base hover:bg-brand-50 hover:text-brand-600"
                 aria-label={t("nav.ariaAccount")}
               >
                 <User className="h-5 w-5" />
@@ -185,13 +212,13 @@ export function Navbar({ user }: { user: NavUser | null }) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 8 }}
                     transition={{ duration: 0.18 }}
-                    className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-ink/5 bg-white shadow-lift"
+                    className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-ink/[0.04] bg-white shadow-lift"
                   >
                     {user ? (
                       <div className="p-1">
-                        <div className="border-b border-ink/5 px-4 py-3">
+                        <div className="border-b border-ink/[0.04] px-4 py-3">
                           <p className="truncate text-sm font-semibold text-brand-950">{user.name}</p>
-                          <p className="truncate text-xs text-ink/50">{user.email}</p>
+                          <p className="truncate text-xs text-ink-muted">{user.email}</p>
                         </div>
                         <AccountLink href={user.role === "ADMIN" ? "/admin" : "/customer-dashboard"} icon={<LayoutDashboard className="h-4 w-4" />}>
                           {user.role === "ADMIN" ? t("nav.adminDashboard") : t("nav.myDashboard")}
@@ -208,7 +235,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
                             router.push("/");
                             router.refresh();
                           }}
-                          className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm text-red-600 transition-colors hover:bg-red-50"
+                          className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm text-red-500 transition-colors duration-base hover:bg-red-50"
                         >
                           <LogOut className="h-4 w-4" />
                           {t("nav.logOut")}
@@ -216,7 +243,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
                       </div>
                     ) : (
                       <div className="p-3">
-                        <p className="px-2 pb-2 text-sm text-ink/60">{t("nav.welcome")}</p>
+                        <p className="px-2 pb-2 text-sm text-ink-muted">{t("nav.welcome")}</p>
                         <Link href="/login" className="btn-primary btn-sm mb-2 w-full">
                           {t("nav.signIn")}
                         </Link>
@@ -230,22 +257,28 @@ export function Navbar({ user }: { user: NavUser | null }) {
               </AnimatePresence>
             </div>
 
+            {/* Cart */}
             <Link
               href="/cart"
-              className="relative flex h-10 w-10 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-brand-50 hover:text-brand-700"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full text-ink/50 transition-colors duration-base hover:bg-brand-50 hover:text-brand-600"
               aria-label={t("nav.ariaCartCount").replace("{count}", String(count))}
             >
               <ShoppingBag className="h-5 w-5" />
               {count > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-gold-500 px-1 text-[11px] font-bold text-brand-950">
+                <motion.span
+                  initial={{ scale: 0.6 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-gold-500 px-1 text-[11px] font-bold text-brand-950 shadow-soft"
+                >
                   {count > 99 ? "99+" : count}
-                </span>
+                </motion.span>
               )}
             </Link>
 
+            {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen(true)}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-ink/70 transition-colors hover:bg-brand-50 lg:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-ink/60 transition-colors duration-base hover:bg-brand-50 hover:text-brand-600 lg:hidden"
               aria-label={t("nav.ariaOpenMenu")}
             >
               <Menu className="h-6 w-6" />
@@ -253,8 +286,9 @@ export function Navbar({ user }: { user: NavUser | null }) {
           </div>
         </div>
 
-        <nav className="hidden border-t border-ink/5 bg-brand-950 lg:block" aria-label="Category navigation">
-          <div className="container-site flex items-center gap-1">
+        {/* ── Category sub-navigation bar ── */}
+        <nav className="hidden border-t border-brand-800/30 bg-brand-950 lg:block" aria-label="Category navigation">
+          <div className="container-site flex items-center gap-0.5">
             <CategoryLink href="/shop" label={t("nav.allProducts")} active={pathname === "/shop"} />
             {CATEGORY_LINKS.map((link) => (
               <CategoryLink
@@ -264,13 +298,13 @@ export function Navbar({ user }: { user: NavUser | null }) {
                 active={pathname.startsWith(link.href)}
               />
             ))}
-            <span className="mx-2 h-5 w-px bg-ink/10" aria-hidden="true" />
+            <span className="mx-2 h-5 w-px bg-white/10" aria-hidden="true" />
             {PAGE_LINKS.map((link) => (
               <CategoryLink key={link.href} href={link.href} label={t(link.labelKey)} active={pathname === link.href} />
             ))}
             <Link
               href="/shop?sort=newest"
-              className="ml-auto flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-gold-700 transition-colors hover:bg-gold-50"
+              className="ml-auto flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-gold-400 transition-colors duration-base hover:bg-gold-500/10 hover:text-gold-300"
             >
               <PackageSearch className="h-3.5 w-3.5" />
               {t("nav.newArrivals")}
@@ -284,13 +318,36 @@ export function Navbar({ user }: { user: NavUser | null }) {
   );
 }
 
+/* ── Primary nav link with active indicator ── */
+function NavLink({ href, label, active }: { href: string; label: string; active: boolean }) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "relative rounded-lg px-3.5 py-2 text-[13px] font-semibold tracking-wide transition-colors duration-base",
+        active ? "text-brand-600" : "text-ink/65 hover:text-brand-600"
+      )}
+    >
+      {label}
+      {active && (
+        <motion.span
+          layoutId="nav-active"
+          className="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-gold-500"
+          transition={{ type: "spring", damping: 30, stiffness: 300 }}
+        />
+      )}
+    </Link>
+  );
+}
+
+/* ── Category sub-nav link ── */
 function CategoryLink({ href, label, active }: { href: string; label: string; active: boolean }) {
   return (
     <Link
       href={href}
       className={cn(
-        "relative whitespace-nowrap rounded-full px-3 py-2.5 text-[13px] font-semibold transition-colors",
-        active ? "text-brand-700" : "text-ink/65 hover:text-brand-700"
+        "relative whitespace-nowrap rounded-full px-3 py-2.5 text-[13px] font-semibold transition-colors duration-base",
+        active ? "text-white" : "text-white/60 hover:text-white/90"
       )}
     >
       {label}
@@ -298,17 +355,19 @@ function CategoryLink({ href, label, active }: { href: string; label: string; ac
         <motion.span
           layoutId="category-active"
           className="absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-gold-500"
+          transition={{ type: "spring", damping: 30, stiffness: 300 }}
         />
       )}
     </Link>
   );
 }
 
+/* ── Account dropdown link ── */
 function AccountLink({ href, icon, children }: { href: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <Link
       href={href}
-      className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm text-ink/75 transition-colors hover:bg-brand-50 hover:text-brand-700"
+      className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm text-ink/70 transition-colors duration-base hover:bg-brand-50 hover:text-brand-600"
     >
       {icon}
       {children}

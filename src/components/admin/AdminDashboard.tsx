@@ -106,7 +106,7 @@ export function AdminDashboard() {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {cardData.map((c) => (
-          <div key={c.label} className="rounded-2xl border border-ink/5 bg-white p-5 shadow-card">
+          <div key={c.label} className="rounded-xl border border-[#E5E7EB] bg-white p-5 shadow-sm">
             <c.icon className={`h-5 w-5 ${c.accent}`} />
             <p className="mt-3 text-xl font-bold text-brand-950">{c.value}</p>
             <p className="text-xs text-ink/50">{c.label}</p>
@@ -115,7 +115,7 @@ export function AdminDashboard() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-        <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
+        <div className="rounded-xl border border-[#E5E7EB] bg-white p-6 shadow-sm">
           <h2 className="font-display text-lg font-bold text-brand-950">{t("admin.dashboard.salesTitle")}</h2>
           <div className="mt-6 flex h-48 items-end gap-1.5">
             {sales.map((s) => (
@@ -136,7 +136,7 @@ export function AdminDashboard() {
           </p>
         </div>
 
-        <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
+        <div className="rounded-xl border border-[#E5E7EB] bg-white p-6 shadow-sm">
           <h2 className="font-display text-lg font-bold text-brand-950">{t("admin.dashboard.lowStockTitle")}</h2>
           {lowStock.length === 0 ? (
             <p className="mt-4 text-sm text-ink/45">{t("admin.dashboard.allStocked")}</p>
@@ -155,7 +155,7 @@ export function AdminDashboard() {
         </div>
       </div>
 
-      <div className="rounded-3xl border border-ink/5 bg-white p-6 shadow-card">
+      <div className="rounded-xl border border-[#E5E7EB] bg-white p-6 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="font-display text-lg font-bold text-brand-950">{t("admin.dashboard.recentOrders")}</h2>
           <Link href="/admin/orders" className="flex items-center gap-1 text-sm font-semibold text-brand-700 hover:text-brand-800">

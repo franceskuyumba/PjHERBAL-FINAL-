@@ -17,20 +17,20 @@ export function Tabs({ tabs }: { tabs: TabItem[] }) {
 
   return (
     <div>
-      <div className="flex flex-wrap gap-1 rounded-full bg-ink/[0.04] p-1">
+      <div className="flex flex-wrap gap-1 rounded-full bg-surface-muted p-1">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActive(tab.id)}
             className={cn(
               "relative rounded-full px-4 py-2.5 text-sm font-semibold transition-colors",
-              active === tab.id ? "text-brand-800" : "text-ink/55 hover:text-ink"
+              active === tab.id ? "text-brand-700" : "text-ink-muted hover:text-ink"
             )}
           >
             {active === tab.id && (
               <motion.span
                 layoutId="tab-pill"
-                className="absolute inset-0 rounded-full bg-white shadow-card"
+                className="absolute inset-0 rounded-full bg-white shadow-soft"
                 transition={{ type: "spring", damping: 30, stiffness: 300 }}
               />
             )}
@@ -44,7 +44,7 @@ export function Tabs({ tabs }: { tabs: TabItem[] }) {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="prose-herbal mt-6 rounded-3xl bg-white p-6 shadow-card sm:p-8"
+        className="prose-herbal mt-6 rounded-2xl border border-ink/[0.04] bg-white p-6 shadow-soft sm:p-8"
       >
         {activeTab.content.split("\n").map((line, i) =>
           line.trim() ? (

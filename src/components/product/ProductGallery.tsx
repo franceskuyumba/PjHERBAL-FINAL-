@@ -17,7 +17,7 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className="relative aspect-square overflow-hidden rounded-[2rem] bg-brand-50"
+        className="relative aspect-square overflow-hidden rounded-3xl bg-surface-muted shadow-soft"
       >
         <Image
           src={list[active]}
@@ -36,8 +36,8 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
               key={img + i}
               onClick={() => setActive(i)}
               className={cn(
-                "relative h-20 w-20 overflow-hidden rounded-2xl border-2 transition-all",
-                i === active ? "border-brand-600" : "border-transparent opacity-70 hover:opacity-100"
+                "relative h-20 w-20 overflow-hidden rounded-2xl border-2 transition-all duration-200",
+                i === active ? "border-brand-600 shadow-soft" : "border-transparent opacity-60 hover:opacity-100"
               )}
               aria-label={t("product.viewImage").replace("{n}", String(i + 1))}
             >

@@ -35,24 +35,24 @@ export function Newsletter() {
   };
 
   return (
-    <section className="container-site py-16 sm:py-20">
+    <section className="container-site py-16 sm:py-24">
       <motion.div
         initial={reduceMotion ? false : { opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="relative overflow-hidden rounded-[2rem] border border-gold-200 bg-gradient-to-br from-gold-50 via-cream to-brand-50 p-8 text-center shadow-card sm:p-12"
+        className="relative overflow-hidden rounded-3xl border border-gold-200/60 bg-gradient-to-br from-gold-50 via-cream to-sage-50 p-8 text-center shadow-elevated sm:p-14"
       >
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gold-500 text-white shadow-card">
-          <Mail className="h-7 w-7" />
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-gold-500 text-white shadow-card">
+          <Mail className="h-8 w-8" />
         </div>
-        <h2 className="font-display text-3xl font-bold text-brand-950 sm:text-4xl">
+        <h2 className="font-display text-3xl font-bold text-ink sm:text-4xl">
           {t("home.newsletter.title")}
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-base text-ink/60">
+        <p className="mx-auto mt-3 max-w-xl text-base leading-6 text-ink-muted">
           {t("home.newsletter.subtitle")}
         </p>
-        <form onSubmit={submit} className="mx-auto mt-7 flex max-w-md flex-col gap-3 sm:flex-row">
+        <form onSubmit={submit} className="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row">
           <input
             type="email"
             value={email}
@@ -61,12 +61,12 @@ export function Newsletter() {
             aria-label={t("home.newsletter.emailLabel")}
             className="input flex-1"
           />
-          <button type="submit" disabled={loading} className="btn-gold btn-md shrink-0">
+          <button type="submit" disabled={loading} className="btn-gold btn-md shrink-0 shadow-card">
             {loading ? t("home.newsletter.subscribing") : t("home.newsletter.subscribe")}
           </button>
         </form>
-        <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-ink/45">
-          <CheckCircle2 className="h-3.5 w-3.5 text-brand-600" />
+        <p className="mt-5 flex items-center justify-center gap-1.5 text-xs text-ink-muted">
+          <CheckCircle2 className="h-3.5 w-3.5 text-sage-600" />
           {t("home.newsletter.trusted")}
         </p>
       </motion.div>

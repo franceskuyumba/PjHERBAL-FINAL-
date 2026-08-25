@@ -14,6 +14,23 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     const body = await request.json().catch(() => null);
     if (body === null) return error("Invalid request.");
 
+    if (body.mode === "photo") {
+      if (!body.images) return error("Provide at least one image URL.");
+      const product = await prisma.product.update({ where: { id: params.id }, data: { images: String(body.images) } });
+      await logActivity({ actorId: session.sub, actorName: session.name, role: session.role, action: "PRODUCT_UPDATE", entity: "Product", entityId: product.id, details: `${product.name}: updated photo`, ip: request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null });
+      return json({ product });
+    }
+
+    if (body.mode === "quick-edit") {
+      const data: Record<string, unknown> = {};
+      if (body.price !== undefined) data.price = Number(body.price);
+      if (body.shortDescription !== undefined) data.shortDescription = String(body.shortDescription);
+      if (body.description !== undefined) data.description = String(body.description);
+      const product = await prisma.product.update({ where: { id: params.id }, data });
+      await logActivity({ actorId: session.sub, actorName: session.name, role: session.role, action: "PRODUCT_UPDATE", entity: "Product", entityId: product.id, details: `${product.name}: quick edit`, ip: request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null });
+      return json({ product });
+    }
+
     // Allow partial updates (stock/status quick edits or full form)
     if (body.mode === "quick") {
       const product = await prisma.product.update({

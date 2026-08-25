@@ -44,17 +44,17 @@ export function BuyPanel({ productId, slug, name, price, image, stock }: BuyPane
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.1 }}
-      className="card p-6"
+      className="rounded-2xl border border-ink/[0.04] bg-white p-6 shadow-soft"
     >
-      <p className="text-xs font-bold uppercase tracking-widest text-gold-600">{t("product.price")}</p>
-      <div className="mt-1 flex items-baseline gap-3">
-        <span className="font-display text-3xl font-bold text-brand-800">{formatTZS(price)}</span>
-        <span className="text-sm text-ink/40 line-through">{formatTZS(price * 1.2)}</span>
+      <p className="text-xs font-bold uppercase tracking-[0.15em] text-gold-600">{t("product.price")}</p>
+      <div className="mt-1.5 flex items-baseline gap-3">
+        <span className="font-display text-3xl font-bold text-brand-700">{formatTZS(price)}</span>
+        <span className="text-sm text-ink/35 line-through">{formatTZS(price * 1.2)}</span>
       </div>
-      <p className="mt-1 text-xs text-ink/50">{t("product.finalPriceNote")}</p>
+      <p className="mt-1.5 text-xs text-ink-muted">{t("product.finalPriceNote")}</p>
 
       <div className="mt-6 flex items-center gap-4">
-        <span className="text-sm font-medium text-ink/70">{t("product.quantity")}</span>
+        <span className="text-sm font-medium text-ink-muted">{t("product.quantity")}</span>
         <QuantityStepper value={quantity} onChange={setQuantity} max={Math.max(stock, 1)} />
       </div>
 
@@ -89,7 +89,7 @@ export function BuyPanel({ productId, slug, name, price, image, stock }: BuyPane
           {t("product.outOfStockMsg")}
         </p>
       ) : (
-        <div className="mt-4 space-y-1.5 rounded-xl bg-brand-50 px-4 py-3 text-xs text-brand-800">
+        <div className="mt-4 space-y-1.5 rounded-xl bg-sage-50 px-4 py-3 text-xs text-sage-800">
           <p>✓ {t("product.stockNote1")}</p>
           <p>✓ {t("product.stockNote2")}</p>
           <p>✓ {t("product.stockNote3")}</p>

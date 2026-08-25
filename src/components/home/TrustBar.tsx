@@ -10,9 +10,9 @@ function TrustIcon({ children }: { children: ReactNode }) {
   const reduceMotion = useReducedMotion();
   return (
     <motion.div
-      className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-600"
-      animate={reduceMotion ? {} : { y: [0, -4, 0] }}
-      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sage-50 text-sage-700 shadow-soft"
+      animate={reduceMotion ? {} : { y: [0, -3, 0] }}
+      transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
     >
       {children}
     </motion.div>
@@ -51,15 +51,15 @@ export function TrustBar() {
   ];
 
   return (
-    <section className="border-y border-ink/5 bg-white">
-      <div className="container-site grid grid-cols-1 gap-6 py-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+    <section className="border-y border-ink/[0.04] bg-white">
+      <div className="container-site grid grid-cols-1 gap-8 py-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {items.map((item, i) => (
           <AnimatedReveal key={item.title} delay={i * 0.07}>
             <div className="flex items-center gap-4">
               <TrustIcon>{item.icon}</TrustIcon>
               <div>
-                <p className="font-display text-base font-bold text-brand-950">{item.title}</p>
-                <p className="mt-0.5 text-xs text-ink/55">{item.description}</p>
+                <p className="font-display text-[15px] font-bold text-ink">{item.title}</p>
+                <p className="mt-0.5 text-xs leading-5 text-ink-muted">{item.description}</p>
               </div>
             </div>
           </AnimatedReveal>

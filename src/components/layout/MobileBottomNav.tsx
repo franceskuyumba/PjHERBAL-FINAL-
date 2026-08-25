@@ -30,15 +30,15 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/5 bg-white/95 backdrop-blur-lg lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/[0.04] bg-white/95 backdrop-blur-xl lg:hidden"
       aria-label="Mobile navigation"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div className="grid grid-cols-5">
         {items.map((item) => {
           const className = cn(
-            "relative flex flex-col items-center gap-1 py-2.5 text-[10px] font-semibold transition-colors",
-            item.active ? "text-brand-700" : "text-ink/50"
+            "relative flex flex-col items-center gap-1 py-2.5 text-[10px] font-semibold transition-colors duration-base",
+            item.active ? "text-brand-600" : "text-ink-muted/60"
           );
           if (item.action) {
             return (
@@ -52,7 +52,7 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
             <Link key={item.label} href={item.href!} className={className} aria-label={item.label}>
               {item.icon}
               {typeof item.badge === "number" && item.badge > 0 && (
-                <span className="absolute right-1/2 top-0.5 flex h-4 min-w-4 -translate-x-[-1.25rem] items-center justify-center rounded-full bg-gold-500 px-1 text-[9px] font-bold text-brand-950">
+                <span className="absolute right-1/2 top-0.5 flex h-4 min-w-4 -translate-x-[-1.25rem] items-center justify-center rounded-full bg-gold-500 px-1 text-[9px] font-bold text-brand-950 shadow-soft">
                   {item.badge > 99 ? "99+" : item.badge}
                 </span>
               )}

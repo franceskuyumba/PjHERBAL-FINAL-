@@ -32,11 +32,11 @@ export function StorySection() {
 
   return (
     <section className="overflow-hidden bg-white py-16 sm:py-24">
-      <div className="container-site grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <div className="container-site grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <AnimatedReveal className="relative order-2 lg:order-1">
           <div className="relative">
-            <div className="absolute -left-4 -top-4 h-40 w-40 rounded-3xl bg-gold-100/70" aria-hidden="true" />
-            <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] shadow-lift">
+            <div className="absolute -left-4 -top-4 h-44 w-44 rounded-3xl bg-gold-100/60" aria-hidden="true" />
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] shadow-elevated">
               <Image
                 src="/images/products/moringa-power.svg"
                 alt={t(lang, "home.storySection.imageAlt")}
@@ -45,9 +45,9 @@ export function StorySection() {
                 className="object-cover"
               />
             </div>
-            <div className="absolute -bottom-6 left-6 rounded-2xl bg-brand-950 px-5 py-4 text-white shadow-lift">
+            <div className="absolute -bottom-6 left-6 rounded-2xl bg-brand-950 px-6 py-4 text-white shadow-elevated">
               <p className="font-display text-lg font-bold text-gold-300">{t(lang, "home.storySection.branch")}</p>
-              <p className="text-sm text-white/70">Dar es Salaam · Tanzania</p>
+              <p className="text-sm text-white/65">Dar es Salaam · Tanzania</p>
             </div>
           </div>
         </AnimatedReveal>
@@ -55,10 +55,10 @@ export function StorySection() {
         <div className="order-1 lg:order-2">
           <AnimatedReveal>
             <p className="eyebrow">{t(lang, "home.storySection.eyebrow")}</p>
-            <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-brand-950 sm:text-4xl">
+            <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-ink sm:text-4xl">
               {t(lang, "home.storySection.title")}
             </h2>
-            <p className="mt-4 text-base leading-7 text-ink/60">
+            <p className="mt-5 text-base leading-7 text-ink-muted">
               {t(lang, "home.storySection.paragraph")}
             </p>
           </AnimatedReveal>
@@ -66,13 +66,13 @@ export function StorySection() {
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {pillars.map((p, i) => (
               <AnimatedReveal key={p.title} delay={i * 0.08}>
-                <div className="flex h-full items-start gap-3 rounded-2xl border border-ink/5 bg-cream p-4 transition-all hover:border-brand-500/30 hover:shadow-card">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+                <div className="flex h-full items-start gap-3 rounded-2xl border border-ink/[0.04] bg-white p-5 shadow-soft transition-all duration-300 hover:border-brand-500/20 hover:shadow-card">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sage-50 text-sage-700">
                     {p.icon}
                   </span>
                   <div>
-                    <p className="text-sm font-bold text-brand-950">{p.title}</p>
-                    <p className="mt-1 text-xs leading-5 text-ink/55">{p.text}</p>
+                    <p className="text-sm font-bold text-ink">{p.title}</p>
+                    <p className="mt-1.5 text-xs leading-5 text-ink-muted">{p.text}</p>
                   </div>
                 </div>
               </AnimatedReveal>

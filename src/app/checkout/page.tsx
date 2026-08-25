@@ -147,29 +147,22 @@ export default function CheckoutPage() {
       <div className="container-site">
       <h1 className="sr-only">{t("checkout.title")}</h1>
 
-      <div className="mt-6 flex items-center gap-1 sm:gap-2">
-        {([1, 2, 3, 4] as Step[]).map((s) => (
-          <div key={s} className="flex flex-1 items-center gap-1 sm:gap-2">
-            <button
-              onClick={() => s < step && step !== 4 && setStep(s)}
-              disabled={s >= step || step === 4}
-              className={cn(
-                 "flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-xs font-bold transition-all",
-                step > s || (step === 4 && s < 4)
-                  ? "bg-brand-600 text-white"
-                  : step === s
-                    ? "bg-brand-600 text-white ring-4 ring-brand-100"
-                     : "bg-[#e5e7eb] text-ink/50"
-              )}
-            >
-              {step > s ? <Check className="h-4 w-4" /> : s}
-            </button>
-            <span className={cn("hidden text-xs font-medium sm:block", step === s ? "text-brand-800" : "text-ink/40")}>
-              {stepLabels[s]}
-            </span>
-            {s < 4 && <div className={cn("h-0.5 flex-1 rounded", step > s ? "bg-brand-600" : "bg-ink/10")} />}
-          </div>
-        ))}
+      <div className="mx-auto flex max-w-2xl items-center justify-between gap-2 py-2">
+        <div className="flex flex-col items-center gap-1.5">
+          <Link href="/cart" className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1E4620] text-sm font-bold text-white">1</Link>
+          <span className="text-xs font-bold tracking-wide text-[#1E4620]">Cart Summary</span>
+          <span className="h-0.5 w-12 bg-[#C69C52] sm:w-20" />
+        </div>
+        <div className="h-px flex-1 bg-[#C69C52] opacity-40" />
+        <div className="flex flex-col items-center gap-1.5">
+          <span className={cn("flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold", step === 1 || step === 2 ? "bg-[#1E4620] text-white ring-4 ring-[#1E4620]/20" : "bg-[#E5E7EB] text-ink/60")}>2</span>
+          <span className={cn("text-xs font-medium", step === 1 || step === 2 ? "font-bold text-[#1E4620]" : "text-ink/60")}>Customer Details</span>
+        </div>
+        <div className={cn("h-px flex-1", step > 2 ? "bg-[#C69C52]" : "bg-[#E5E7EB]")} />
+        <div className="flex flex-col items-center gap-1.5">
+          <span className={cn("flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold", step === 3 || step === 4 ? "bg-[#1E4620] text-white" : "bg-[#E5E7EB] text-ink/60")}>3</span>
+          <span className={cn("text-xs font-medium", step === 3 ? "font-bold text-[#1E4620]" : "text-ink/60")}>Payment</span>
+        </div>
       </div>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
@@ -392,9 +385,13 @@ export default function CheckoutPage() {
                 <dt className="text-ink/55">{t("checkout.delivery")}</dt>
                 <dd className="font-semibold">{totals.shipping === 0 ? t("checkout.free") : formatTZS(totals.shipping)}</dd>
               </div>
-              <div className="flex justify-between border-t border-ink/10 pt-3">
+              <div className="flex justify-between">
+                <dt className="text-ink/55">Estimated VAT (18%)</dt>
+                <dd className="font-semibold text-ink">{formatTZS(Math.round(totals.subtotal * 0.18))}</dd>
+              </div>
+              <div className="flex justify-between border-t border-[#E5E7EB] pt-3">
                 <dt className="font-bold text-brand-950">{t("checkout.total")}</dt>
-                <dd className="font-display text-lg font-bold text-brand-800">{formatTZS(totals.total)}</dd>
+                <dd className="font-display text-lg font-bold text-[#1E4620]">{formatTZS(totals.total)}</dd>
               </div>
             </dl>
 

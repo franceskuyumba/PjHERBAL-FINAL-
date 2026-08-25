@@ -24,15 +24,45 @@ export default function ContactPage() {
         </div>
       </section>
 
+      <section className="container-site py-10">
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className="rounded-xl border border-[#E5E7EB] bg-white p-5 shadow-sm">
+            <p className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-50 text-brand-700"><MessageCircle className="h-4 w-4" /></p>
+            <p className="mt-3 text-sm font-bold text-brand-950">1. Describe your concern</p>
+            <p className="mt-1 text-xs leading-5 text-ink/60">Share symptoms or wellness goals in a few lines.</p>
+          </div>
+          <div className="rounded-xl border border-[#E5E7EB] bg-white p-5 shadow-sm">
+            <p className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-50 text-brand-700"><Phone className="h-4 w-4" /></p>
+            <p className="mt-3 text-sm font-bold text-brand-950">2. Chat with Specialist</p>
+            <p className="mt-1 text-xs leading-5 text-ink/60">Our Segerea herbalist replies on WhatsApp with tailored guidance.</p>
+          </div>
+          <div className="rounded-xl border border-[#E5E7EB] bg-white p-5 shadow-sm">
+            <p className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-50 text-brand-700"><Navigation className="h-4 w-4" /></p>
+            <p className="mt-3 text-sm font-bold text-brand-950">3. Get your plan</p>
+            <p className="mt-1 text-xs leading-5 text-ink/60">Receive product advice, usage and delivery details.</p>
+          </div>
+        </div>
+      </section>
+
       <section className="container-site grid gap-10 py-14 lg:grid-cols-[1fr_1.2fr]">
         <div className="space-y-4">
+          <div className="rounded-xl border border-[#E5E7EB] bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-50 text-brand-700"><Phone className="h-5 w-5" /></span>
+              <div>
+                <p className="text-sm font-bold text-brand-950">Segerea Herbal Specialist</p>
+                <p className="text-xs text-ink/55">Tanzanian naturopath · WhatsApp replies within minutes</p>
+              </div>
+              <a href={buildWhatsAppUrl({ recipient: "specialist" })} target="_blank" rel="noopener noreferrer" className="ml-auto btn-whatsapp btn-sm">WhatsApp</a>
+            </div>
+          </div>
           <div className="space-y-4">
             <ContactCard
               icon={<MapPin className="h-5 w-5" />}
               title={t(lang, "contact.visitUs")}
               lines={[SITE.address, t(lang, "contact.openHours")]}
             />
-            <div className="flex gap-4 rounded-3xl border border-ink/5 bg-white p-5 shadow-card transition-shadow hover:shadow-lift">
+            <div className="flex gap-4 rounded-xl border border-[#E5E7EB] bg-white p-5 shadow-sm transition-shadow hover:shadow-lift">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-700">
                 <Phone className="h-5 w-5" />
               </span>
@@ -71,7 +101,7 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-ink/5 bg-white p-8 shadow-card">
+        <div className="rounded-xl border border-[#E5E7EB] bg-white p-8 shadow-sm">
           <h2 className="font-display text-2xl font-bold text-brand-950">{t(lang, "contact.sendMessage")}</h2>
           <p className="mt-1 text-sm text-ink/55">{t(lang, "contact.replyTime")}</p>
           <div className="mt-6">
@@ -94,7 +124,7 @@ export default function ContactPage() {
             </a>
           )}
         </div>
-        <div className="mt-5 overflow-hidden rounded-3xl border border-ink/5 shadow-card">
+        <div className="mt-5 overflow-hidden rounded-xl border border-[#E5E7EB] shadow-sm">
           <iframe
             title={`${SITE.name} location map`}
             src={GOOGLE_MAPS.embedUrl}
@@ -121,7 +151,7 @@ function ContactCard({
   href?: string;
 }) {
   const body = (
-    <div className="flex gap-4 rounded-3xl border border-ink/5 bg-white p-5 shadow-card transition-shadow hover:shadow-lift">
+    <div className="flex gap-4 rounded-xl border border-[#E5E7EB] bg-white p-5 shadow-sm transition-shadow hover:shadow-lift">
       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-700">
         {icon}
       </span>

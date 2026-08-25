@@ -22,7 +22,7 @@ export function StatCards({ stats }: { stats: Stat[] }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, delay: i * 0.08, ease: "easeOut" }}
           whileHover={reduceMotion ? undefined : { y: -4 }}
-          className="rounded-3xl border border-ink/5 bg-white p-5 shadow-card"
+          className="rounded-xl border border-[#E5E7EB] bg-white p-5 shadow-sm"
         >
           <span className={`flex h-11 w-11 items-center justify-center rounded-2xl ${s.accent}`}>{s.icon}</span>
           <p className="mt-4 text-2xl font-bold tracking-tight text-brand-950">{s.value}</p>

@@ -21,6 +21,7 @@ export const footerEn = {
   monSat: "Mon – Sat: 8:00 AM – 8:00 PM",
   sunday: "Sunday: 10:00 AM – 6:00 PM",
   copyright: "© {year} PJHERBAL Clinic – Segerea Branch. All rights reserved.",
+  payments: "Payments",
 };
 
 export const footerSw = {
@@ -46,4 +47,5 @@ export const footerSw = {
   monSat: "Jumatatu – Jumamosi: 8:00 asubuhi – 8:00 jioni",
   sunday: "Jumapili: 10:00 asubuhi – 6:00 jioni",
   copyright: "© {year} PJHERBAL Clinic – Tawi la Segerea. Haki zote zimehifadhiwa.",
+  payments: "Njia za Malipo",
 };

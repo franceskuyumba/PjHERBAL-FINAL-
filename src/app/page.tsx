@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
+import { HomeAdminPhotoEdit } from "@/components/home/HomeAdminPhotoEdit";
 import { TrustBar } from "@/components/home/TrustBar";
 import { FlashDeals } from "@/components/home/FlashDeals";
 import { FeaturedCategories } from "@/components/home/FeaturedCategories";
@@ -91,6 +92,7 @@ export default async function HomePage() {
   }
 
   const isLoggedIn = Boolean(user);
+  const isAdmin = user?.role === "ADMIN";
 
   return (
     <>
@@ -107,7 +109,10 @@ export default async function HomePage() {
           ),
         }}
       />
-      <Hero />
+      <div className="relative">
+        <Hero />
+        <HomeAdminPhotoEdit isAdmin={isAdmin} />
+      </div>
       <CartReminder />
       <PromoTileGrid categories={categoryCards} />
       <FlashDeals products={flashProducts} isLoggedIn={isLoggedIn} />
@@ -123,9 +128,10 @@ export default async function HomePage() {
           linkLabel={t(lang, "home.recommended.linkLabel")}
           products={recommended}
           isLoggedIn={isLoggedIn}
+          bg="white"
         />
       )}
-      <BestSellers products={bestSellers.map((p) => toProductCard(p))} isLoggedIn={isLoggedIn} />
+      <BestSellers products={bestSellers.map((p) => toProductCard(p))} isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
       <ProductGridSection
         eyebrow={t(lang, "home.latestCollection.eyebrow")}
         title={t(lang, "home.latestCollection.title")}
@@ -134,6 +140,8 @@ export default async function HomePage() {
         linkLabel={t(lang, "home.viewAllProducts")}
         products={newArrivalCards}
         isLoggedIn={isLoggedIn}
+        isAdmin={isAdmin}
+        bg="white"
       />
       <PromoBanner />
       <StorySection />
