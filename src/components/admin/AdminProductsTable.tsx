@@ -139,7 +139,7 @@ export function AdminProductsTable() {
                           title={t("admin.products.edit")}
                         >
                           <Pencil className="h-4 w-4" />
-                          <span className="hidden text-xs font-semibold sm:inline">{t("admin.products.edit")}</span>
+                          <span className="text-xs font-semibold">{t("admin.products.edit")}</span>
                         </Link>
                         <button
                           onClick={() => onDelete(p.id, p.name)}
