@@ -134,10 +134,12 @@ export function AdminProductsTable() {
                       <div className="flex items-center justify-end gap-1">
                         <Link
                           href={`/admin/products/${p.id}/edit`}
-                          className="flex h-8 w-8 items-center justify-center rounded-lg text-ink/50 hover:bg-brand-50 hover:text-brand-700"
+                          className="flex h-8 items-center justify-center gap-1 rounded-lg px-2 text-ink/50 hover:bg-brand-50 hover:text-brand-700"
                           aria-label={t("admin.products.edit")}
+                          title={t("admin.products.edit")}
                         >
                           <Pencil className="h-4 w-4" />
+                          <span className="hidden text-xs font-semibold sm:inline">{t("admin.products.edit")}</span>
                         </Link>
                         <button
                           onClick={() => onDelete(p.id, p.name)}
