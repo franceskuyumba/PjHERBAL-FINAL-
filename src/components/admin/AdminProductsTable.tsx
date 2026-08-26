@@ -135,11 +135,11 @@ export function AdminProductsTable() {
                         <Link
                           href={`/admin/products/${p.id}/edit`}
                           className="flex h-8 items-center justify-center gap-1 rounded-lg px-2 text-ink/50 hover:bg-brand-50 hover:text-brand-700"
-                          aria-label={t("admin.products.edit")}
-                          title={t("admin.products.edit")}
+                          aria-label={t("admin.products.editPhotosDetails")}
+                          title={t("admin.products.editPhotosDetails")}
                         >
                           <Pencil className="h-4 w-4" />
-                          <span className="text-xs font-semibold">{t("admin.products.edit")}</span>
+                          <span className="text-xs font-semibold">{t("admin.products.editPhotosDetails")}</span>
                         </Link>
                         <button
                           onClick={() => onDelete(p.id, p.name)}
