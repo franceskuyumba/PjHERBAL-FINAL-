@@ -46,3 +46,10 @@ next-env.d.ts
 
 # backups
 /backups
+
+.vercel
+.env*
+
+.next
+.vercel
+node_modules
