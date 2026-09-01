@@ -135,7 +135,7 @@ export function ProductCard({
         {isAdmin && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-brand-950/60 p-3 opacity-0 transition hover:opacity-100">
             <label className="cursor-pointer rounded-full bg-white px-3 py-1.5 text-xs font-bold text-brand-800">
-              Choose file
+
               <input
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/avif"

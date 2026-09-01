@@ -265,7 +265,7 @@ export function ProductForm({
                   <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" multiple className="sr-only" onChange={(event) => setSelectedFiles(Array.from(event.target.files || []))} />
                 </label>
                 <label className="btn-outline btn-sm cursor-pointer">
-                  {t("admin.media.camera")}
+
                   <input type="file" accept="image/*" capture="environment" className="sr-only" onChange={(event) => setSelectedFiles((current) => [...current, ...Array.from(event.target.files || [])])} />
                 </label>
                 {selectedFiles.length > 0 && <span className="self-center text-xs text-ink/55">{selectedFiles.length} {t("admin.media.selected")}</span>}

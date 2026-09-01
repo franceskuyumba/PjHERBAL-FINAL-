@@ -30,11 +30,11 @@ export function HomeAdminPhotoEdit({ isAdmin }: { isAdmin: boolean }) {
   return (
     <div className="absolute right-4 top-4 z-10 flex gap-2">
       <label className="cursor-pointer rounded-full bg-white/90 px-3 py-1.5 text-xs font-bold text-brand-800 shadow-card hover:bg-white">
-        <span className="inline-flex items-center gap-1.5"><Pencil className="h-3.5 w-3.5" /> {busy ? "Uploading..." : "Choose file"}</span>
+
         <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" className="hidden" onChange={onPick} />
       </label>
       <label className="cursor-pointer rounded-full bg-brand-600 px-3 py-1.5 text-xs font-bold text-white shadow-card hover:bg-brand-700">
-        <span className="inline-flex items-center gap-1">📷 Camera</span>
+
         <input type="file" accept="image/*" capture="environment" className="hidden" onChange={onPick} />
       </label>
     </div>
