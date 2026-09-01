@@ -53,7 +53,7 @@ export function MobileMenu({ open, onClose, user }: { open: boolean; onClose: ()
           exit={{ opacity: 0 }}
         >
           {/* Backdrop */}
-          <div className="absolute inset-0 bg-ink/40 backdrop-blur-sm" onClick={onClose} />
+          <div className="absolute inset-0 bg-ink/40 " onClick={onClose} />
 
           {/* Drawer */}
           <motion.div
