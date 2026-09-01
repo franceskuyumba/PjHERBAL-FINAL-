@@ -289,3 +289,45 @@ body:has(.vikoba-app) .site-chrome {
     box-shadow: none !important;
   }
 }
+
+/* Updated Clean Print Rules */
+@media print {
+  /* Hide top browser headers/footers text automatically */
+  @page {
+    margin: 10mm;
+    size: auto;
+  }
+
+  /* Hide navigation, floating elements, menu links, and chat buttons */
+  header, footer, nav, .navbar, .site-header, .site-footer, 
+  [class*="assistant"], [class*="chat"], [class*="floating"], 
+  .no-print, a[href*="orders"], a[href*="support"], a[href*="account"] {
+    display: none !important;
+  }
+
+  /* Clean print body resetting */
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Prevent extra blank pages */
+  body, main, div {
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+  }
+
+  /* Target exact report container */
+  .printable-report {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
