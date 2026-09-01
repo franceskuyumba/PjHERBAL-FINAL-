@@ -331,3 +331,19 @@ body:has(.vikoba-app) .site-chrome {
     border: none !important;
   }
 }
+
+/* Extended Hide Selectors for Print */
+@media print {
+  /* Target text items and navigation links explicitly */
+  a[href*="account"],
+  a[href*="help"],
+  a[href*="support"],
+  a[href*="orders"],
+  [class*="announcement"],
+  [class*="delivery"],
+  [class*="top-bar"],
+  [class*="topbar"],
+  header, footer, nav, aside {
+    display: none !important;
+  }
+}
