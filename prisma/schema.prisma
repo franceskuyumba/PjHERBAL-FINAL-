@@ -106,7 +106,7 @@ model Product {
   id            String   @id @default(cuid())
   slug          String   @unique
   name          String
-  shortDescription String
+  shortDescription String?
   description   String
   ingredients   String?
   usage         String?

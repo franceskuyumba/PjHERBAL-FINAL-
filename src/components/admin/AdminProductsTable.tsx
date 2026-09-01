@@ -32,7 +32,7 @@ export function AdminProductsTable() {
       const res = await fetch(`/api/admin/products${q ? `?search=${encodeURIComponent(q)}` : ""}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || t("admin.products.loadFailed"));
-      setProducts(data.products);
+      setProducts(Array.isArray(data) ? data : (data.products || []));
     } catch (e) {
       setErrorMsg((e as Error).message);
     } finally {

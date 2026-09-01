@@ -2,6 +2,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { getBotReply } from "@/lib/chatbot";
 import { logger } from "@/lib/logger";
+import { sendWhatsAppText } from "@/lib/whatsapp";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +10,8 @@ export async function GET(request: NextRequest) {
   const mode = request.nextUrl.searchParams.get("hub.mode");
   const token = request.nextUrl.searchParams.get("hub.verify_token");
   const challenge = request.nextUrl.searchParams.get("hub.challenge");
-  if (mode === "subscribe" && token && token === process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN && challenge) {
+  const verifyToken = process.env.WHATSAPP_VERIFY_TOKEN || process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN;
+  if (mode === "subscribe" && token && token === verifyToken && challenge) {
     return new NextResponse(challenge, { status: 200 });
   }
   return new NextResponse("Webhook verification failed", { status: 403 });
@@ -27,7 +29,7 @@ export async function POST(request: NextRequest) {
     for (const message of messages) {
       const recipient = message.from;
       const text = message.text?.body?.trim();
-      if (recipient && text) await sendReply(recipient, getBotReply(text, "en").text);
+      if (recipient && text) await sendWhatsAppText(recipient, getBotReply(text, "en").text);
     }
     return NextResponse.json({ received: true });
   } catch (error) {
@@ -45,15 +47,3 @@ function isValidSignature(body: string, header: string | null): boolean {
   return providedBuffer.length === expectedBuffer.length && timingSafeEqual(providedBuffer, expectedBuffer);
 }
 
-async function sendReply(to: string, text: string) {
-  const token = process.env.WHATSAPP_ACCESS_TOKEN;
-  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
-  if (!token || !phoneNumberId) throw new Error("WhatsApp Business API credentials are not configured.");
-
-  const response = await fetch(`https://graph.facebook.com/v20.0/${phoneNumberId}/messages`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ messaging_product: "whatsapp", recipient_type: "individual", to, type: "text", text: { preview_url: false, body: text } }),
-  });
-  if (!response.ok) throw new Error(`WhatsApp API returned ${response.status}`);
-}

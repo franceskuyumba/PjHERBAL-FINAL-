@@ -57,13 +57,25 @@ class InfobipProvider implements NotifyProvider {
     const apiKey = process.env.INFOBIP_API_KEY;
     const sender = process.env.INFOBIP_SENDER;
     if (!apiKey || !sender) return false;
+    const phone = normalizeTanzaniaPhone(message.to);
+    if (!phone) {
+      logger.error("[notify] invalid SMS recipient", message.to);
+      return false;
+    }
     const response = await fetch(`${this.baseUrl}/sms/2/text/advanced`, {
       method: "POST",
       headers: { Authorization: `App ${apiKey}`, "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ messages: [{ from: sender, destinations: [{ to: message.to }], text: message.text }] }),
+      body: JSON.stringify({ messages: [{ from: sender, destinations: [{ to: phone }], text: message.text }] }),
     });
     return response.ok;
   }
+}
+
+function normalizeTanzaniaPhone(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.startsWith("0") && digits.length === 10) return `255${digits.slice(1)}`;
+  if (digits.startsWith("255") && digits.length === 12) return digits;
+  return "";
 }
 
 const consoleProvider = new ConsoleProvider();

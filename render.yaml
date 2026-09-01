@@ -28,6 +28,8 @@ services:
         value: infobip
       - key: INFOBIP_SENDER
         value: PJHERBAL
+      - key: INFOBIP_BASE_URL
+        value: https://api.infobip.com
       - key: INFOBIP_API_KEY
         sync: false
       - key: SELCOM_API_KEY

@@ -136,3 +136,21 @@ Full list in `.env.example`. Notables:
 | `NEXT_PUBLIC_GOOGLE_MAPS_URL` | "Get directions" link to your Google Business Profile |
 | `NEXT_PUBLIC_FACEBOOK_URL` / `INSTAGRAM` / `TIKTOK` / `X` | Footer social links |
 | `SHIPPING_FEE_TZS` / `FREE_SHIPPING_THRESHOLD_TZS` | Delivery fee calculator defaults + free-delivery bar |
+
+### WhatsApp chatbot
+
+The FAQ chatbot answers incoming WhatsApp text messages through the Meta WhatsApp
+Cloud API at `/api/whatsapp/webhook`. Configure these server-only variables in the
+deployment environment:
+
+| Variable | Purpose |
+| -------- | ------- |
+| `WHATSAPP_ACCESS_TOKEN` | Meta WhatsApp Cloud API access token |
+| `WHATSAPP_PHONE_NUMBER_ID` | Phone number ID registered in Meta Business Manager |
+| `WHATSAPP_APP_SECRET` | Meta app secret used to validate webhook signatures |
+| `WHATSAPP_VERIFY_TOKEN` | Private token entered when configuring the Meta webhook |
+
+Set the Meta callback URL to `https://your-domain.example/api/whatsapp/webhook`,
+subscribe to the `messages` field, and use the same value for
+`WHATSAPP_VERIFY_TOKEN` in the deployment environment. The existing
+`WHATSAPP_WEBHOOK_VERIFY_TOKEN` name remains supported for compatibility.

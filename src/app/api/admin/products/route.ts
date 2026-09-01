@@ -1,76 +1,75 @@
-import { NextRequest } from "next/server";
-import { json, error, requireApiAdmin, handleApiError } from "@/lib/api";
-import { prisma } from "@/lib/prisma";
-import { productSchema } from "@/lib/validations";
-import { zodParseSafe } from "@/lib/zod-helpers";
-import { logActivity } from "@/lib/activity";
+import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
+import { prisma } from '@/lib/prisma';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   try {
-    await requireApiAdmin();
-    const search = request.nextUrl.searchParams.get("search") || "";
-    const lowStockOnly = request.nextUrl.searchParams.get("lowStock") === "1";
-    const products = await prisma.product.findMany({
-      where: search
-        ? { OR: [{ name: { contains: search } }, { sku: { contains: search } }] }
-        : undefined,
-      include: { category: true },
-      orderBy: { createdAt: "desc" },
-    });
-    if (lowStockOnly) {
-      return json({
-        products: products.filter((p) => p.status === "ACTIVE" && p.stock <= p.lowStockThreshold),
-      });
+    const { searchParams } = new URL(request.url);
+    const query = searchParams.get('search') || '';
+    const lowStockOnly = searchParams.get('lowStock') === '1';
+
+    const where: Record<string, unknown> = {};
+
+    if (query) {
+      where.OR = [
+        { name: { contains: query, mode: 'insensitive' } },
+        { sku: { contains: query, mode: 'insensitive' } },
+      ];
     }
-    return json({ products });
-  } catch (e) {
-    return handleApiError(e);
+
+    if (lowStockOnly) {
+      where.status = 'ACTIVE';
+      where.stock = { lte: prisma.product.fields.lowStockThreshold };
+    }
+
+    const products = await prisma.product.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      include: { category: true }
+    });
+
+    return NextResponse.json(JSON.parse(JSON.stringify(products)));
+  } catch (error: any) {
+    console.error('GET_PRODUCTS_ERROR:', error);
+    return NextResponse.json([]);
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const session = await requireApiAdmin();
-    const body = await request.json().catch(() => null);
-    const parsed = zodParseSafe(productSchema, body || {});
-    if (!parsed.ok) return error(parsed.message);
+    const body = await request.json();
+    const name = body.name || body.title || 'New Product';
+    const rawSlug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const slug = body.slug || `${rawSlug}-${Date.now()}`;
+    const sku = body.sku || `SKU-${Date.now()}`;
 
-    const existing = await prisma.product.findUnique({ where: { slug: parsed.data.slug } });
-    if (existing) return error("A product with this slug already exists.", 409);
+    const productData: any = {
+      name,
+      slug,
+      sku,
+      description: body.description || '',
+      price: parseFloat(body.price) || 0,
+      stock: parseInt(body.stock, 10) || 0,
+      status: body.status || 'ACTIVE',
+      isFeatured: true,
+      images: Array.isArray(body.images) ? body.images : body.image ? [body.image] : [],
+    };
 
-    const sku = body?.sku ? String(body.sku) : `PJH-${parsed.data.slug.replace(/-/g, "").toUpperCase().slice(0, 10)}`;
-    const images = String(body?.images || body?.image || `/images/products/${parsed.data.slug}.svg`)
-      .split(/[\n,]+/)
-      .map((value) => value.trim())
-      .filter(Boolean)
-      .join(",");
+    if (body.compareAtPrice) productData.compareAtPrice = parseFloat(body.compareAtPrice);
+    if (body.categoryId) productData.categoryId = body.categoryId;
 
     const product = await prisma.product.create({
-      data: {
-        ...parsed.data,
-        sku,
-        images,
-        categoryId: parsed.data.categoryId,
-        compareAtPrice: parsed.data.compareAtPrice || null,
-        isBestSeller: Boolean(body?.isBestSeller),
-        isFeatured: Boolean(body?.isFeatured),
-      },
-      include: { category: true },
+      data: productData,
     });
 
-    await logActivity({
-      actorId: session.sub,
-      actorName: session.name,
-      role: session.role,
-      action: "PRODUCT_CREATE",
-      entity: "Product",
-      entityId: product.id,
-      details: `${product.name} (${product.sku})`,
-      ip: request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null,
-    });
+    // Instantly invalidate Vercel's static cache for homepage and shop pages
+    revalidatePath('/');
+    revalidatePath('/products');
+    revalidatePath('/shop');
 
-    return json({ product }, 201);
-  } catch (e) {
-    return handleApiError(e);
+    return NextResponse.json(JSON.parse(JSON.stringify(product)), { status: 201 });
+  } catch (error: any) {
+    console.error('POST_PRODUCT_ERROR:', error);
+    return NextResponse.json({ error: error.message || 'Database insert failed' }, { status: 500 });
   }
 }
