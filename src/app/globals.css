@@ -268,3 +268,24 @@ body:has(.vikoba-app) .site-chrome {
     scroll-behavior: auto !important;
   }
 }
+
+/* Print-Specific Styles */
+@media print {
+  header, footer, nav, .navbar, .site-header, .site-footer, .floating-chat, .no-print {
+    display: none !important;
+  }
+  body, main, #root, #__next {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+  .printable-report {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    box-shadow: none !important;
+  }
+}
