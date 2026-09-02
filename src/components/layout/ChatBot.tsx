@@ -109,7 +109,7 @@ export function ChatBot() {
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close chatbot"
-                className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition-colors duration-base hover:bg-white/10 hover:text-white"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition-colors duration-300 hover:bg-white/10 hover:text-white"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -148,7 +148,7 @@ export function ChatBot() {
                     <button
                       key={chip}
                       onClick={() => send(chip)}
-                      className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1.5 text-xs font-semibold text-brand-600 transition-colors duration-base hover:bg-brand-100"
+                      className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1.5 text-xs font-semibold text-brand-600 transition-colors duration-300 hover:bg-brand-100"
                     >
                       {chip}
                     </button>
@@ -186,7 +186,7 @@ export function ChatBot() {
                 type="submit"
                 aria-label="Send message"
                 disabled={!input.trim() || typing}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white shadow-soft transition-colors duration-base hover:bg-brand-700 disabled:opacity-40"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white shadow-soft transition-colors duration-300 hover:bg-brand-700 disabled:opacity-40"
               >
                 <Send className="h-4 w-4" />
               </button>

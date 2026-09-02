@@ -113,7 +113,7 @@ export async function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-sm text-white/55 transition-colors duration-base hover:text-gold-300"
+                  className="text-sm text-white/55 transition-colors duration-300 hover:text-gold-300"
                 >
                   {t(lang, link.labelKey)}
                 </Link>
@@ -132,7 +132,7 @@ export async function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-sm text-white/55 transition-colors duration-base hover:text-gold-300"
+                  className="text-sm text-white/55 transition-colors duration-300 hover:text-gold-300"
                 >
                   {t(lang, link.labelKey)}
                 </Link>
@@ -246,8 +246,8 @@ function SocialIcon({
       aria-label={label}
       className={
         highlight
-          ? "flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.06] text-white/60 transition-colors duration-base hover:bg-[#25D366] hover:text-white"
-          : "flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.06] text-white/60 transition-colors duration-base hover:bg-brand-600 hover:text-white"
+          ? "flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.06] text-white/60 transition-colors duration-300 hover:bg-[#25D366] hover:text-white"
+          : "flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.06] text-white/60 transition-colors duration-300 hover:bg-brand-600 hover:text-white"
       }
     >
       {children}

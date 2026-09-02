@@ -8,7 +8,7 @@ export function LanguageSwitcher({ variant = "light" }: { variant?: "light" | "d
 
   const buttonClass = (active: boolean) =>
     cn(
-      "rounded-full px-3 py-1.5 text-[11px] font-bold transition-all duration-base",
+      "rounded-full px-3 py-1.5 text-[11px] font-bold transition-all duration-300",
       active
         ? variant === "dark"
           ? "bg-gold-500 text-brand-950 shadow-soft"

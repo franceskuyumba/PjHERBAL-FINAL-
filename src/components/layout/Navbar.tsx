@@ -81,14 +81,14 @@ export function Navbar({ user }: { user: NavUser | null }) {
           <div className="flex min-w-0 items-center gap-5">
             <a
               href={`tel:${SITE.phone.replace(/\s/g, "")}`}
-              className="hidden items-center gap-1.5 text-white/70 transition-colors duration-base hover:text-gold-300 md:flex"
+              className="hidden items-center gap-1.5 text-white/70 transition-colors duration-300 hover:text-gold-300 md:flex"
             >
               <Phone className="h-3.5 w-3.5 text-gold-400/60" />
               {SITE.phone}
             </a>
             <a
               href={`mailto:${SITE.email}`}
-              className="hidden items-center gap-1.5 text-white/70 transition-colors duration-base hover:text-gold-300 lg:flex"
+              className="hidden items-center gap-1.5 text-white/70 transition-colors duration-300 hover:text-gold-300 lg:flex"
             >
               <Mail className="h-3.5 w-3.5 text-gold-400/60" />
               {SITE.email}
@@ -101,20 +101,20 @@ export function Navbar({ user }: { user: NavUser | null }) {
           <div className="flex shrink-0 items-center gap-4 sm:gap-5">
             <Link
               href={user ? "/customer-dashboard/orders" : "/login"}
-              className="flex items-center gap-1.5 text-white/70 transition-colors duration-base hover:text-gold-300"
+              className="flex items-center gap-1.5 text-white/70 transition-colors duration-300 hover:text-gold-300"
             >
               <PackageSearch className="h-3.5 w-3.5" />
               {t("nav.myOrders")}
             </Link>
             <Link
               href="/contact"
-              className="hidden text-white/70 transition-colors duration-base hover:text-gold-300 sm:block"
+              className="hidden text-white/70 transition-colors duration-300 hover:text-gold-300 sm:block"
             >
               {t("nav.helpSupport")}
             </Link>
             <Link
               href={user ? (user.role === "ADMIN" ? "/admin" : "/customer-dashboard") : "/login"}
-              className="flex items-center gap-1.5 text-white/70 transition-colors duration-base hover:text-gold-300"
+              className="flex items-center gap-1.5 text-white/70 transition-colors duration-300 hover:text-gold-300"
             >
               <User className="h-3.5 w-3.5" />
               {user ? t("nav.myAccount") : t("nav.signIn")}
@@ -126,7 +126,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
       {/* ── Main header ── */}
       <header
         className={cn(
-          "sticky top-0 z-50 border-b border-surface-muted bg-white/95 backdrop-blur-md transition-shadow duration-base",
+          "sticky top-0 z-50 border-b border-surface-muted bg-white/95 backdrop-blur-md transition-shadow duration-300",
           scrolled && "shadow-elevated"
         )}
       >
@@ -152,7 +152,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
           <button
             onClick={openSearch}
             className={cn(
-              "group hidden flex-1 items-center gap-2.5 rounded-xl border border-ink/[0.06] bg-surface-muted/60 px-4 py-2.5 text-sm text-ink/40 shadow-soft transition-all duration-base hover:border-brand-300/40 hover:bg-white hover:shadow-card sm:max-w-2xl",
+              "group hidden flex-1 items-center gap-2.5 rounded-xl border border-ink/[0.06] bg-surface-muted/60 px-4 py-2.5 text-sm text-ink/40 shadow-soft transition-all duration-300 hover:border-brand-300/40 hover:bg-white hover:shadow-card sm:max-w-2xl",
               showDesktopSearch && "sm:flex"
             )}
             aria-label={t("nav.ariaOpenSearch")}
@@ -167,7 +167,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
           {/* Mobile search icon */}
           <button
             onClick={openSearch}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors duration-base hover:bg-brand-50 hover:text-brand-600 sm:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors duration-300 hover:bg-brand-50 hover:text-brand-600 sm:hidden"
             aria-label={t("nav.ariaOpenSearch")}
           >
             <Search className="h-5 w-5" />
@@ -178,7 +178,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
             {/* Wishlist */}
             <Link
               href="/customer-dashboard/wishlist"
-              className="flex h-10 w-10 items-center justify-center rounded-full text-ink/50 transition-colors duration-base hover:bg-red-50 hover:text-red-400"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-ink/50 transition-colors duration-300 hover:bg-red-50 hover:text-red-400"
               aria-label={t("nav.ariaWishlist")}
             >
               <Heart className="h-5 w-5" />
@@ -189,7 +189,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
               href={buildWhatsAppUrl({ recipient: "specialist" })}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden h-10 items-center gap-2 rounded-xl bg-brand-600 px-4 text-white shadow-soft transition-all duration-base hover:bg-brand-700 hover:shadow-card sm:flex"
+              className="hidden h-10 items-center gap-2 rounded-xl bg-brand-600 px-4 text-white shadow-soft transition-all duration-300 hover:bg-brand-700 hover:shadow-card sm:flex"
               aria-label="Chat on WhatsApp"
             >
               <MessageCircle className="h-4 w-4" />
@@ -200,7 +200,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
             <div className="relative">
               <button
                 onClick={() => setAccountOpen((v) => !v)}
-                className="flex h-10 w-10 items-center justify-center rounded-full text-ink/50 transition-colors duration-base hover:bg-brand-50 hover:text-brand-600"
+                className="flex h-10 w-10 items-center justify-center rounded-full text-ink/50 transition-colors duration-300 hover:bg-brand-50 hover:text-brand-600"
                 aria-label={t("nav.ariaAccount")}
               >
                 <User className="h-5 w-5" />
@@ -235,7 +235,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
                             router.push("/");
                             router.refresh();
                           }}
-                          className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm text-red-500 transition-colors duration-base hover:bg-red-50"
+                          className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm text-red-500 transition-colors duration-300 hover:bg-red-50"
                         >
                           <LogOut className="h-4 w-4" />
                           {t("nav.logOut")}
@@ -260,7 +260,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
             {/* Cart */}
             <Link
               href="/cart"
-              className="relative flex h-10 w-10 items-center justify-center rounded-full text-ink/50 transition-colors duration-base hover:bg-brand-50 hover:text-brand-600"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full text-ink/50 transition-colors duration-300 hover:bg-brand-50 hover:text-brand-600"
               aria-label={t("nav.ariaCartCount").replace("{count}", String(count))}
             >
               <ShoppingBag className="h-5 w-5" />
@@ -278,7 +278,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen(true)}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-ink/60 transition-colors duration-base hover:bg-brand-50 hover:text-brand-600 lg:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-ink/60 transition-colors duration-300 hover:bg-brand-50 hover:text-brand-600 lg:hidden"
               aria-label={t("nav.ariaOpenMenu")}
             >
               <Menu className="h-6 w-6" />
@@ -304,7 +304,7 @@ export function Navbar({ user }: { user: NavUser | null }) {
             ))}
             <Link
               href="/shop?sort=newest"
-              className="ml-auto flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-gold-400 transition-colors duration-base hover:bg-gold-500/10 hover:text-gold-300"
+              className="ml-auto flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-gold-400 transition-colors duration-300 hover:bg-gold-500/10 hover:text-gold-300"
             >
               <PackageSearch className="h-3.5 w-3.5" />
               {t("nav.newArrivals")}
@@ -324,7 +324,7 @@ function NavLink({ href, label, active }: { href: string; label: string; active:
     <Link
       href={href}
       className={cn(
-        "relative rounded-lg px-3.5 py-2 text-[13px] font-semibold tracking-wide transition-colors duration-base",
+        "relative rounded-lg px-3.5 py-2 text-[13px] font-semibold tracking-wide transition-colors duration-300",
         active ? "text-brand-600" : "text-ink/65 hover:text-brand-600"
       )}
     >
@@ -346,7 +346,7 @@ function CategoryLink({ href, label, active }: { href: string; label: string; ac
     <Link
       href={href}
       className={cn(
-        "relative whitespace-nowrap rounded-full px-3 py-2.5 text-[13px] font-semibold transition-colors duration-base",
+        "relative whitespace-nowrap rounded-full px-3 py-2.5 text-[13px] font-semibold transition-colors duration-300",
         active ? "text-white" : "text-white/60 hover:text-white/90"
       )}
     >
@@ -367,7 +367,7 @@ function AccountLink({ href, icon, children }: { href: string; icon: React.React
   return (
     <Link
       href={href}
-      className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm text-ink/70 transition-colors duration-base hover:bg-brand-50 hover:text-brand-600"
+      className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm text-ink/70 transition-colors duration-300 hover:bg-brand-50 hover:text-brand-600"
     >
       {icon}
       {children}

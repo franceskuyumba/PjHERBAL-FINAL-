@@ -30,12 +30,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const [image] = product.images.split(",").filter(Boolean);
   return {
     title: product.name,
-    description: product.shortDescription,
+    description: product.shortDescription ?? "",
     alternates: { canonical: `/product/${product.slug}` },
     openGraph: {
       type: "website",
       title: `${product.name} | ${SITE.name}`,
-      description: product.shortDescription,
+      description: product.shortDescription ?? "",
       images: image ? [{ url: absoluteUrl(image) }] : undefined,
     },
   };
@@ -63,7 +63,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
   const isLoggedIn = Boolean(user);
 
   const tabs = [
-    { id: "benefits", label: t(lang, "product.tabBenefits"), content: product.benefits || product.shortDescription },
+    { id: "benefits", label: t(lang, "product.tabBenefits"), content: (product.benefits || product.shortDescription || "") as string },
     { id: "ingredients", label: t(lang, "product.tabIngredients"), content: product.ingredients || t(lang, "product.defaultIngredients") },
     { id: "usage", label: t(lang, "product.tabUsage"), content: product.usage || t(lang, "product.defaultUsage") },
     { id: "precautions", label: t(lang, "product.tabPrecautions"), content: product.precautions || t(lang, "product.defaultPrecautions") },
@@ -72,7 +72,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
   const jsonLd = generateJsonLd({
     type: "Product",
     name: product.name,
-    description: product.shortDescription,
+    description: product.shortDescription ?? "",
     image: absoluteUrl(images[0] || "/images/hero.svg"),
     url: absoluteUrl(`/product/${product.slug}`),
     price: product.price,
@@ -119,13 +119,13 @@ export default async function ProductPage({ params }: { params: { slug: string }
               <StockBadge stock={product.stock} />
             </div>
 
-            <p className="mt-5 text-base leading-7 text-ink-muted">{product.shortDescription}</p>
+            <p className="mt-5 text-base leading-7 text-ink-muted">{product.shortDescription ?? ""}</p>
 
             {(product.benefits || product.shortDescription) && (
               <div className="mt-6 rounded-2xl border border-ink/[0.04] bg-white p-5 shadow-soft">
                 <p className="text-sm font-bold text-brand-700">Key Benefits</p>
                 <ul className="mt-2.5 space-y-2 text-sm leading-6 text-ink-muted">
-                  {(product.benefits || product.shortDescription).split(/[\n•·]/).filter(Boolean).slice(0,5).map((b, i) => (
+                  {(product.benefits || product.shortDescription || "").split(/[\n•·]/).filter(Boolean).slice(0,5).map((b, i) => (
                     <li key={i} className="flex gap-2"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gold-500" />{b.trim()}</li>
                   ))}
                 </ul>

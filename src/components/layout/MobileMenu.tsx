@@ -68,7 +68,7 @@ export function MobileMenu({ open, onClose, user }: { open: boolean; onClose: ()
               <Image src="/images/logo.svg" alt="PJHERBAL Clinic" width={160} height={36} className="h-8 w-auto" />
               <button
                 onClick={onClose}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-muted text-ink/60 transition-colors duration-base hover:bg-brand-50 hover:text-brand-600"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-muted text-ink/60 transition-colors duration-300 hover:bg-brand-50 hover:text-brand-600"
                 aria-label={t("nav.ariaCloseMenu")}
               >
                 <X className="h-5 w-5" />
@@ -83,7 +83,7 @@ export function MobileMenu({ open, onClose, user }: { open: boolean; onClose: ()
                   onClose();
                   openSearch();
                 }}
-                className="mb-5 flex w-full items-center gap-2.5 rounded-xl border border-ink/[0.06] bg-surface-muted/50 px-4 py-3 text-sm text-ink/40 transition-all duration-base hover:border-brand-300/40 hover:bg-white hover:shadow-soft"
+                className="mb-5 flex w-full items-center gap-2.5 rounded-xl border border-ink/[0.06] bg-surface-muted/50 px-4 py-3 text-sm text-ink/40 transition-all duration-300 hover:border-brand-300/40 hover:bg-white hover:shadow-soft"
               >
                 <Search className="h-4 w-4 shrink-0 text-brand-500" />
                 <span className="truncate text-left">{t("nav.searchPlaceholder")}</span>
@@ -101,7 +101,7 @@ export function MobileMenu({ open, onClose, user }: { open: boolean; onClose: ()
                     <Link
                       href={link.href}
                       onClick={onClose}
-                      className="block rounded-xl px-3 py-2.5 text-[15px] font-medium text-ink/75 transition-colors duration-base hover:bg-brand-50 hover:text-brand-600"
+                      className="block rounded-xl px-3 py-2.5 text-[15px] font-medium text-ink/75 transition-colors duration-300 hover:bg-brand-50 hover:text-brand-600"
                     >
                       {t(link.labelKey)}
                     </Link>

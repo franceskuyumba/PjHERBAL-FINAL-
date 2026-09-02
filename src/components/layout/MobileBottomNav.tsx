@@ -37,7 +37,7 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
       <div className="grid grid-cols-5">
         {items.map((item) => {
           const className = cn(
-            "relative flex flex-col items-center gap-1 py-2.5 text-[10px] font-semibold transition-colors duration-base",
+            "relative flex flex-col items-center gap-1 py-2.5 text-[10px] font-semibold transition-colors duration-300",
             item.active ? "text-brand-600" : "text-ink-muted/60"
           );
           if (item.action) {

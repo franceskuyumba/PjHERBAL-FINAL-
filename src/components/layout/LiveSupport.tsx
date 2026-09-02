@@ -42,7 +42,7 @@ export function LiveSupport() {
                 <button
                   onClick={() => setOpen(false)}
                   aria-label="Close support panel"
-                  className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition-colors duration-base hover:bg-white/10 hover:text-white"
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition-colors duration-300 hover:bg-white/10 hover:text-white"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -55,7 +55,7 @@ export function LiveSupport() {
                 href={buildWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-xl bg-[#25D366] px-4 py-3 text-white shadow-soft transition-all duration-base hover:brightness-105"
+                className="flex items-center gap-3 rounded-xl bg-[#25D366] px-4 py-3 text-white shadow-soft transition-all duration-300 hover:brightness-105"
               >
                 <MessageCircle className="h-5 w-5" />
                 <span>
@@ -107,7 +107,7 @@ function SupportLink({ href, icon, label }: { href: string; icon: React.ReactNod
   return (
     <Link
       href={href}
-      className="flex flex-col items-center gap-1.5 rounded-xl border border-ink/[0.04] bg-surface-muted/40 px-3 py-3 text-center transition-colors duration-base hover:border-brand-300/30 hover:bg-brand-50"
+      className="flex flex-col items-center gap-1.5 rounded-xl border border-ink/[0.04] bg-surface-muted/40 px-3 py-3 text-center transition-colors duration-300 hover:border-brand-300/30 hover:bg-brand-50"
     >
       <span className="text-brand-600">{icon}</span>
       <span className="text-xs font-semibold text-ink/65">{label}</span>

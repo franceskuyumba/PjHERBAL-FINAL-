@@ -24,7 +24,7 @@ export default async function EditProductPage({ params }: { params: { id: string
         compareAtPrice: product.compareAtPrice != null ? String(product.compareAtPrice) : "",
         stock: String(product.stock),
         status: product.status,
-        shortDescription: product.shortDescription,
+        shortDescription: product.shortDescription ?? "",
         description: product.description,
         ingredients: product.ingredients || "",
         usage: product.usage || "",

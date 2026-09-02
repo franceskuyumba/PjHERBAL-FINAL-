@@ -25,7 +25,7 @@ export default async function WishlistPage() {
           id: w.product.id,
           slug: w.product.slug,
           name: w.product.name,
-          shortDescription: w.product.shortDescription,
+          shortDescription: w.product.shortDescription ?? "",
           price: w.product.price,
           compareAtPrice: w.product.compareAtPrice,
           image: w.product.images.split(",")[0],

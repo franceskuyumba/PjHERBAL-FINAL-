@@ -7,7 +7,7 @@ export function toProductCard(product: Product & { category?: { name: string } |
     id: product.id,
     slug: product.slug,
     name: product.name,
-    shortDescription: product.shortDescription,
+    shortDescription: product.shortDescription ?? "",
     price: product.price,
     compareAtPrice: product.compareAtPrice,
     image: image || "/images/hero.svg",
