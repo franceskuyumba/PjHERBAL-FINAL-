@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Star, Trash2 } from "lucide-react";
+import { ImagePlus, Plus, Pencil, Star, Trash2 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { useI18n } from "@/context/LanguageContext";
 
@@ -61,6 +61,17 @@ export function AdminBlogManager() {
   const onDelete = async (p: Post) => {
     if (!confirm(t("admin2.blogManager.deleteConfirm").replace("{title}", p.title))) return;
     await fetch(`/api/admin/blog/${p.id}`, { method: "DELETE" });
+    load();
+  };
+
+  const replaceCover = async (post: Post, file: File) => {
+    const form = new FormData();
+    form.append("files", file);
+    const upload = await fetch("/api/admin/uploads", { method: "POST", body: form });
+    const uploadData = await upload.json();
+    if (!upload.ok || !uploadData.urls?.[0]) { alert(uploadData.error || "Cover photo upload failed."); return; }
+    const save = await fetch(`/api/admin/blog/${post.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ coverImage: uploadData.urls[0] }) });
+    if (!save.ok) { const data = await save.json(); alert(data.error || "Could not save cover photo."); return; }
     load();
   };
 
@@ -134,6 +145,10 @@ export function AdminBlogManager() {
                           >
                             <Pencil className="h-4 w-4" />
                           </a>
+                          <label className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-ink/50 hover:bg-brand-50 hover:text-brand-700" aria-label="Change cover photo" title="Change cover photo">
+                            <ImagePlus className="h-4 w-4" />
+                            <input type="file" accept="image/*" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (file) replaceCover(p, file); }} />
+                          </label>
                           <button
                             onClick={() => onDelete(p)}
                             className="flex h-8 w-8 items-center justify-center rounded-lg text-ink/50 hover:bg-red-50 hover:text-red-600"

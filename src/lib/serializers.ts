@@ -1,8 +1,9 @@
 import type { Product } from "@prisma/client";
 import type { ProductCardProduct } from "@/components/product/ProductCard";
+import { parseProductImages } from "@/lib/product-images";
 
 export function toProductCard(product: Product & { category?: { name: string } | null }): ProductCardProduct {
-  const [image] = product.images.split(",").filter(Boolean);
+  const [image] = parseProductImages(product.images);
   return {
     id: product.id,
     slug: product.slug,

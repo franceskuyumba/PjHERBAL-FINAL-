@@ -1,12 +1,6 @@
 import { put, del } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 
-async function makeDataUrl(file: File) {
-  const bytes = await file.arrayBuffer();
-  const mimeType = file.type || 'image/jpeg';
-  return `data:${mimeType};base64,${Buffer.from(bytes).toString('base64')}`;
-}
-
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
@@ -25,28 +19,21 @@ export async function POST(request: Request) {
     const uploadedUrls: string[] = [];
 
     for (const file of files) {
-      if (process.env.BLOB_READ_WRITE_TOKEN) {
-        const blob = await put(file.name || `product-${Date.now()}.png`, file, { access: 'public' });
-        uploadedUrls.push(blob.url);
-        continue;
-      }
-
-      uploadedUrls.push(await makeDataUrl(file));
+      const blob = await put(`products/${Date.now()}-${file.name || 'image.png'}`, file, { access: 'private', addRandomSuffix: true });
+      uploadedUrls.push(`/api/product-image?url=${encodeURIComponent(blob.url)}`);
     }
 
     return NextResponse.json({ urls: uploadedUrls, url: uploadedUrls[0] || '/placeholder.jpg' }, { status: 200 });
   } catch (error: any) {
     console.error('UPLOAD_ERROR:', error);
-    return NextResponse.json({ urls: [], url: '/placeholder.jpg' }, { status: 200 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Image upload failed.' }, { status: 500 });
   }
 }
 
 export async function DELETE(request: Request) {
   try {
     const { url } = await request.json().catch(() => ({ url: null }));
-    if (url && url.startsWith('http') && process.env.BLOB_READ_WRITE_TOKEN) {
-      await del(url);
-    }
+    if (url && url.startsWith('http') && process.env.BLOB_READ_WRITE_TOKEN) await del(url);
     return NextResponse.json({ success: true }, { status: 200 });
   } catch {
     return NextResponse.json({ success: true }, { status: 200 });

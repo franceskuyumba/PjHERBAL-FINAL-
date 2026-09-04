@@ -25,6 +25,7 @@ import { generateJsonLd } from "@/lib/seo";
 import { publishedWhere } from "@/lib/blog";
 import { getLocale, t } from "@/lib/i18n";
 import type { ProductCardProduct } from "@/components/product/ProductCard";
+import { getHomepageSettings } from "@/lib/site-settings";
 
 export const metadata: Metadata = {
   title: `${SITE.name} – ${SITE.tagline}`,
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const lang = getLocale();
-  const [categories, bestSellers, recentPosts, user, dealCandidates, newArrivals] = await Promise.all([
+  const [categories, bestSellers, recentPosts, user, dealCandidates, newArrivals, homepageSettings] = await Promise.all([
     prisma.category.findMany({
       where: { isActive: true },
       orderBy: { sortOrder: "asc" },
@@ -63,6 +64,7 @@ export default async function HomePage() {
       include: { category: true },
       take: 8,
     }),
+    getHomepageSettings(),
   ]);
 
   const categoryCards = categories.map((c) => ({
@@ -110,7 +112,7 @@ export default async function HomePage() {
         }}
       />
       <div className="relative">
-        <Hero />
+        <Hero settings={homepageSettings} />
         <HomeAdminPhotoEdit isAdmin={isAdmin} />
       </div>
       <CartReminder />
@@ -143,7 +145,7 @@ export default async function HomePage() {
         isAdmin={isAdmin}
         bg="white"
       />
-      <PromoBanner />
+      <PromoBanner promoText={homepageSettings.promoText} />
       <StorySection />
       <WhyUs />
       <HowItWorks />

@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Save, Settings } from "lucide-react";
+import { ImagePlus, Save, Settings } from "lucide-react";
 import { useI18n } from "@/context/LanguageContext";
 
 export function AdminSettingsManager() {
-  const [form, setForm] = useState({ facebook: "", instagram: "", tiktok: "", x: "" });
+  const [form, setForm] = useState({ facebook: "", instagram: "", tiktok: "", x: "", heroImage: "", heroTitle: "", heroSubtitle: "", promoText: "" });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -14,7 +14,7 @@ export function AdminSettingsManager() {
   useEffect(() => {
     fetch("/api/admin/settings")
       .then((response) => response.json())
-      .then((data) => setForm((current) => ({ ...current, ...(Object.fromEntries(Object.entries(data.settings || {}).map(([key, value]) => [key.replace("social.", ""), value])) as Partial<typeof current>) })))
+      .then((data) => setForm((current) => ({ ...current, ...(Object.fromEntries(Object.entries(data.settings || {}).map(([key, value]) => [key.replace("social.", "").replace("homepage.", ""), value])) as Partial<typeof current>) })))
       .finally(() => setLoading(false));
   }, []);
 
@@ -46,6 +46,18 @@ export function AdminSettingsManager() {
             <input value={form[key]} onChange={(event) => setForm({ ...form, [key]: event.target.value })} placeholder={`https://${key === "x" ? "x.com" : key + ".com"}/your-account`} className="input mt-1 w-full" />
           </label>
         ))}
+        <div className="border-t border-ink/10 pt-5">
+          <div className="flex items-center gap-2 text-sm font-bold text-brand-950"><ImagePlus className="h-4 w-4 text-brand-600" /> Homepage content</div>
+          <div className="mt-3 space-y-3">
+            {(["heroTitle", "heroSubtitle", "promoText"] as const).map((key) => (
+              <label key={key} className="block text-sm font-semibold text-brand-950">
+                {key === "heroTitle" ? "Hero title" : key === "heroSubtitle" ? "Hero subtitle" : "Homepage promotion"}
+                <textarea value={form[key]} onChange={(event) => setForm({ ...form, [key]: event.target.value })} rows={key === "heroTitle" ? 2 : 3} className="input mt-1 w-full" placeholder="Leave blank to use the default" />
+              </label>
+            ))}
+            <p className="text-xs text-ink/50">Use the homepage photo control to replace the hero image.</p>
+          </div>
+        </div>
         {message && <p className="rounded-xl bg-brand-50 px-3 py-2 text-sm text-brand-800">{message}</p>}
         <button type="submit" disabled={saving} className="btn-primary"><Save className="h-4 w-4" />{saving ? t("admin.settings.saving") : t("admin.settings.save")}</button>
       </div>

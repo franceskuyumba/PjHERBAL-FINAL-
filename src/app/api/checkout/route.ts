@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { json, error, ApiError, handleApiError, requireSameOrigin } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
+import { parseProductImages } from "@/lib/product-images";
 import { checkoutSchema } from "@/lib/validations";
 import { calculateTotals } from "@/lib/cart";
 import { generateOrderNumber } from "@/lib/utils";
@@ -65,7 +66,7 @@ async function handleCheckout(request: NextRequest) {
         productId: product.id,
         productName: product.name,
         productSlug: product.slug,
-        productImage: product.images.split(",")[0],
+        productImage: parseProductImages(product.images)[0],
         price: product.price,
         quantity: qty,
         subtotal: product.price * qty,

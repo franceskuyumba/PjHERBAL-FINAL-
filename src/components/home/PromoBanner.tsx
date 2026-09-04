@@ -8,7 +8,7 @@ import { ArrowRight, BadgePercent } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useI18n } from "@/context/LanguageContext";
 
-export function PromoBanner() {
+export function PromoBanner({ promoText = "" }: { promoText?: string }) {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
   const { t } = useI18n();
@@ -16,7 +16,7 @@ export function PromoBanner() {
   const banners = [
     {
       title: t("home.promoBanner.b1.title"),
-      text: t("home.promoBanner.b1.text"),
+      text: promoText || t("home.promoBanner.b1.text"),
       image: "/images/products/black-seed-oil.svg",
       cta: t("home.promoBanner.b1.cta"),
       href: "/category/energy-immunity",

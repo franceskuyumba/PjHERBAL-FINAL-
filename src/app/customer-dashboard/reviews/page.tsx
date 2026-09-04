@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { parseProductImages } from "@/lib/product-images";
 import { MyReviewsList } from "@/components/dashboard/MyReviewsList";
 import { getLocale, t } from "@/lib/i18n";
 
@@ -32,7 +33,7 @@ export default async function ReviewsPage() {
           product: {
             slug: r.product.slug,
             name: r.product.name,
-            image: r.product.images.split(",")[0] || "/images/hero.svg",
+            image: parseProductImages(r.product.images)[0] || "/images/hero.svg",
           },
         }))}
       />

@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import {
   Activity,
   BookOpen,
+  Images,
   Boxes,
   LayoutDashboard,
   LogOut,
@@ -38,6 +39,7 @@ const allNavItems = [
   { href: "/admin/customers", labelKey: "admin.shell.customers", icon: Users, adminOnly: false },
   { href: "/admin/coupons", labelKey: "admin.shell.coupons", icon: Tag, adminOnly: false },
   { href: "/admin/blog", labelKey: "admin.shell.blog", icon: BookOpen, adminOnly: false },
+  { href: "/admin/categories", labelKey: "admin.shell.categories", icon: Images, adminOnly: false },
   { href: "/admin/reviews", labelKey: "admin.shell.reviews", icon: Star, adminOnly: false },
   { href: "/admin/activity", labelKey: "admin.shell.activityLog", icon: Activity, adminOnly: true },
   { href: "/admin/team", labelKey: "admin.shell.team", icon: UserCog, adminOnly: true },

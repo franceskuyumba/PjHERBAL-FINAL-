@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { WishlistGrid } from "@/components/dashboard/WishlistGrid";
 import { getLocale, t } from "@/lib/i18n";
+import { parseProductImages } from "@/lib/product-images";
 
 export default async function WishlistPage() {
   const lang = getLocale();
@@ -28,7 +29,7 @@ export default async function WishlistPage() {
           shortDescription: w.product.shortDescription ?? "",
           price: w.product.price,
           compareAtPrice: w.product.compareAtPrice,
-          image: w.product.images.split(",")[0],
+          image: parseProductImages(w.product.images)[0] || "/images/hero.svg",
           stock: w.product.stock,
           rating: w.product.rating,
           ratingCount: w.product.ratingCount,

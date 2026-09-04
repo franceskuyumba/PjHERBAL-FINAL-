@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { json, error, requireApiUser, handleApiError } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
+import { parseProductImages } from "@/lib/product-images";
 
 export async function GET() {
   try {
@@ -21,7 +22,7 @@ export async function GET() {
           name: w.product.name,
           price: w.product.price,
           compareAtPrice: w.product.compareAtPrice,
-          image: w.product.images.split(",")[0],
+          image: parseProductImages(w.product.images)[0],
           stock: w.product.stock,
           rating: w.product.rating,
           ratingCount: w.product.ratingCount,

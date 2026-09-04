@@ -1,9 +1,11 @@
 import { NextRequest } from "next/server";
+import { revalidatePath } from "next/cache";
 import { json, error, requireApiAdmin, handleApiError } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 import { productSchema } from "@/lib/validations";
 import { zodParseSafe } from "@/lib/zod-helpers";
 import { logActivity } from "@/lib/activity";
+import { parseProductImages } from "@/lib/product-images";
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -16,7 +18,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
     if (body.mode === "photo") {
       if (!body.images) return error("Provide at least one image URL.");
-      const product = await prisma.product.update({ where: { id: params.id }, data: { images: String(body.images) } });
+      const product = await prisma.product.update({ where: { id: params.id }, data: { images: JSON.stringify(parseProductImages(String(body.images))) } });
+      revalidatePath("/");
+      revalidatePath("/shop");
       await logActivity({ actorId: session.sub, actorName: session.name, role: session.role, action: "PRODUCT_UPDATE", entity: "Product", entityId: product.id, details: `${product.name}: updated photo`, ip: request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null });
       return json({ product });
     }
@@ -72,16 +76,18 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
         isFeatured: Boolean(body.isFeatured),
          ...(body.images || body.image
            ? {
-               images: String(body.images || body.image)
-                 .split(/[\n,]+/)
+               images: JSON.stringify(String(body.images || body.image)
+                 .split(/\r?\n/)
                  .map((value) => value.trim())
-                 .filter(Boolean)
-                 .join(","),
+                 .filter(Boolean)),
              }
            : {}),
       },
       include: { category: true },
     });
+
+    revalidatePath("/");
+    revalidatePath("/shop");
 
     await logActivity({
       actorId: session.sub,

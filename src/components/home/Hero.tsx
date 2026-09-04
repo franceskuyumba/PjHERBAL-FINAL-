@@ -7,7 +7,7 @@ import { ArrowRight, Award, Leaf, MessageCircle, ShieldCheck, Sparkles, Truck } 
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { useI18n } from "@/context/LanguageContext";
 
-export function Hero() {
+export function Hero({ settings }: { settings?: { heroImage?: string; heroTitle?: string; heroSubtitle?: string } }) {
   const reduceMotion = useReducedMotion();
   const { t } = useI18n();
 
@@ -21,6 +21,7 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-brand-950 via-brand-800 to-brand-700 text-white">
       {/* Animated background logo */}
+      {settings?.heroImage && <Image src={settings.heroImage} alt="" fill className="object-cover opacity-25" priority />}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
         <motion.div
           animate={reduceMotion ? {} : { scale: [1, 1.05, 1], opacity: [0.06, 0.1, 0.06] }}
@@ -70,7 +71,7 @@ export function Hero() {
             className="mx-auto mt-8 max-w-4xl font-display text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl"
           >
             <span className="bg-gradient-to-r from-white via-white to-white/90 bg-clip-text text-transparent">
-              Unlock Your Body&apos;s
+              {settings?.heroTitle || "Unlock Your Body's"}
             </span>
             <br />
             <span className="bg-gradient-to-r from-gold-300 via-gold-400 to-gold-300 bg-clip-text text-transparent">
@@ -85,7 +86,7 @@ export function Hero() {
             transition={{ delay: 0.5, duration: 0.6 }}
             className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg lg:text-xl"
           >
-            Virutubisho bora vya asili kwa ustawi wako — vimechaguliwa na wataalamu wa PJHERBAL Segerea
+            {settings?.heroSubtitle || "Virutubisho bora vya asili kwa ustawi wako — vimechaguliwa na wataalamu wa PJHERBAL Segerea"}
           </motion.p>
 
           {/* Feature pills */}

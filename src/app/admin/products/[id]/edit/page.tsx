@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProductForm } from "@/components/admin/ProductForm";
+import { parseProductImages } from "@/lib/product-images";
 
 export default async function EditProductPage({ params }: { params: { id: string } }) {
   const [product, categories] = await Promise.all([
@@ -31,7 +32,7 @@ export default async function EditProductPage({ params }: { params: { id: string
         benefits: product.benefits || "",
         precautions: product.precautions || "",
         sku: product.sku,
-        images: product.images.split(",").filter(Boolean).join("\n"),
+        images: parseProductImages(product.images).join("\n"),
         isBestSeller: product.isBestSeller,
         isFeatured: product.isFeatured,
       }}

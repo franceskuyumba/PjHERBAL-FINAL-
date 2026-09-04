@@ -11,6 +11,7 @@ export const adminEn = {
     customers: "Customers",
     coupons: "Coupons",
     blog: "Blog",
+    categories: "Categories",
     reviews: "Reviews",
     activityLog: "Activity Log",
     team: "Team & Roles",

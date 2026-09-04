@@ -20,6 +20,7 @@ import { getLocale, t } from "@/lib/i18n";
 import { formatDate } from "@/lib/utils";
 import { SITE } from "@/lib/constants";
 import { absoluteUrl, generateJsonLd } from "@/lib/seo";
+import { parseProductImages } from "@/lib/product-images";
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const product = await prisma.product.findUnique({
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     include: { category: true },
   });
   if (!product) return {};
-  const [image] = product.images.split(",").filter(Boolean);
+  const [image] = parseProductImages(product.images);
   return {
     title: product.name,
     description: product.shortDescription ?? "",
@@ -53,7 +54,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
 
   if (!product) notFound();
 
-  const images = product.images.split(",").filter(Boolean);
+  const images = parseProductImages(product.images);
   const related = await prisma.product.findMany({
     where: { status: "ACTIVE", categoryId: product.categoryId, id: { not: product.id } },
     include: { category: true },

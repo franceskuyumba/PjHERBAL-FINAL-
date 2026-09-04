@@ -54,6 +54,22 @@ const emptyForm: ProductFormValues = {
   isFeatured: false,
 };
 
+async function prepareImageFile(file: File): Promise<File> {
+  if (!file.type.startsWith("image/") || file.size <= 2_500_000) return file;
+
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+  canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.82));
+  if (!blob) return file;
+  return new File([blob], `${file.name.replace(/\.[^.]+$/, "")}.jpg`, { type: "image/jpeg" });
+}
+
 export function ProductForm({
   categories,
   editing,
@@ -88,7 +104,8 @@ export function ProductForm({
       if (selectedFiles.length > 0) {
         setUploading(true);
         const uploadData = new FormData();
-        selectedFiles.forEach((file) => uploadData.append("files", file));
+        const preparedFiles = await Promise.all(selectedFiles.map(prepareImageFile));
+        preparedFiles.forEach((file) => uploadData.append("files", file));
         const uploadResponse = await fetch("/api/admin/uploads", { method: "POST", body: uploadData });
         const uploadResult = await uploadResponse.json();
         if (!uploadResponse.ok) throw new Error(uploadResult.error || "Image upload failed.");
