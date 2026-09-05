@@ -1,157 +1,67 @@
-import type { Metadata } from "next";
-import { Hero } from "@/components/home/Hero";
-import { HomeAdminPhotoEdit } from "@/components/home/HomeAdminPhotoEdit";
-import { TrustBar } from "@/components/home/TrustBar";
-import { FlashDeals } from "@/components/home/FlashDeals";
-import { FeaturedCategories } from "@/components/home/FeaturedCategories";
-import { PromoTileGrid } from "@/components/home/PromoTileGrid";
-import { CategoryPicksRows } from "@/components/home/CategoryPicksRows";
-import { BestSellers } from "@/components/home/BestSellers";
-import { ProductGridSection } from "@/components/home/ProductGridSection";
-import { PromoBanner } from "@/components/home/PromoBanner";
-import { HowItWorks } from "@/components/home/HowItWorks";
-import { Testimonials } from "@/components/home/Testimonials";
-import { Newsletter } from "@/components/home/Newsletter";
-import { BlogPreview } from "@/components/home/BlogPreview";
-import { WhyUs } from "@/components/home/WhyUs";
-import { StorySection } from "@/components/home/StorySection";
-import { CartReminder } from "@/components/cart/CartReminder";
-import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/auth";
-import { toProductCard } from "@/lib/serializers";
-import { getRecommendations } from "@/lib/recommendations";
-import { SITE } from "@/lib/constants";
-import { generateJsonLd } from "@/lib/seo";
-import { publishedWhere } from "@/lib/blog";
-import { getLocale, t } from "@/lib/i18n";
-import type { ProductCardProduct } from "@/components/product/ProductCard";
-import { getHomepageSettings } from "@/lib/site-settings";
+import EditableImage from "@/components/EditableImage";
 
-export const metadata: Metadata = {
-  title: `${SITE.name} – ${SITE.tagline}`,
-  description: SITE.description,
-  alternates: { canonical: "/" },
-};
-
-export default async function HomePage() {
-  const lang = getLocale();
-  const [categories, bestSellers, recentPosts, user, dealCandidates, newArrivals, homepageSettings] = await Promise.all([
-    prisma.category.findMany({
-      where: { isActive: true },
-      orderBy: { sortOrder: "asc" },
-      include: { _count: { select: { products: { where: { status: "ACTIVE" } } } } },
-    }),
-    prisma.product.findMany({
-      where: { status: "ACTIVE", isBestSeller: true },
-      orderBy: { ratingCount: "desc" },
-      take: 8,
-      include: { category: true },
-    }),
-    prisma.blogPost.findMany({
-      where: publishedWhere(),
-      orderBy: { publishedAt: "desc" },
-      take: 3,
-    }),
-    getCurrentUser(),
-    prisma.product.findMany({
-      where: { status: "ACTIVE", compareAtPrice: { not: null } },
-      include: { category: true },
-      take: 12,
-    }),
-    prisma.product.findMany({
-      where: { status: "ACTIVE" },
-      orderBy: { createdAt: "desc" },
-      include: { category: true },
-      take: 8,
-    }),
-    getHomepageSettings(),
-  ]);
-
-  const categoryCards = categories.map((c) => ({
-    slug: c.slug,
-    name: c.name,
-    description: c.description,
-    image: c.image,
-    icon: c.icon,
-    productCount: c._count.products,
-  }));
-
-  const flashProducts = dealCandidates
-    .filter((p) => p.compareAtPrice != null && p.compareAtPrice > p.price)
-    .sort(
-      (a, b) =>
-        ((b.compareAtPrice! - b.price) / b.compareAtPrice!) -
-        ((a.compareAtPrice! - a.price) / a.compareAtPrice!)
-    )
-    .slice(0, 4)
-    .map((p) => toProductCard(p));
-
-  const newArrivalCards = newArrivals.map((p) => toProductCard(p));
-
-  let recommended: ProductCardProduct[] = [];
-  if (user && user.role === "CUSTOMER") {
-    recommended = await getRecommendations(user.id, 4);
-  }
-
-  const isLoggedIn = Boolean(user);
-  const isAdmin = user?.role === "ADMIN";
-
+export default function HomePage() {
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            generateJsonLd({
-              type: "Organization",
-              name: SITE.name,
-              url: SITE.url,
-              description: SITE.description,
-            })
-          ),
-        }}
-      />
-      <div className="relative">
-        <Hero settings={homepageSettings} />
-        <HomeAdminPhotoEdit isAdmin={isAdmin} />
-      </div>
-      <CartReminder />
-      <PromoTileGrid categories={categoryCards} />
-      <FlashDeals products={flashProducts} isLoggedIn={isLoggedIn} />
-      <CategoryPicksRows categories={categoryCards} products={[...bestSellers.map((p) => toProductCard(p)), ...newArrivalCards]} isLoggedIn={isLoggedIn} />
-      <TrustBar />
-      <FeaturedCategories categories={categoryCards} />
-      {recommended.length > 0 && (
-        <ProductGridSection
-          eyebrow={t(lang, "home.recommended.eyebrow")}
-          title={t(lang, "home.recommended.title")}
-          subtitle={t(lang, "home.recommended.subtitle")}
-          href="/customer-dashboard/recommendations"
-          linkLabel={t(lang, "home.recommended.linkLabel")}
-          products={recommended}
-          isLoggedIn={isLoggedIn}
-          bg="white"
-        />
-      )}
-      <BestSellers products={bestSellers.map((p) => toProductCard(p))} isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
-      <ProductGridSection
-        eyebrow={t(lang, "home.latestCollection.eyebrow")}
-        title={t(lang, "home.latestCollection.title")}
-        subtitle={t(lang, "home.latestCollection.subtitle")}
-        href="/shop?sort=newest"
-        linkLabel={t(lang, "home.viewAllProducts")}
-        products={newArrivalCards}
-        isLoggedIn={isLoggedIn}
-        isAdmin={isAdmin}
-        bg="white"
-      />
-      <PromoBanner promoText={homepageSettings.promoText} />
-      <StorySection />
-      <WhyUs />
-      <HowItWorks />
-      <Testimonials />
-      <BlogPreview posts={recentPosts} />
-      <Newsletter />
-    </>
+    <main className="min-h-screen pb-20 bg-gray-50">
+      {/* Category Section */}
+      <section className="p-4">
+        <h2 className="text-xs font-bold tracking-wider text-amber-700 uppercase">Shop By Category</h2>
+        <h1 className="text-2xl font-serif font-bold text-gray-900 mb-4">Find what your body needs</h1>
+        
+        <div className="grid grid-cols-2 gap-3">
+          <div className="relative rounded-2xl overflow-hidden h-36 bg-emerald-900 text-white p-3 flex flex-col justify-between">
+            <EditableImage sectionKey="cat_mens_health" defaultSrc="/images/mens-health.jpg" alt="Men's Health" isAdmin={true} className="absolute inset-0 z-0 opacity-40" />
+            <div className="relative z-10">
+              <h3 className="font-bold text-sm">Men's Health</h3>
+              <p className="text-[10px] text-gray-200">Support vitality, stamina and prostate wellbeing.</p>
+            </div>
+          </div>
+
+          <div className="relative rounded-2xl overflow-hidden h-36 bg-emerald-900 text-white p-3 flex flex-col justify-between">
+            <EditableImage sectionKey="cat_weight_mgnt" defaultSrc="/images/weight-management.jpg" alt="Weight Management" isAdmin={true} className="absolute inset-0 z-0 opacity-40" />
+            <div className="relative z-10">
+              <h3 className="font-bold text-sm">Weight Management</h3>
+              <p className="text-[10px] text-gray-200">Natural support for healthy weight loss journeys.</p>
+            </div>
+          </div>
+
+          <div className="relative rounded-2xl overflow-hidden h-36 bg-emerald-900 text-white p-3 flex flex-col justify-between">
+            <EditableImage sectionKey="cat_energy_imm" defaultSrc="/images/energy-immunity.jpg" alt="Energy & Immunity" isAdmin={true} className="absolute inset-0 z-0 opacity-40" />
+            <div className="relative z-10">
+              <h3 className="font-bold text-sm">Energy & Immunity</h3>
+              <p className="text-[10px] text-gray-200">Daily power, stronger defenses and vitality.</p>
+            </div>
+          </div>
+
+          <div className="relative rounded-2xl overflow-hidden h-36 bg-emerald-900 text-white p-3 flex flex-col justify-between">
+            <EditableImage sectionKey="cat_womens_well" defaultSrc="/images/womens-wellness.jpg" alt="Women's Wellness" isAdmin={true} className="absolute inset-0 z-0 opacity-40" />
+            <div className="relative z-10">
+              <h3 className="font-bold text-sm">Women's Wellness</h3>
+              <p className="text-[10px] text-gray-200">Nourishment and balance for every stage.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Product Banner Section */}
+      <section className="p-4">
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-lg font-bold text-gray-900">Energy & Immunity</h2>
+          <span className="text-xs text-emerald-800 font-semibold">View all products ?</span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 p-2">
+            <EditableImage sectionKey="prod_kaa_fit" defaultSrc="/images/kaa-fit.jpg" alt="Kaa Fit Bila Stress" isAdmin={true} className="h-32 w-full rounded-lg" />
+            <p className="text-xs font-bold mt-2 text-gray-800">Kaa Fit Bila Stress!</p>
+          </div>
+
+          <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 p-2">
+            <EditableImage sectionKey="prod_moyo_health" defaultSrc="/images/moyo-health.jpg" alt="Msaada kwa Afya ya Moyo" isAdmin={true} className="h-32 w-full rounded-lg" />
+            <p className="text-xs font-bold mt-2 text-gray-800">Msaada Kwa Afya Ya Moyo</p>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

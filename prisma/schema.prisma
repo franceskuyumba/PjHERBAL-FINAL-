@@ -417,3 +417,12 @@ model WalkInCustomer {
 
   @@index([visitedAt])
 }
+
+model SiteMedia {
+  id          String   @id @default(uuid())
+  sectionKey  String   @unique
+  imageUrl    String
+  altText     String?
+  updatedAt   DateTime @updatedAt
+}
+
