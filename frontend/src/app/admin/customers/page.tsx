@@ -86,7 +86,7 @@ export default function AdminCustomersPage() {
 
       <div className="overflow-hidden rounded-2xl border border-brand-100 bg-white shadow-card">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[760px] text-left text-sm">
+          <div className="w-full overflow-x-auto"><table className="w-full min-w-[760px] text-left text-sm">
             <thead>
               <tr className="border-b border-brand-100 bg-brand-50/50 text-xs uppercase tracking-wider text-brand-400">
                 <th className="px-5 py-3 font-semibold">Customer</th>
@@ -151,7 +151,7 @@ export default function AdminCustomersPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
       </div>
     </div>

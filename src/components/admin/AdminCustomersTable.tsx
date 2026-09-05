@@ -91,7 +91,7 @@ export function AdminCustomersTable() {
           <p className="p-10 text-center text-sm text-ink/50">{t("admin.customers.empty")}</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
+            <div className="w-full overflow-x-auto"><table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-ink/10 bg-slate-50 text-xs uppercase tracking-wide text-ink/40">
                   <th className="px-5 py-3 font-semibold">{t("admin.customers.colCustomer")}</th>
@@ -125,7 +125,7 @@ export function AdminCustomersTable() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           </div>
         )}
       </div>

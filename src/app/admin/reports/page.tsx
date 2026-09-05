@@ -27,10 +27,10 @@ export default async function AdminReportPage({ searchParams }: { searchParams: 
         <h1 className="font-display text-2xl font-bold text-brand-950">{t(lang, "admin.report.title")}</h1>
         <p className="mt-1 text-sm text-ink/55">{t(lang, "admin.report.range").replace("{from}", searchParams.from || "All time").replace("{to}", searchParams.to || "Today")}</p>
         <p className="mt-4 text-lg font-bold text-brand-800">{formatTZS(total)}</p>
-        <table className="mt-6 w-full text-left text-sm">
+        <div className="w-full overflow-x-auto"><table className="mt-6 w-full text-left text-sm">
           <thead><tr className="border-b border-ink/10 text-xs uppercase tracking-wide text-ink/50"><th className="py-3">{t(lang, "admin.report.type")}</th><th>{t(lang, "admin.report.reference")}</th><th>{t(lang, "admin.report.customer")}</th><th>{t(lang, "admin.report.amount")}</th><th>{t(lang, "admin.report.status")}</th><th>{t(lang, "admin.report.created")}</th></tr></thead>
           <tbody className="divide-y divide-ink/5">{rows.map((row) => <tr key={row.reference}><td className="py-3">{row.type}</td><td>{row.reference}</td><td>{row.customer}</td><td className="font-semibold">{formatTZS(row.amount)}</td><td>{row.status}</td><td>{formatDateTime(row.created)}</td></tr>)}</tbody>
-        </table>
+        </table></div>
       </div>
     </div>
   );

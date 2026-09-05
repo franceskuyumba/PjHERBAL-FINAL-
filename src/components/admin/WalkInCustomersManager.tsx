@@ -187,7 +187,7 @@ export function WalkInCustomersManager() {
       ) : (
         <div className="mt-6 overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-card">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
+            <div className="w-full overflow-x-auto"><table className="w-full text-left text-sm">
               <thead className="border-b border-ink/5 bg-slate-50 text-xs uppercase tracking-wide text-ink/50">
                 <tr>
                   <th className="px-5 py-3">Customer</th>
@@ -223,7 +223,7 @@ export function WalkInCustomersManager() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           </div>
         </div>
       )}

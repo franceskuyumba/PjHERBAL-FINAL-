@@ -171,7 +171,7 @@ export default function AdminAnalyticsPage() {
           <h2 className="font-display text-base font-bold text-brand-950">Top Pages</h2>
           <p className="text-xs text-brand-400">Most visited pages and their conversion rates</p>
           <div className="mt-4 overflow-x-auto">
-            <table className="w-full text-left text-sm">
+            <div className="w-full overflow-x-auto"><table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-brand-100 text-xs uppercase tracking-wider text-brand-400">
                   <th className="pb-2 pr-4 font-semibold">Page</th>
@@ -193,7 +193,7 @@ export default function AdminAnalyticsPage() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           </div>
           <div className="mt-4 flex items-center gap-2 rounded-xl bg-gold-50 p-3 text-xs text-gold-800">
             <TrendingUp className="h-4 w-4 shrink-0" />

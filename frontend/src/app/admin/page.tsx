@@ -138,7 +138,7 @@ export default function AdminDashboardPage() {
           </Link>
         </div>
         <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[640px] text-left text-sm">
+          <div className="w-full overflow-x-auto"><table className="w-full min-w-[640px] text-left text-sm">
             <thead>
               <tr className="border-b border-brand-100 text-xs uppercase tracking-wider text-brand-400">
                 <th className="pb-3 pr-4 font-semibold">Order</th>
@@ -165,7 +165,7 @@ export default function AdminDashboardPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
       </div>
 

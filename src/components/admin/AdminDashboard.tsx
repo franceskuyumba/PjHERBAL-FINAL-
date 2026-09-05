@@ -166,7 +166,7 @@ export function AdminDashboard() {
           <p className="text-sm text-ink/45">{t("admin.dashboard.noOrders")}</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
+            <div className="w-full overflow-x-auto"><table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-ink/10 text-xs uppercase tracking-wide text-ink/40">
                   <th className="pb-3 pr-4 font-semibold">{t("admin.dashboard.colOrder")}</th>
@@ -196,7 +196,7 @@ export function AdminDashboard() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           </div>
         )}
       </div>

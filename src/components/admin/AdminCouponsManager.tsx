@@ -144,7 +144,7 @@ export function AdminCouponsManager() {
             <p className="p-10 text-center text-sm text-ink/50">{t("admin2.coupons.empty")}</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              <div className="w-full overflow-x-auto"><table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-ink/10 bg-slate-50 text-xs uppercase tracking-wide text-ink/40">
                     <th className="px-5 py-3 font-semibold">{t("admin2.coupons.thCode")}</th>
@@ -189,7 +189,7 @@ export function AdminCouponsManager() {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
             </div>
           )}
         </div>
