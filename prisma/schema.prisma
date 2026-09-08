@@ -63,10 +63,13 @@ model Payment {
 }
 
 model BlogPost {
-  id        String   @id @default(cuid())
-  title     String
-  content   String
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  title      String
+  slug       String?  @unique
+  excerpt    String?
+  content    String
+  coverImage String?
+  createdAt  DateTime @default(now())
 }
 
 model Coupon {
